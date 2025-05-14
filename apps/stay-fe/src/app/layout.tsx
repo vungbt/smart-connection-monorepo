@@ -1,4 +1,6 @@
-import './global.css';
+import { UIProvider } from '@smart-connection-monorepo/ui-theme';
+import themeToken from '@smart-connection-monorepo/ui-theme/theme-token/stay-fe.json';
+import '@/styles/index.css';
 
 export const metadata = {
   title: 'Welcome to stay-fe',
@@ -11,8 +13,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <UIProvider config={themeToken.variants}>{children}</UIProvider>
+      </body>
     </html>
   );
 }

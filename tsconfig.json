@@ -5,6 +5,12 @@
   "references": [
     {
       "path": "./apps/stay-fe"
+    },
+    {
+      "path": "./libs/ui-theme"
+    },
+    {
+      "path": "./libs/ui-components"
     }
   ]
 }
