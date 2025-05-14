@@ -2,7 +2,15 @@
   "name": "@smart-connection-monorepo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "prepare": "husky",
+    "commitlint": "commitlint --edit",
+    "format": "nx format:write",
+    "format:check": "nx format:check",
+    "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+    "format:all": "nx run-many --target=format --all",
+    "format:staged": "nx format:write --uncommitted"
+  },
   "private": true,
   "dependencies": {
     "next": "~15.2.4",
@@ -10,6 +18,9 @@
     "react-dom": "19.0.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@nx/eslint-plugin": "^21.0.3",
     "@nx/js": "21.0.3",
     "@nx/next": "21.0.3",
     "@nx/vite": "21.0.3",
@@ -22,9 +33,13 @@
     "@types/node": "18.16.9",
     "@types/react": "19.0.0",
     "@types/react-dom": "19.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
     "@vitest/ui": "^3.0.0",
     "autoprefixer": "10.4.13",
+    "husky": "^9.1.7",
     "jiti": "2.4.2",
+    "lint-staged": "^16.0.0",
     "nx": "21.0.3",
     "postcss": "8.4.38",
     "prettier": "^2.6.2",
@@ -34,9 +49,5 @@
     "vite": "^6.0.0",
     "vite-plugin-dts": "~4.5.0",
     "vitest": "^3.0.0"
-  },
-  "workspaces": [
-    "apps/*",
-    "libs/*"
-  ]
+  }
 }

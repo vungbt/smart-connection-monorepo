@@ -1,0 +1,12 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Format all uncommitted files first
+pnpm exec nx format:write --uncommitted
+# Add formatted files to commit
+git add .
+
+# Also run prettier directly to ensure all file types are covered
+pnpm format:write
+# Add formatted files to commit
+git add .

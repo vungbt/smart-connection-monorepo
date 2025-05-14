@@ -141,7 +141,7 @@ export function UIProvider(props: ThemeProviderProps) {
   const [theme, setThemeState] = useState<UIConfig>(props.config);
 
   const setTheme = useCallback((newTheme: Partial<UIConfig>) => {
-    setThemeState((theme) => ({ ...theme, ...newTheme }));
+    setThemeState(theme => ({ ...theme, ...newTheme }));
   }, []);
 
   return (

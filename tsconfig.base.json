@@ -18,8 +18,8 @@
     "target": "es2022",
     "customConditions": ["development"],
     "paths": {
-      "@smart-connection-monorepo/ui-theme": ["libs/ui-theme/src/index.ts"],
-      "@smart-connection-monorepo/ui-components": ["libs/ui-components/src/index.ts"]
+      "@smart-connection-monorepo/ui-components": ["./libs/ui-components/src/index.ts"],
+      "@smart-connection-monorepo/ui-theme": ["./libs/ui-theme/src/index.ts"]
     }
   }
 }
