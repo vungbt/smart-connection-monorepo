@@ -1,4 +1,3 @@
-
 type ButtonProps = {
   className?: string;
 };

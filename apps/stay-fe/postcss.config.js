@@ -1,6 +1,4 @@
-const {
-  createPostCssConfig,
-} = require('@smart-connection-monorepo/ui-theme/helper');
+const { createPostCssConfig } = require('@smart-connection-monorepo/ui-theme/helper');
 const { join } = require('path');
 
 module.exports = createPostCssConfig({

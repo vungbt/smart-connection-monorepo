@@ -1,82 +1,152 @@
-# SmartConnectionMonorepo
+# Smart Connection Monorepo
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This is a monorepo for the Smart Connection project, built with [Nx](https://nx.dev).
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## Project Structure
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/next?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+The monorepo is organized as follows:
 
-## Finish your CI setup
+- **apps/**
+  - **stay-fe/**: Next.js frontend application
+- **libs/**
+  - **ui-components/**: Reusable React UI components
+  - **ui-theme/**: Theme configuration and styling utilities
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/ng7gUsEPto)
+## Getting Started
 
+### Prerequisites
 
-## Run tasks
+- Node.js (v18+)
+- pnpm
 
-To run the dev server for your app, use:
-
-```sh
-npx nx dev stay-fe
-```
-
-To create a production bundle:
-
-```sh
-npx nx build stay-fe
-```
-
-To see all available targets to run for a project, run:
+### Installation
 
 ```sh
-npx nx show project stay-fe
+# Install dependencies
+pnpm install
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+## Development
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
+### Running the Application
 
 ```sh
-npx nx g @nx/next:app demo
+# Start the Next.js frontend
+pnpm exec nx serve stay-fe
+
+# Or using Nx directly
+nx serve stay-fe
 ```
 
-To generate a new library, use:
+### Building
 
 ```sh
-npx nx g @nx/react:lib mylib
+# Build all affected projects
+pnpm exec nx affected -t build
+
+# Build specific projects
+pnpm exec nx build stay-fe
+pnpm exec nx build ui-components
+pnpm exec nx build ui-theme
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+### Testing
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+```sh
+# Run tests for all affected projects
+pnpm exec nx affected -t test
 
+# Run tests for specific projects
+pnpm exec nx test stay-fe
+pnpm exec nx test ui-components
+pnpm exec nx test ui-theme
+```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Linting
 
-## Install Nx Console
+```sh
+# Lint all affected projects
+pnpm exec nx affected -t lint
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+# Lint specific projects
+pnpm exec nx lint stay-fe
+```
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Formatting
 
-## Useful links
+```sh
+# Format all files
+pnpm run format:all
 
-Learn more:
+# Check formatting
+pnpm run format:check
 
-- [Learn more about this workspace setup](https://nx.dev/nx-api/next?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+# Format only uncommitted files
+pnpm run format:staged
+```
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Build Output
+
+All build artifacts are stored in the `dist/` directory:
+
+- `dist/apps/stay-fe`: The built Next.js application
+- `dist/libs/ui-components`: The built UI components library
+- `dist/libs/ui-theme`: The built theme library
+
+## Commit Convention
+
+This project follows the [Conventional Commits](https://www.conventionalcommits.org/) specification for commit messages. Please see [COMMIT_CONVENTION.md](./COMMIT_CONVENTION.md) for detailed guidelines.
+
+Example of a valid commit message:
+
+```
+feat(ui-components): add new button variant
+```
+
+## Pre-commit Hooks
+
+This project uses Husky and lint-staged to run the following checks before each commit:
+
+1. Code formatting with Prettier
+2. Linting with ESLint
+3. Commit message validation with commitlint
+
+## Useful Commands
+
+```sh
+# Generate dependency graph
+nx graph
+
+# Show available targets for a project
+nx show project stay-fe
+
+# Run a target for all projects
+nx run-many --target=build --all
+```
+
+## Adding New Code
+
+### Creating a New Component in ui-components
+
+```sh
+# Generate a new component
+nx g @nx/react:component button --project=ui-components --export
+```
+
+### Creating a New Application
+
+```sh
+# Generate a new Next.js application
+nx g @nx/next:app admin-dashboard
+```
+
+### Creating a New Library
+
+```sh
+# Generate a new React library
+nx g @nx/react:lib shared-utils
+```
+
+## License
+
+MIT

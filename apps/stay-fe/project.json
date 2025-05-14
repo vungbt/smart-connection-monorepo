@@ -1,0 +1,57 @@
+{
+  "name": "stay-fe",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/stay-fe",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/stay-fe"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/stay-fe"
+        },
+        "production": {
+          "outputPath": "dist/apps/stay-fe"
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "stay-fe:build",
+        "dev": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "stay-fe:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "stay-fe:build:production",
+          "dev": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "maxWarnings": -1,
+        "lintFilePatterns": ["apps/stay-fe/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "format": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier --write \"apps/stay-fe/**/*.{ts,tsx,js,jsx,json,css,scss,md}\""
+      }
+    }
+  },
+  "tags": []
+}

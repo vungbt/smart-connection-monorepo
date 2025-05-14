@@ -6,11 +6,7 @@
     "emitDeclarationOnly": false,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
@@ -21,9 +17,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
+      "@/*": ["./src/*"],
       "@smart-connection-monorepo/ui-theme": ["../../libs/ui-theme/src/index.ts"],
       "@smart-connection-monorepo/ui-theme/theme-token/*": ["../../libs/ui-theme/theme-token/*"],
       "@smart-connection-monorepo/ui-components": ["../../libs/ui-components/src/index.ts"]
