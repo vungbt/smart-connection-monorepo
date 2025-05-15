@@ -11,6 +11,12 @@
     },
     {
       "path": "./libs/ui-components"
+    },
+    {
+      "path": "./apps/stay-api-e2e"
+    },
+    {
+      "path": "./apps/stay-api"
     }
   ]
 }
