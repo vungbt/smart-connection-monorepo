@@ -1,0 +1,15 @@
+{
+  "name": "@smart-connection-monorepo/stay-fe",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "~15.2.4",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "tslib": "^2.3.0",
+    "sharp": "0.33.5"
+  }
+}
