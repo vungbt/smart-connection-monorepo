@@ -1,0 +1,17 @@
+{
+  "attribute": {
+    "acl": "ACL",
+    "avatar": "Avatar",
+    "email": "Email",
+    "name": "Name",
+    "operation": "Operation",
+    "password": "Password",
+    "refreshToken": "Refresh token",
+    "username": "Username"
+  },
+  "message": {
+    "dateTimeISO": ":attribute phải có định dạng YYYY-MM-DDTHH:mm:ss.sssZ",
+    "exists": ":attribute không tồn tại.",
+    "unique": ":attribute đã tồn tại."
+  }
+}

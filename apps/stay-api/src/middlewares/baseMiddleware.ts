@@ -4,7 +4,8 @@ import HttpStatus from 'http-status-codes';
 import { startsWith } from 'lodash';
 
 const baseMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  // res.t = req.t;
+  res.i18n = req.i18n;
+  res.t = req.t;
 
   res.jsonApi = (status = HttpStatus.OK, data?: DataResponse) => {
     if (typeof data === 'string') {

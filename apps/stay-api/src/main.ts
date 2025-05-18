@@ -19,6 +19,7 @@ import baseMiddleware from '@/middlewares/baseMiddleware';
 import { handleErrorApi } from '@/utils/errors';
 import logger from '@/utils/logger';
 import { createLogger } from '@/utils/logger/morgan';
+import i18next from '@/locale/config/i18next';
 
 const bootstrap = async () => {
   // Initialize express app
@@ -30,7 +31,7 @@ const bootstrap = async () => {
   app.use(bodyParser.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Middleware
+  // middleware
   app.use(
     cors({
       credentials: true,
@@ -41,6 +42,16 @@ const bootstrap = async () => {
   if (env.server.env === 'production') {
     app.use(helmet());
   }
+
+  // language
+  app.use(i18next);
+  app.use((req, res, next) => {
+    req.i18n.changeLanguage(
+      req.i18n.language.split('-').shift() || process.env.LANGUAGE_DEFAULT || 'en'
+    );
+    return next();
+  });
+
   const morgan = await createLogger();
   app.use('/api', morgan, baseMiddleware, routers, handleErrorApi);
 
