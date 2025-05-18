@@ -31,6 +31,9 @@ COPY --from=builder /app/dist/apps/stay-api ./
 COPY --from=builder /app/apps/stay-api/.env.prod ./.env
 COPY apps/stay-api/package.prod.json ./package.json
 
+# Copy the locale files explicitly to ensure they're available
+COPY --from=builder /app/apps/stay-api/src/locale ./src/locale
+
 # For debugging purposes
 RUN echo "Checking file structure:" && \
     ls -la ./ && \

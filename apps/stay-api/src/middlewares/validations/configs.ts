@@ -1,8 +1,8 @@
-import { validate } from '@/configs/validator';
 import { Request, Response, NextFunction } from 'express';
+import validator from '@/utils/validator';
 
 const create = (req: Request, res: Response, next: NextFunction) =>
-  validate(req, res, next, {
+  validator(req, res, next, {
     data: req.body,
     rules: {
       room_fee: 'required|numeric|min:0',
@@ -26,7 +26,7 @@ const create = (req: Request, res: Response, next: NextFunction) =>
   });
 
 const update = (req: Request, res: Response, next: NextFunction) =>
-  validate(req, res, next, {
+  validator(req, res, next, {
     data: req.body,
     rules: {
       room_fee: 'numeric|min:0',

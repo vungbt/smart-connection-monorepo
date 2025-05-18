@@ -1,0 +1,12 @@
+{
+  "username_or_password_invalid": "Username or password invalid",
+  "entry_not_found": "Entry not found",
+  "input_valid_error": "Input valid error",
+  "not_found": "Not found",
+  "token_invalid": "Token invalid",
+  "unauthorized": "Unauthorized",
+  "forbidden": "Forbidden",
+  "valid_error": "Valid error",
+  "user_conflict": "User conflict",
+  "server_error": "Server error"
+}
