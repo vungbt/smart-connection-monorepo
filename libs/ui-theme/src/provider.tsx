@@ -12,15 +12,15 @@ export const getStyle = (uiConfig: UIConfig) => {
     // Primary Color
     '--color-primary': uiConfig.colors.primary.default,
     '--color-primary-bg': uiConfig.colors.primary._50,
-    '--color-primary-hover': uiConfig.colors.primary._600,
-    '--color-primary-base': uiConfig.colors.primary._700,
+    '--color-primary-hover': uiConfig.colors.primary._500,
+    '--color-primary-base': uiConfig.colors.primary._600,
     '--color-primary-clicked': uiConfig.colors.primary._800,
 
     // Secondary Color
     '--color-secondary': uiConfig.colors.secondary.default,
     '--color-secondary-bg': uiConfig.colors.secondary._50,
-    '--color-secondary-hover': uiConfig.colors.secondary._600,
-    '--color-secondary-base': uiConfig.colors.secondary._700,
+    '--color-secondary-hover': uiConfig.colors.secondary._500,
+    '--color-secondary-base': uiConfig.colors.secondary._600,
     '--color-secondary-clicked': uiConfig.colors.secondary._800,
 
     // Neutral Color
@@ -39,19 +39,25 @@ export const getStyle = (uiConfig: UIConfig) => {
     // Pending Color
     '--color-pending': uiConfig.colors.pending.default,
     '--color-pending-bg': uiConfig.colors.pending._50,
+    '--color-pending-hover': uiConfig.colors.pending._500,
     '--color-pending-base': uiConfig.colors.pending._700,
-    '--color-pending-border': uiConfig.colors.pending._800,
+    '--color-pending-clicked': uiConfig.colors.pending._800,
+    '--color-pending-border': uiConfig.colors.pending._900,
 
     // Error Color
     '--color-error': uiConfig.colors.error.default,
     '--color-error-bg': uiConfig.colors.error._50,
+    '--color-error-hover': uiConfig.colors.error._500,
     '--color-error-base': uiConfig.colors.error._700,
+    '--color-error-clicked': uiConfig.colors.error._600,
     '--color-error-border': uiConfig.colors.error._800,
 
     // Success Color
     '--color-success': uiConfig.colors.success.default,
     '--color-success-bg': uiConfig.colors.success._50,
+    '--color-success-hover': uiConfig.colors.success._500,
     '--color-success-base': uiConfig.colors.success._700,
+    '--color-success-clicked': uiConfig.colors.success._600,
     '--color-success-border': uiConfig.colors.success._800,
 
     // --- FONT ---
