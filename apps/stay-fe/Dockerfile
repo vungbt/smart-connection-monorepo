@@ -31,6 +31,7 @@ COPY --from=builder /app/dist/apps/stay-fe/.next ./.next
 COPY --from=builder /app/dist/apps/stay-fe/public ./public
 COPY --from=builder /app/dist/apps/stay-fe/next.config.js ./next.config.js
 COPY --from=builder /app/dist/apps/stay-fe/.nx-helpers ./.nx-helpers
+COPY --from=builder /app/apps/stay-fe/.env.prod ./.env
 
 EXPOSE 3000
 

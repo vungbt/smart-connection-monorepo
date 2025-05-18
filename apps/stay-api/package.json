@@ -1,5 +1,29 @@
 {
   "name": "@smart-connection-monorepo/stay-api",
   "version": "0.0.1",
-  "private": true
+  "private": true,
+  "nodemonConfig": {
+    "watch": [
+      "src"
+    ],
+    "ext": "ts, json",
+    "ignore": [
+      "src/public"
+    ],
+    "exec": "ts-node -r tsconfig-paths/register ./src/main.ts"
+  },
+  "_moduleAliases": {
+    "@": "dist/apps/stay-api/src",
+    "@/routers": "dist/apps/stay-api/src/routes",
+    "@/services": "dist/apps/stay-api/src/services",
+    "@/controllers": "dist/apps/stay-api/src/controllers",
+    "@/utils": "dist/apps/stay-api/src/utils",
+    "@/middlewares": "dist/apps/stay-api/src/middlewares",
+    "@/types": "dist/apps/stay-api/src/types",
+    "@/modules": "dist/apps/stay-api/src/modules",
+    "@/sequelize": "dist/apps/stay-api/src/sequelize",
+    "@/locale": "dist/apps/stay-api/src/locale",
+    "@/configs": "dist/apps/stay-api/src/configs",
+    "@/models": "dist/apps/stay-api/src/models"
+  }
 }

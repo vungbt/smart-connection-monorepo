@@ -11,26 +11,34 @@
       }
     },
     "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "executor": "nx:run-commands",
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/stay-api",
-        "main": "apps/stay-api/src/main.ts",
-        "tsConfig": "apps/stay-api/tsconfig.json",
-        "assets": ["apps/stay-api/src/assets"],
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "cwd": ".",
+        "commands": [
+          "rimraf dist/apps/stay-api",
+          "tsc -p apps/stay-api/tsconfig.json --outDir dist/apps/stay-api",
+          "cp -r apps/stay-api/src/assets dist/apps/stay-api/src/ 2>/dev/null || :",
+          "cp apps/stay-api/package.json dist/apps/stay-api/ 2>/dev/null || :"
+        ],
+        "parallel": false
       },
       "configurations": {
         "development": {
-          "optimization": false,
-          "extractLicenses": false,
-          "sourceMap": true
+          "commands": [
+            "rimraf dist/apps/stay-api",
+            "tsc -p apps/stay-api/tsconfig.json --outDir dist/apps/stay-api --sourceMap",
+            "cp -r apps/stay-api/src/assets dist/apps/stay-api/src/ 2>/dev/null || :",
+            "cp apps/stay-api/package.json dist/apps/stay-api/ 2>/dev/null || :"
+          ]
         },
         "production": {
-          "optimization": true,
-          "extractLicenses": true,
-          "sourceMap": false
+          "commands": [
+            "rimraf dist/apps/stay-api",
+            "tsc -p apps/stay-api/tsconfig.json --outDir dist/apps/stay-api",
+            "cp -r apps/stay-api/src/assets dist/apps/stay-api/src/ 2>/dev/null || :",
+            "cp apps/stay-api/package.prod.json dist/apps/stay-api/package.json 2>/dev/null || :"
+          ]
         }
       }
     },
@@ -53,7 +61,7 @@
     "dev": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/main.ts",
+        "command": "cross-env NODE_ENV=development nodemon",
         "cwd": "apps/stay-api"
       }
     }

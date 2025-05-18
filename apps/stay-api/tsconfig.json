@@ -10,6 +10,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
+    "target": "ES2020" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "paths": {
@@ -23,7 +24,8 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "typeRoots": ["./types", "./node_modules/@types"]
   },
   "include": ["src/**/*.js", "src/**/*.ts"],
   "exclude": [
