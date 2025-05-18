@@ -7,9 +7,10 @@ export default function Index() {
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen gap-y-7">
-        <div className="flex gap-x-4">
+        <div className="flex flex-row gap-x-4">
           <Button
-            iconLeft="home"
+            loading
+            icon="home"
             size="small"
             onClick={handleClick}
             color="primary"
@@ -27,7 +28,7 @@ export default function Index() {
             Click me
           </Button>
           <Button
-            iconLeft="arrow-up-tray-solid"
+            icon="arrow-up-tray-solid"
             size="large"
             onClick={handleClick}
             color="success"
@@ -46,17 +47,11 @@ export default function Index() {
           </Button>
         </div>
         <div className="flex gap-x-4">
-          <Button
-            iconLeft="home"
-            size="middle"
-            onClick={handleClick}
-            color="primary"
-            variant="outline"
-          >
+          <Button icon="home" size="middle" onClick={handleClick} color="primary" variant="outline">
             Click me
           </Button>
           <Button
-            iconLeft="arrow-up-tray-solid"
+            icon="arrow-up-tray-solid"
             size="middle"
             onClick={handleClick}
             color="secondary"
@@ -79,13 +74,7 @@ export default function Index() {
         </div>
 
         <div className="flex gap-x-4">
-          <Button
-            iconLeft="home"
-            size="middle"
-            onClick={handleClick}
-            color="primary"
-            variant="subtle"
-          >
+          <Button icon="home" size="middle" onClick={handleClick} color="primary" variant="subtle">
             Click me
           </Button>
           <Button size="middle" onClick={handleClick} color="secondary" variant="subtle">
@@ -106,13 +95,7 @@ export default function Index() {
         </div>
 
         <div className="flex gap-x-4">
-          <Button
-            iconLeft="home"
-            size="middle"
-            onClick={handleClick}
-            color="primary"
-            variant="link"
-          >
+          <Button icon="home" size="middle" onClick={handleClick} color="primary" variant="link">
             Click me
           </Button>
           <Button size="middle" onClick={handleClick} color="secondary" variant="link">
@@ -133,13 +116,7 @@ export default function Index() {
         </div>
 
         <div className="flex gap-x-4">
-          <Button
-            iconLeft="home"
-            size="middle"
-            onClick={handleClick}
-            color="primary"
-            variant="text"
-          >
+          <Button icon="home" size="middle" onClick={handleClick} color="primary" variant="text">
             Click me
           </Button>
           <Button size="middle" onClick={handleClick} color="secondary" variant="text">
@@ -160,13 +137,7 @@ export default function Index() {
         </div>
 
         <div className="flex gap-x-4">
-          <Button
-            iconLeft="home"
-            size="middle"
-            onClick={handleClick}
-            color="primary"
-            variant="ghost"
-          >
+          <Button icon="home" size="middle" onClick={handleClick} color="primary" variant="ghost">
             Click me
           </Button>
           <Button size="middle" onClick={handleClick} color="secondary" variant="ghost">

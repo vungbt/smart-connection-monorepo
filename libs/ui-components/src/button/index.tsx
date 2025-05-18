@@ -12,8 +12,13 @@ export type ButtonProps = {
   danger?: boolean;
   color?: 'primary' | 'secondary' | 'success' | 'error' | 'pending' | 'neutral';
   variant?: 'solid' | 'outline' | 'subtle' | 'link' | 'text' | 'ghost';
-  iconLeft?: IconName;
+  icon?: IconName;
   iconRight?: IconName;
+  customClasses?: {
+    root?: string;
+    icon?: string;
+    iconRight?: string;
+  };
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const sizeClasses = {
@@ -30,70 +35,54 @@ const shapeClasses = {
 
 const colorClasses = {
   primary: {
-    solid: 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-base)]',
-    outline:
-      'border border-[var(--color-primary)] text-[var(--color-primary)] bg-transparent hover:bg-[var(--color-primary-bg)]',
-    subtle:
-      'bg-[var(--color-primary-bg)] text-[var(--color-primary-base)] hover:bg-[var(--color-primary-hover)]',
-    link: 'text-[var(--color-primary)] bg-transparent hover:underline',
-    text: 'text-[var(--color-primary)] bg-transparent hover:text-[var(--color-primary-hover)]',
+    solid: 'bg-primary text-white hover:bg-primary-base',
+    outline: 'border border-primary text-primary bg-transparent hover:bg-primary-background',
+    subtle: 'bg-primary-background text-primary-base hover:bg-primary-hover',
+    link: 'text-primary bg-transparent hover:underline',
+    text: 'text-primary bg-transparent hover:text-primary-clicked',
     ghost:
-      'text-[var(--color-primary)] bg-transparent border border-dashed border-[var(--color-primary)] hover:bg-[var(--color-primary-bg)]',
+      'text-primary bg-transparent border border-dashed border-primary hover:bg-primary-background',
   },
   secondary: {
-    solid: 'bg-[var(--color-secondary)] text-white hover:bg-[var(--color-secondary-base)]',
-    outline:
-      'border border-[var(--color-secondary)] text-[var(--color-secondary)] bg-transparent hover:bg-[var(--color-secondary-bg)]',
-    subtle:
-      'bg-[var(--color-secondary-bg)] text-[var(--color-secondary-base)] hover:bg-[var(--color-secondary-hover)]',
-    link: 'text-[var(--color-secondary)] bg-transparent hover:underline',
-    text: 'text-[var(--color-secondary)] bg-transparent hover:text-[var(--color-secondary-hover)]',
+    solid: 'bg-secondary text-white hover:bg-secondary-base',
+    outline: 'border border-secondary text-secondary bg-transparent hover:bg-secondary-background',
+    subtle: 'bg-secondary-background text-secondary-base hover:bg-secondary-hover',
+    link: 'text-secondary bg-transparent hover:underline',
+    text: 'text-secondary bg-transparent hover:text-secondary-clicked',
     ghost:
-      'text-[var(--color-secondary)] bg-transparent border border-dashed border-[var(--color-secondary)] hover:bg-[var(--color-secondary-bg)]',
+      'text-secondary bg-transparent border border-dashed border-secondary hover:bg-secondary-background',
   },
   success: {
-    solid: 'bg-[var(--color-success)] text-white hover:bg-[var(--color-success-base)]',
-    outline:
-      'border border-[var(--color-success)] text-[var(--color-success)] bg-transparent hover:bg-[var(--color-success-bg)]',
-    subtle:
-      'bg-[var(--color-success-bg)] text-[var(--color-success)] hover:bg-[var(--color-success-base)]',
-    link: 'text-[var(--color-success)] bg-transparent hover:underline',
-    text: 'text-[var(--color-success)] bg-transparent hover:text-[var(--color-success-base)]',
-    ghost:
-      'text-[var(--color-success)] bg-transparent border border-dashed border-[var(--color-success)] hover:bg-[var(--color-success-bg)]',
+    solid: 'bg-success text-white hover:bg-success-base',
+    outline: 'border border-success text-success bg-transparent hover:bg-success-bg',
+    subtle: 'bg-success-bg text-success hover:bg-success-base',
+    link: 'text-success bg-transparent hover:underline',
+    text: 'text-success bg-transparent hover:text-success-base',
+    ghost: 'text-success bg-transparent border border-dashed border-success hover:bg-success-bg',
   },
   error: {
-    solid: 'bg-[var(--color-error)] text-white hover:bg-[var(--color-error-base)]',
-    outline:
-      'border border-[var(--color-error)] text-[var(--color-error)] bg-transparent hover:bg-[var(--color-error-bg)]',
-    subtle:
-      'bg-[var(--color-error-bg)] text-[var(--color-error)] hover:bg-[var(--color-error-base)]',
-    link: 'text-[var(--color-error)] bg-transparent hover:underline',
-    text: 'text-[var(--color-error)] bg-transparent hover:text-[var(--color-error-base)]',
-    ghost:
-      'text-[var(--color-error)] bg-transparent border border-dashed border-[var(--color-error)] hover:bg-[var(--color-error-bg)]',
+    solid: 'bg-error text-white hover:bg-error-base',
+    outline: 'border border-color-error text-error bg-transparent hover:bg-error-bg',
+    subtle: 'bg-error-bg text-error hover:bg-error-base',
+    link: 'text-error bg-transparent hover:underline',
+    text: 'text-error bg-transparent hover:text-error-base',
+    ghost: 'text-error bg-transparent border border-dashed border-error hover:bg-error-bg',
   },
   pending: {
-    solid: 'bg-[var(--color-pending)] text-white hover:bg-[var(--color-pending-base)]',
-    outline:
-      'border border-[var(--color-pending)] text-[var(--color-pending)] bg-transparent hover:bg-[var(--color-pending-bg)]',
-    subtle:
-      'bg-[var(--color-pending-bg)] text-[var(--color-pending)] hover:bg-[var(--color-pending-base)]',
-    link: 'text-[var(--color-pending)] bg-transparent hover:underline',
-    text: 'text-[var(--color-pending)] bg-transparent hover:text-[var(--color-pending-base)]',
-    ghost:
-      'text-[var(--color-pending)] bg-transparent border border-dashed border-[var(--color-pending)] hover:bg-[var(--color-pending-bg)]',
+    solid: 'bg-pending text-white hover:bg-pending-base',
+    outline: 'border border-pending text-pending bg-transparent hover:bg-pending-bg',
+    subtle: 'bg-pending-bg text-pending hover:bg-pending-base',
+    link: 'text-pending bg-transparent hover:underline',
+    text: 'text-pending bg-transparent hover:text-pending-base',
+    ghost: 'text-pending bg-transparent border border-dashed border-pending hover:bg-pending-bg',
   },
   neutral: {
-    solid: 'bg-[var(--color-neutral)] text-white hover:bg-[var(--color-neutral-text-primary)]',
-    outline:
-      'border border-[var(--color-neutral)] text-[var(--color-neutral)] bg-transparent hover:bg-[var(--color-neutral-bg)]',
-    subtle:
-      'bg-[var(--color-neutral-bg)] text-[var(--color-neutral)] hover:bg-[var(--color-neutral-text-primary)]',
-    link: 'text-[var(--color-neutral)] bg-transparent hover:underline',
-    text: 'text-[var(--color-neutral)] bg-transparent hover:text-[var(--color-neutral-text-primary)]',
-    ghost:
-      'text-[var(--color-neutral)] bg-transparent border border-dashed border-[var(--color-neutral)] hover:bg-[var(--color-neutral-bg)]',
+    solid: 'bg-neutral text-white hover:bg-neutral-text-primary',
+    outline: 'border border-neutral text-neutral bg-transparent hover:bg-neutral-bg',
+    subtle: 'bg-neutral-bg text-neutral hover:bg-neutral-text-primary',
+    link: 'text-neutral bg-transparent hover:underline',
+    text: 'text-neutral bg-transparent hover:text-neutral-text-primary',
+    ghost: 'text-neutral bg-transparent border border-dashed border-neutral hover:bg-neutral-bg',
   },
 };
 
@@ -109,8 +98,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       danger,
       color = 'primary',
       variant = 'solid',
-      iconLeft,
+      icon,
       iconRight,
+      customClasses,
       ...rest
     },
     ref
@@ -137,31 +127,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           shapeClasses[shape],
           colorClass,
           disabled || loading ? 'opacity-50 cursor-not-allowed' : '',
-          className
+          className,
+          customClasses?.root
         )}
         disabled={disabled || loading}
         {...rest}
       >
-        {loading && (
-          <svg className="animate-spin mr-2 h-4 w-4 text-white" viewBox="0 0 24 24">
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-              fill="none"
+        {loading ? (
+          <RenderIcon
+            name="loading"
+            className={clsx(getIconSize(), children ? 'mr-2' : '', customClasses?.icon)}
+          />
+        ) : (
+          icon && (
+            <RenderIcon
+              name={icon}
+              className={clsx(getIconSize(), children ? 'mr-2' : '', customClasses?.icon)}
             />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
-          </svg>
-        )}
-        {iconLeft && (
-          <RenderIcon name={iconLeft} className={clsx(getIconSize(), children ? 'mr-2' : '')} />
+          )
         )}
         {children}
         {iconRight && (
-          <RenderIcon name={iconRight} className={clsx(getIconSize(), children ? 'ml-2' : '')} />
+          <RenderIcon
+            name={iconRight}
+            className={clsx(getIconSize(), children ? 'ml-2' : '', customClasses?.iconRight)}
+          />
         )}
       </button>
     );

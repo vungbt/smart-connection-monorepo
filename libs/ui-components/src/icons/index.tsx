@@ -4,6 +4,7 @@ import Home from './home';
 import HomeSolid from './home-solid';
 import ArrowUpTray from './arrow-up-tray';
 import ArrowUpTraySolid from './arrow-up-tray-solid';
+import Loading from './loading';
 
 export type IconProps = {
   className?: string;
@@ -19,6 +20,7 @@ const IconsDefine = {
   'home-solid': 'home-solid',
   'arrow-up-tray': 'arrow-up-tray',
   'arrow-up-tray-solid': 'arrow-up-tray-solid',
+  loading: 'loading',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -38,6 +40,10 @@ export const Icons: IconsType = {
   'arrow-up-tray-solid': (props: IconProps) => {
     return <ArrowUpTraySolid {...props} />;
   },
+  loading: (props: IconProps) => {
+    return <Loading {...props} />;
+  },
+
   // Add more icons here
 };
 
