@@ -1,0 +1,70 @@
+{
+  "name": "stay-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/stay-api",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["rm -rf dist/apps/stay-api", "rm -rf apps/stay-api/dist"]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "production",
+      "options": {
+        "cwd": ".",
+        "commands": [
+          "rimraf dist/apps/stay-api",
+          "tsc -p apps/stay-api/tsconfig.json --outDir dist/apps/stay-api",
+          "cp -r apps/stay-api/src/assets dist/apps/stay-api/src/ 2>/dev/null || :",
+          "cp apps/stay-api/package.json dist/apps/stay-api/ 2>/dev/null || :"
+        ],
+        "parallel": false
+      },
+      "configurations": {
+        "development": {
+          "commands": [
+            "rimraf dist/apps/stay-api",
+            "tsc -p apps/stay-api/tsconfig.json --outDir dist/apps/stay-api --sourceMap",
+            "cp -r apps/stay-api/src/assets dist/apps/stay-api/src/ 2>/dev/null || :",
+            "cp apps/stay-api/package.json dist/apps/stay-api/ 2>/dev/null || :"
+          ]
+        },
+        "production": {
+          "commands": [
+            "rimraf dist/apps/stay-api",
+            "tsc -p apps/stay-api/tsconfig.json --outDir dist/apps/stay-api",
+            "cp -r apps/stay-api/src/assets dist/apps/stay-api/src/ 2>/dev/null || :",
+            "cp apps/stay-api/package.prod.json dist/apps/stay-api/package.json 2>/dev/null || :"
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "stay-api:build",
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "stay-api:build:development"
+        },
+        "production": {
+          "buildTarget": "stay-api:build:production"
+        }
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "cross-env NODE_ENV=development nodemon",
+        "cwd": "apps/stay-api"
+      }
+    }
+  },
+  "tags": []
+}
