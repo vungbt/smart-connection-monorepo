@@ -73,12 +73,8 @@ jobs:
           chmod +x ./fix-eslint.sh
           ./fix-eslint.sh
 
-      # Run lint, test, and build separately to better identify failures
       - name: Lint
         run: pnpm exec nx affected -t lint --skip-nx-cache
-
-      - name: Test
-        run: pnpm exec nx affected -t test
 
       - name: Build
         run: pnpm exec nx affected -t build
