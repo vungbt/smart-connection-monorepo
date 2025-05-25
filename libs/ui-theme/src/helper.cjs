@@ -17,6 +17,7 @@ const createTWConfig = ({ content = [] } = {}) => {
         },
         boxShadow: {
           md: '0px 8px 12px rgba(56, 5, 89, 0.16)',
+          border: '0px 0px 0px 1px rgba(59, 130, 246, 1), 0px 0px 0px 2px rgba(59, 130, 246, 0.2)',
         },
       },
       colors: {
@@ -83,11 +84,19 @@ const createTWConfig = ({ content = [] } = {}) => {
         24: 'var(--size-24)',
         20: 'var(--size-20)',
         18: 'var(--size-18)',
+        17: 'var(--size-17)',
+        16: 'var(--size-16)',
         15: 'var(--size-15)',
+        14: 'var(--size-14)',
         13: 'var(--size-13)',
         12: 'var(--size-12)',
         10: 'var(--size-10)',
         8: 'var(--size-8)',
+        xs: 'var(--size-12)',
+        sm: 'var(--size-14)',
+        base: 'var(--size-16)',
+        lg: 'var(--size-18)',
+        xl: 'var(--size-20)',
         'heading-1': ['48px', '64px'],
         'heading-2': ['40px', '56px'],
         'heading-3': ['36px', '56px'],
@@ -122,4 +131,4 @@ const createPostCssConfig = ({ tailwindcss }) => ({
 module.exports = {
   createTWConfig,
   createPostCssConfig,
-}; 
+};

@@ -9,12 +9,6 @@ module.exports = createTWConfig({
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {
-      fontSize: {
-        'text-40': '40px',
-        'text-15': '15px',
-      },
-    },
     spacing: {
       0: '0px',
       1: '1px',

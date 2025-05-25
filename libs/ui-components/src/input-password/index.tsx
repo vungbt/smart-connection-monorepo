@@ -1,8 +1,8 @@
 import clsx from 'clsx';
-import { InputHTMLAttributes, forwardRef } from 'react';
+import { InputHTMLAttributes, forwardRef, useState } from 'react';
 import { IconName, RenderIcon } from '../icons';
 
-export type InputProps = {
+export type InputPasswordProps = {
   className?: string;
   disabled?: boolean;
   loading?: boolean;
@@ -10,7 +10,6 @@ export type InputProps = {
   color?: 'primary' | 'secondary' | 'success' | 'error' | 'pending' | 'neutral';
   variant?: 'solid' | 'outline' | 'subtle' | 'ghost';
   icon?: IconName;
-  iconRight?: IconName;
   label?: string;
   helperText?: string;
   error?: string;
@@ -24,7 +23,7 @@ export type InputProps = {
     helperText?: string;
     error?: string;
   };
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
+} & Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'password'>;
 
 const sizeClasses = {
   small: 'px-2 py-1 text-14',
@@ -92,7 +91,7 @@ const colorClasses = {
   },
 };
 
-export const Input = forwardRef<HTMLInputElement, InputProps>(
+export const InputPassword = forwardRef<HTMLInputElement, InputPasswordProps>(
   (
     {
       className,
@@ -102,7 +101,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       color = 'neutral',
       variant = 'outline',
       icon,
-      iconRight,
       label,
       helperText,
       error,
@@ -113,6 +111,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
+    const [showPassword, setShowPassword] = useState(false);
     const colorClass = error ? colorClasses.error[variant] : colorClasses[color][variant];
     const getIconSize = (): string => {
       switch (size) {
@@ -177,12 +176,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           <input
             ref={ref}
             id={id}
+            type={showPassword ? 'text' : 'password'}
             className={clsx(
               'w-full border rounded-lg transition-all ease-in-out outline-none focus:shadow-border',
               sizeClasses[size],
               colorClass,
               icon ? (size === 'small' ? 'pl-8' : size === 'large' ? 'pl-12' : 'pl-10') : '',
-              iconRight ? (size === 'small' ? 'pr-8' : size === 'large' ? 'pr-12' : 'pr-10') : '',
+              size === 'small' ? 'pr-8' : size === 'large' ? 'pr-12' : 'pr-10',
               disabled || loading ? 'opacity-50 cursor-not-allowed' : '',
               className,
               customClasses?.input
@@ -191,14 +191,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             {...rest}
           />
 
-          {iconRight && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              <RenderIcon
-                name={iconRight}
-                className={clsx(getIconSize(), customClasses?.iconRight)}
-              />
-            </div>
-          )}
+          <div
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer z-[1]"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            <RenderIcon
+              name={showPassword ? 'eye' : 'eye-slash'}
+              className={clsx(getIconSize(), customClasses?.iconRight)}
+            />
+          </div>
         </div>
 
         {(helperText || error) && (
@@ -227,4 +228,4 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
   }
 );
 
-Input.displayName = 'Input';
+InputPassword.displayName = 'InputPassword';
