@@ -29,7 +29,10 @@ export type FontSizeConfig = {
   _24: string;
   _20: string;
   _18: string;
+  _17: string;
+  _16: string;
   _15: string;
+  _14: string;
   _13: string;
   _12: string;
   _10: string;

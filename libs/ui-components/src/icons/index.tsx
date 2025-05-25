@@ -5,6 +5,13 @@ import HomeSolid from './home-solid';
 import ArrowUpTray from './arrow-up-tray';
 import ArrowUpTraySolid from './arrow-up-tray-solid';
 import Loading from './loading';
+import MagnifyingGlass from './magnifying-glass';
+import Envelope from './envelope';
+import Key from './key';
+import Phone from './phone';
+import CheckCircle from './check-circle';
+import Eye from './eye';
+import EyeSlash from './eye-slash';
 
 export type IconProps = {
   className?: string;
@@ -21,6 +28,13 @@ const IconsDefine = {
   'arrow-up-tray': 'arrow-up-tray',
   'arrow-up-tray-solid': 'arrow-up-tray-solid',
   loading: 'loading',
+  'magnifying-glass': 'magnifying-glass',
+  envelope: 'envelope',
+  key: 'key',
+  phone: 'phone',
+  'check-circle': 'check-circle',
+  eye: 'eye',
+  'eye-slash': 'eye-slash',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -42,6 +56,27 @@ export const Icons: IconsType = {
   },
   loading: (props: IconProps) => {
     return <Loading {...props} />;
+  },
+  'magnifying-glass': (props: IconProps) => {
+    return <MagnifyingGlass {...props} />;
+  },
+  envelope: (props: IconProps) => {
+    return <Envelope {...props} />;
+  },
+  key: (props: IconProps) => {
+    return <Key {...props} />;
+  },
+  phone: (props: IconProps) => {
+    return <Phone {...props} />;
+  },
+  'check-circle': (props: IconProps) => {
+    return <CheckCircle {...props} />;
+  },
+  eye: (props: IconProps) => {
+    return <Eye {...props} />;
+  },
+  'eye-slash': (props: IconProps) => {
+    return <EyeSlash {...props} />;
   },
 
   // Add more icons here
