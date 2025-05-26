@@ -19,6 +19,13 @@ const createTWConfig = ({ content = [] } = {}) => {
           md: '0px 8px 12px rgba(56, 5, 89, 0.16)',
           border: '0px 0px 0px 1px rgba(59, 130, 246, 1), 0px 0px 0px 2px rgba(59, 130, 246, 0.2)',
         },
+        textShadow: {
+          sm: '1px 1px 2px rgba(0, 0, 0, 0.25)',
+          DEFAULT: '2px 2px 4px rgba(0, 0, 0, 0.3)',
+          lg: '3px 3px 6px rgba(0, 0, 0, 0.4)',
+          redGlow: '0 0 5px #f00, 0 0 10px #f00',
+          current: '0 0 0.25px currentColor',
+        },
       },
       colors: {
         // default
@@ -117,7 +124,7 @@ const createTWConfig = ({ content = [] } = {}) => {
         primary: 'var(--font-primary)',
       },
     },
-    plugins: [],
+    plugins: [require('tailwindcss-textshadow')],
   };
 };
 

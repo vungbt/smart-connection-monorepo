@@ -1,12 +1,53 @@
 'use client';
-import { Button, Input, InputPassword, RenderIcon } from '@smart-connection-monorepo/ui-components';
+import {
+  Button,
+  Input,
+  InputPassword,
+  RenderIcon,
+  Tabs,
+} from '@smart-connection-monorepo/ui-components';
+import { useState } from 'react';
 export default function Index() {
+  const [tabActive, setTabActive] = useState(0);
   const handleClick = () => {
     console.log('Button clicked');
   };
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen gap-y-7">
+      <div className="flex flex-col items-center justify-center h-screen gap-y-7 mt-6">
+        {/*  TABS */}
+        <Tabs
+          tabs={[
+            { label: 'Small 1', value: 0, icon: 'arrow-up-tray' },
+            { label: 'Small 2', value: 1, icon: 'arrow-up-tray' },
+          ]}
+          color="secondary"
+          size="small"
+          variant="card"
+          selectedIndex={tabActive}
+          onChange={value => setTabActive(value)}
+        />
+        <Tabs
+          tabs={[
+            { label: 'Middle 1', value: 0, icon: 'arrow-up-tray' },
+            { label: 'Middle 2', value: 1, icon: 'arrow-up-tray' },
+          ]}
+          variant="card"
+          color="success"
+          selectedIndex={tabActive}
+          onChange={value => setTabActive(value)}
+        />
+        <Tabs
+          tabs={[
+            { label: 'Large 1', value: 0, icon: 'arrow-up-tray' },
+            { label: 'Large 2', value: 1, icon: 'arrow-up-tray' },
+          ]}
+          color="pending"
+          size="large"
+          variant="card"
+          selectedIndex={tabActive}
+          onChange={value => setTabActive(value)}
+        />
         <div className="flex flex-row gap-x-4">
           <Button
             loading
