@@ -3,18 +3,99 @@ import {
   Button,
   Input,
   InputPassword,
+  RadioGroup,
   RenderIcon,
   Tabs,
 } from '@smart-connection-monorepo/ui-components';
 import { useState } from 'react';
 export default function Index() {
   const [tabActive, setTabActive] = useState(0);
+  const [selected, setSelected] = useState('option1');
+
   const handleClick = () => {
     console.log('Button clicked');
   };
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen gap-y-7 mt-6">
+        {/* RADIO */}
+        <RadioGroup
+          name="example4"
+          value={selected}
+          size="small"
+          color="success"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+        <RadioGroup
+          name="example5"
+          value={selected}
+          color="error"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+        <RadioGroup
+          name="example6"
+          value={selected}
+          size="large"
+          color="secondary"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+
+        <RadioGroup
+          name="example"
+          value={selected}
+          size="small"
+          color="neutral"
+          optionType="button"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+
+        <RadioGroup
+          name="example1"
+          color="pending"
+          value={selected}
+          optionType="button"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+
+        <RadioGroup
+          name="example2"
+          value={selected}
+          size="large"
+          color="secondary"
+          optionType="button"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+
         {/*  TABS */}
         <Tabs
           tabs={[
