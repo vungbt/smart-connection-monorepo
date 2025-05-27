@@ -1,6 +1,7 @@
 'use client';
 import {
   Button,
+  CheckboxGroup,
   Input,
   InputPassword,
   RadioGroup,
@@ -17,7 +18,7 @@ export default function Index() {
   };
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen gap-y-7 mt-6">
+      <div className="flex flex-col items-center justify-center h-screen gap-y-7 pt-6">
         {/* RADIO */}
         <RadioGroup
           name="example4"
@@ -88,6 +89,44 @@ export default function Index() {
           size="large"
           color="secondary"
           optionType="button"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+
+        {/* CHECKBOX */}
+        <CheckboxGroup
+          name="checkbox1"
+          value={selected}
+          size="small"
+          color="error"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+        <CheckboxGroup
+          name="checkbox1"
+          value={selected}
+          size="middle"
+          color="success"
+          onChange={setSelected}
+          options={[
+            { label: 'Option 1', value: 'option1' },
+            { label: 'Option 2', value: 'option2' },
+            { label: 'Disabled', value: 'option3', disabled: true },
+          ]}
+        />
+        <CheckboxGroup
+          name="checkbox1"
+          color="secondary"
+          value={selected}
+          size="large"
           onChange={setSelected}
           options={[
             { label: 'Option 1', value: 'option1' },

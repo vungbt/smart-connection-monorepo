@@ -12,6 +12,9 @@ import Phone from './phone';
 import CheckCircle from './check-circle';
 import Eye from './eye';
 import EyeSlash from './eye-slash';
+import Check from './check';
+import Minus from './minus';
+import CheckV2 from './check-v2';
 
 export type IconProps = {
   className?: string;
@@ -35,6 +38,9 @@ const IconsDefine = {
   'check-circle': 'check-circle',
   eye: 'eye',
   'eye-slash': 'eye-slash',
+  check: 'check',
+  'check-v2': 'check-v2',
+  minus: 'minus',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -77,6 +83,15 @@ export const Icons: IconsType = {
   },
   'eye-slash': (props: IconProps) => {
     return <EyeSlash {...props} />;
+  },
+  check: (props: IconProps) => {
+    return <Check {...props} />;
+  },
+  minus: (props: IconProps) => {
+    return <Minus {...props} />;
+  },
+  'check-v2': (props: IconProps) => {
+    return <CheckV2 {...props} />;
   },
 
   // Add more icons here
