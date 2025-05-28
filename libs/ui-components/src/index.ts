@@ -5,3 +5,5 @@ export * from './input-password';
 export * from './tabs';
 export * from './radio';
 export * from './radio/radio-group';
+export * from './checkbox';
+export * from './checkbox/checkbox-group';
