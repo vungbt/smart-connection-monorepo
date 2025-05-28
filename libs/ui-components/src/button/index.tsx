@@ -107,14 +107,14 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const colorClass = danger ? colorClasses.error[variant] : colorClasses[color][variant];
 
-    const getIconSize = () => {
+    const getIconSize = (): string => {
       switch (size) {
         case 'small':
-          return 'h-4 w-4';
+          return '!h-4 !w-4';
         case 'large':
-          return 'h-6 w-6';
+          return '!h-5 !w-5';
         default:
-          return 'h-5 w-5';
+          return '!h-4 !w-4';
       }
     };
 
