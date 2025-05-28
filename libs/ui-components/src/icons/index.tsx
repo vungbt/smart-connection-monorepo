@@ -15,6 +15,11 @@ import EyeSlash from './eye-slash';
 import Check from './check';
 import Minus from './minus';
 import CheckV2 from './check-v2';
+import Trash from './trash';
+import ExclamationTriangle from './exclamation-triangle';
+import ExclamationCircle from './exclamation-circle';
+import XMark from './x-mark';
+import XCircle from './x-circle';
 
 export type IconProps = {
   className?: string;
@@ -41,6 +46,11 @@ const IconsDefine = {
   check: 'check',
   'check-v2': 'check-v2',
   minus: 'minus',
+  trash: 'trash',
+  'exclamation-triangle': 'exclamation-triangle',
+  'exclamation-circle': 'exclamation-circle',
+  'x-mark': 'x-mark',
+  'x-circle': 'x-circle',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -93,7 +103,21 @@ export const Icons: IconsType = {
   'check-v2': (props: IconProps) => {
     return <CheckV2 {...props} />;
   },
-
+  trash: (props: IconProps) => {
+    return <Trash {...props} />;
+  },
+  'exclamation-triangle': (props: IconProps) => {
+    return <ExclamationTriangle {...props} />;
+  },
+  'exclamation-circle': (props: IconProps) => {
+    return <ExclamationCircle {...props} />;
+  },
+  'x-mark': (props: IconProps) => {
+    return <XMark {...props} />;
+  },
+  'x-circle': (props: IconProps) => {
+    return <XCircle {...props} />;
+  },
   // Add more icons here
 };
 

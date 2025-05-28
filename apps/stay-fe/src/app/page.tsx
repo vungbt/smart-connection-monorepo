@@ -4,6 +4,7 @@ import {
   CheckboxGroup,
   Input,
   InputPassword,
+  ModalConfirm,
   RadioGroup,
   RenderIcon,
   Tabs,
@@ -12,6 +13,7 @@ import { useState } from 'react';
 export default function Index() {
   const [tabActive, setTabActive] = useState(0);
   const [selected, setSelected] = useState('option1');
+  const [showModal, setShowModal] = useState(false);
 
   const handleClick = () => {
     console.log('Button clicked');
@@ -133,6 +135,13 @@ export default function Index() {
             { label: 'Option 2', value: 'option2' },
             { label: 'Disabled', value: 'option3', disabled: true },
           ]}
+        />
+
+        <Button onClick={() => setShowModal(!showModal)}>Click show modal</Button>
+        <ModalConfirm
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          message="Test warning"
         />
 
         {/*  TABS */}
