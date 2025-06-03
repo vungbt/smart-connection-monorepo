@@ -51,6 +51,38 @@
       "options": {
         "command": "prettier --write \"apps/stay-fe/**/*.{ts,tsx,js,jsx,json,css,scss,md}\""
       }
+    },
+    "storybook": {
+      "executor": "@nx/storybook:storybook",
+      "options": {
+        "configDir": "apps/stay-fe/.storybook",
+        "browserTarget": "stay-fe:build",
+        "compodoc": false,
+        "compodocArgs": [],
+        "tsConfig": "apps/stay-fe/tsconfig.json"
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
+    },
+    "build-storybook": {
+      "executor": "@nx/storybook:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "configDir": "apps/stay-fe/.storybook",
+        "browserTarget": "stay-fe:build",
+        "outputPath": "dist/storybook/stay-fe",
+        "compodoc": false,
+        "compodocArgs": [],
+        "tsConfig": "apps/stay-fe/tsconfig.json"
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
+      }
     }
   },
   "tags": []

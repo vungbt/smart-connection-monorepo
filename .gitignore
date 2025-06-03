@@ -50,3 +50,6 @@ vitest.config.*.timestamp*
 *.env
 apps/stay-fe/.env
 apps/stay-api/.env
+
+
+storybook-static
