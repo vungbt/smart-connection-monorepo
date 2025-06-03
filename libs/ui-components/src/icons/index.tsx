@@ -20,6 +20,15 @@ import ExclamationTriangle from './exclamation-triangle';
 import ExclamationCircle from './exclamation-circle';
 import XMark from './x-mark';
 import XCircle from './x-circle';
+import VuesaxArrowDown from './vuesax-arrow-down';
+import VuesaxArrowUp from './vuesax-arrow-up';
+import VuesaxArrowLeft from './vuesax-arrow-left';
+import VuesaxArrowRight from './vuesax-arrow-right';
+import CaretDownFill from './caret-down-fill';
+import CaretUpFill from './caret-up-fill';
+import Inbox from './inbox';
+import ChevronDoubleLeft from './chevron-double-left';
+import ChevronDoubleRight from './chevron-double-right';
 
 export type IconProps = {
   className?: string;
@@ -51,6 +60,15 @@ const IconsDefine = {
   'exclamation-circle': 'exclamation-circle',
   'x-mark': 'x-mark',
   'x-circle': 'x-circle',
+  'vuesax-arrow-right': 'vuesax-arrow-right',
+  'vuesax-arrow-left': 'vuesax-arrow-left',
+  'vuesax-arrow-up': 'vuesax-arrow-up',
+  'vuesax-arrow-down': 'vuesax-arrow-down',
+  'caret-up-fill': 'caret-up-fill',
+  'caret-down-fill': 'caret-down-fill',
+  inbox: 'inbox',
+  'chevron-double-left': 'chevron-double-left',
+  'chevron-double-right': 'chevron-double-right',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -117,6 +135,33 @@ export const Icons: IconsType = {
   },
   'x-circle': (props: IconProps) => {
     return <XCircle {...props} />;
+  },
+  'vuesax-arrow-down': (props: IconProps) => {
+    return <VuesaxArrowDown {...props} />;
+  },
+  'vuesax-arrow-up': (props: IconProps) => {
+    return <VuesaxArrowUp {...props} />;
+  },
+  'vuesax-arrow-left': (props: IconProps) => {
+    return <VuesaxArrowLeft {...props} />;
+  },
+  'vuesax-arrow-right': (props: IconProps) => {
+    return <VuesaxArrowRight {...props} />;
+  },
+  'caret-down-fill': (props: IconProps) => {
+    return <CaretDownFill {...props} />;
+  },
+  'caret-up-fill': (props: IconProps) => {
+    return <CaretUpFill {...props} />;
+  },
+  inbox: (props: IconProps) => {
+    return <Inbox {...props} />;
+  },
+  'chevron-double-left': (props: IconProps) => {
+    return <ChevronDoubleLeft {...props} />;
+  },
+  'chevron-double-right': (props: IconProps) => {
+    return <ChevronDoubleRight {...props} />;
   },
   // Add more icons here
 };

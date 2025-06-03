@@ -9,3 +9,5 @@ export * from './checkbox';
 export * from './checkbox/checkbox-group';
 export * from './modal';
 export * from './modal/modal-confirm';
+export * from './table';
+export * from './pagination';
