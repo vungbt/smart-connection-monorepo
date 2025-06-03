@@ -48,16 +48,14 @@ export const Tabs: React.FC<TabsProps> = props => {
   const variableClass = variableClasses[variant];
 
   return (
-    <ReactTabs
-      className={clsx(
-        className,
-        customClasses?.root,
-        'flex w-full relative before:content-[""] before:absolute before:bottom-0 before:right-0 before:left-0 before:w-full before:h-[1px] before:bg-neutral'
-      )}
-      onSelect={onChange}
-      {...reset}
-    >
-      <TabList className={clsx(customClasses?.tabs, tabListSize, 'flex w-full')}>
+    <ReactTabs className={clsx(className, customClasses?.root)} onSelect={onChange} {...reset}>
+      <TabList
+        className={clsx(
+          customClasses?.tabs,
+          tabListSize,
+          'flex w-full relative before:content-[""] before:absolute before:bottom-0 before:right-0 before:left-0 before:w-full before:h-[1px] before:bg-neutral'
+        )}
+      >
         {tabs.map(tab => {
           return (
             <Tab

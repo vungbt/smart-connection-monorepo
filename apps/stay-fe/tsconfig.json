@@ -11,6 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "incremental": true,
+    "rootDir": "../..",
     "plugins": [
       {
         "name": "next"
@@ -26,14 +27,16 @@
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
   "include": [
-    "../../apps/stay-fe/.next/types/**/*.ts",
-    "../../dist/apps/stay-fe/.next/types/**/*.ts",
+    "../../libs/ui-theme/theme-token/**/*.json",
+    ".next/types/**/*.ts",
+    ".storybook/**/*.ts",
+    ".storybook/**/*.tsx",
     "next-env.d.ts",
     "src/**/*.js",
     "src/**/*.jsx",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    "../../dist/apps/stay-fe/.next/types/**/*.ts"
   ],
   "exclude": [
     "out-tsc",

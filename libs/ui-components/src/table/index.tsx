@@ -54,7 +54,7 @@ type TableProps<T> = {
   };
 };
 
-export const Table = <T extends Record<string, never>>({
+export const Table = <T extends Record<string, any>>({
   columns = [],
   data = [],
   loading = false,
@@ -171,7 +171,7 @@ export const Table = <T extends Record<string, never>>({
     <div className={clsx('w-full', customClasses.root)}>
       <div className={clsx('overflow-y-auto', scroll?.y && `max-h-[${scroll?.y}px]`)}>
         <table className="min-w-full table-auto">
-          <TableHeader headers={table.getHeaderGroups()} />
+          <TableHeader headers={table.getHeaderGroups() as TableHeaderType<T>} />
           <tbody className="relative">
             {rows.length > 0 ? (
               <TableRow rows={rows} rowKey={rowKey} selectedKeys={selectedKeys} />
