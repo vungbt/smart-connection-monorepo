@@ -12,6 +12,7 @@
     "module": "esnext",
     "moduleResolution": "bundler",
     "forceConsistentCasingInFileNames": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["node", "vite/client"]
   },
   "include": [
@@ -31,7 +32,11 @@
     "src/**/*.spec.js",
     "src/**/*.test.js",
     "src/**/*.spec.jsx",
-    "src/**/*.test.jsx"
+    "src/**/*.test.jsx",
+    "**/*.stories.ts",
+    "**/*.stories.js",
+    "**/*.stories.jsx",
+    "**/*.stories.tsx"
   ],
   "references": []
 }

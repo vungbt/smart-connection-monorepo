@@ -18,5 +18,12 @@
     {
       "path": "./apps/stay-api"
     }
-  ]
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node10",
+      "customConditions": null
+    }
+  }
 }

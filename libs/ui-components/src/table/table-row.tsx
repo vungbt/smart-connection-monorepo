@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { flexRender } from '@tanstack/react-table';
 import { TableRowType } from '.';
 import clsx from 'clsx';
@@ -10,7 +11,8 @@ type TableRowProps<T> = {
   onSelect?: (key: React.Key, row: T) => void;
   selectionType?: 'checkbox' | 'radio';
 };
-export const TableRow = <T extends Record<string, never>>({
+
+export const TableRow = <T extends Record<string, any>>({
   rows = [],
   rowKey,
   selectedKeys = [],

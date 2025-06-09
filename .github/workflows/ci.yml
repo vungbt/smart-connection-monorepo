@@ -78,3 +78,37 @@ jobs:
 
       - name: Build
         run: pnpm exec nx affected -t build
+
+  storybook:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: 9.8.0
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      - uses: nrwl/nx-set-shas@v4
+
+      - name: Build Storybook
+        run: pnpm exec nx affected -t build-storybook --configuration=ci
+
+      - name: Upload Storybook artifact
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-build
+          path: dist/storybook/stay-fe
+          retention-days: 7

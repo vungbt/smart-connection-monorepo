@@ -1,9 +1,9 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import clsx from 'clsx';
 import { TableHeaderType } from '.';
 import { flexRender } from '@tanstack/react-table';
 import { RenderIcon } from '../icons';
+import { ReactNode } from 'react';
 
 type TableHeaderProps<T> = {
   headers: TableHeaderType<T>;
@@ -14,11 +14,12 @@ type TableHeaderProps<T> = {
     th?: string;
   };
 };
-export const TableHeader = <T extends Record<string, never>>({
+
+export const TableHeader = <T extends Record<string, any>>({
   headers,
   className,
   customClasses,
-}: TableHeaderProps<T>) => {
+}: TableHeaderProps<T>): ReactNode => {
   return (
     <thead
       className={clsx('sticky top-0 bg-neutral-table-header z-[1]', className, customClasses?.root)}
@@ -60,7 +61,7 @@ export const TableHeader = <T extends Record<string, never>>({
   );
 };
 
-const SortAction = ({ active }: { active: 'asc' | 'desc' }) => {
+const SortAction = ({ active }: { active: 'asc' | 'desc' }): ReactNode => {
   return (
     <div className="flex flex-col items-center justify-center w-fit">
       <span className="mb-[-2px]">
