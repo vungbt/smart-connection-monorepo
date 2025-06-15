@@ -11,3 +11,5 @@ export * from './modal';
 export * from './modal/modal-confirm';
 export * from './table';
 export * from './pagination';
+export * from './upload';
+export * from './avatar';

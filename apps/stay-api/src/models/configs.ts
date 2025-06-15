@@ -61,7 +61,7 @@ ConfigsModel.init(
     createdAt: true,
     updatedAt: true,
     deletedAt: true,
-    paranoid: true, // Enables soft deletes using deletedAt
+    paranoid: true,
   }
 );
 

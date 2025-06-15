@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import {
   AnimatePresence,
-  AnimationControls,
   motion,
   TargetAndTransition,
   VariantLabels,
@@ -9,7 +8,7 @@ import {
 } from 'framer-motion';
 import { ReactNode } from 'react';
 
-const modalAnimation = {
+const modalAnimation: Variants = {
   hidden: {
     y: '-100vh',
     opacity: 0,
@@ -97,7 +96,7 @@ export const Backdrop = ({
   className?: string;
   exit?: VariantLabels | TargetAndTransition;
   initial?: boolean | VariantLabels;
-  animate?: boolean | VariantLabels | AnimationControls | TargetAndTransition;
+  animate?: boolean | VariantLabels | TargetAndTransition;
 }) => {
   return (
     <motion.div
