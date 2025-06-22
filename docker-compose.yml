@@ -9,10 +9,51 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=${API_PORT:-3333}
+      - POSTGRES_DB=${POSTGRES_DB:-smartconnection}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=postgres-stay
+      - POSTGRES_PORT=5432
     volumes:
       - api-data:/app/data
       - api-logs:/app/logs
     restart: unless-stopped
+    networks:
+      - smart-connection
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:${API_PORT:-3333}/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+  sso-api:
+    build:
+      context: .
+      dockerfile: apps/sso-api/Dockerfile
+    container_name: sso-api
+    ports:
+      - '${SSO_PORT:-5000}:${SSO_PORT:-5000}'
+    environment:
+      - NODE_ENV=production
+      - PORT=${SSO_PORT:-5000}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-SSOServiceSecret}
+      - SSO_POSTGRES_DB=${SSO_POSTGRES_DB:-smartconnection_sso}
+      - SSO_POSTGRES_USER=${SSO_POSTGRES_USER:-postgres}
+      - SSO_POSTGRES_PASSWORD=${SSO_POSTGRES_PASSWORD:-postgres}
+      - SSO_POSTGRES_HOST=postgres-sso
+      - SSO_POSTGRES_PORT=5432
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS:-http://localhost:3000}
+    volumes:
+      - sso-logs:/app/logs
+    restart: unless-stopped
+    networks:
+      - smart-connection
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:${SSO_PORT:-5000}/health']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   stay-fe:
     build:
@@ -28,15 +69,27 @@ services:
       - fe-public:/app/public
       - fe-cache:/app/.next/cache
     restart: unless-stopped
+    networks:
+      - smart-connection
     depends_on:
-      - stay-api
+      stay-api:
+        condition: service_healthy
+      sso-api:
+        condition: service_healthy
 
 volumes:
   api-data:
     name: stay-api-data
   api-logs:
     name: stay-api-logs
+  sso-logs:
+    name: sso-api-logs
   fe-public:
     name: stay-fe-public
   fe-cache:
     name: stay-fe-cache
+
+networks:
+  smart-connection:
+    name: smart-connection
+    external: true

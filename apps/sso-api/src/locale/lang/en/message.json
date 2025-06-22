@@ -1,0 +1,17 @@
+{
+  "login": {
+    "success": "Login successful",
+    "failed": "Invalid email or password"
+  },
+  "register": {
+    "success": "Registration successful",
+    "email_exists": "Email already exists"
+  },
+  "refresh_token": {
+    "success": "Token refreshed successfully",
+    "invalid": "Invalid refresh token"
+  },
+  "account": {
+    "inactive": "Account is inactive"
+  }
+}

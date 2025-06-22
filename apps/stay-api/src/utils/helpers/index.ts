@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { readFileSync } from 'fs';
 import slug from 'slugify';
 import { formatDate } from './formatter';

@@ -5,7 +5,7 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "parserOptions": {
-        "project": ["apps/stay-api/tsconfig.*?.json"]
+        "project": ["apps/stay-api/tsconfig.json"]
       },
       "rules": {
         "@typescript-eslint/no-unused-vars": "warn",

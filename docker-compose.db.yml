@@ -1,20 +1,42 @@
 version: '3.8'
 
 services:
-  postgres:
+  postgres-stay:
     image: postgres:16-alpine
-    container_name: postgres
+    container_name: postgres-stay
     ports:
-      - '${POSTGRES_PORT:-5432}:5432'
+      - '${POSTGRES_PORT:-5433}:5432'
     environment:
       - POSTGRES_USER=${POSTGRES_USER:-postgres}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - POSTGRES_DB=${POSTGRES_DB:-smartconnection}
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-stay-data:/var/lib/postgresql/data
     restart: unless-stopped
+    networks:
+      - smart-connection
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-postgres}']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres-sso:
+    image: postgres:16-alpine
+    container_name: postgres-sso
+    ports:
+      - '${SSO_POSTGRES_PORT:-5434}:5432'
+    environment:
+      - POSTGRES_USER=${SSO_POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${SSO_POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_DB=${SSO_POSTGRES_DB:-smartconnection_sso}
+    volumes:
+      - postgres-sso-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - smart-connection
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${SSO_POSTGRES_USER:-postgres}']
       interval: 5s
       timeout: 5s
       retries: 5
@@ -28,6 +50,8 @@ services:
       - redis-data:/data
     command: redis-server --appendonly yes
     restart: unless-stopped
+    networks:
+      - smart-connection
     healthcheck:
       test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
@@ -35,7 +59,13 @@ services:
       retries: 5
 
 volumes:
-  postgres-data:
-    name: postgres-data
+  postgres-stay-data:
+    name: postgres-stay-data
+  postgres-sso-data:
+    name: postgres-sso-data
   redis-data:
     name: redis-data
+
+networks:
+  smart-connection:
+    name: smart-connection
