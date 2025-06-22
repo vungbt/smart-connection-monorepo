@@ -1,26 +1,16 @@
-import { Dialect, Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize';
+import env from './env';
 
-const DB_NAME = process.env.POSTGRES_DB || 'smartconnection';
-const DB_USER = process.env.POSTGRES_USER || 'postgres';
-const DB_PASSWORD = process.env.POSTGRES_PASSWORD || 'postgres';
-const DB_HOST = process.env.POSTGRES_HOST || 'localhost';
-const DB_PORT = parseInt(process.env.POSTGRES_PORT || '5432', 10);
-const DB_DIALECT = (process.env.DB_DIALECT ?? 'postgres') as Dialect;
-
-const database = {
-  host: DB_HOST,
-  port: DB_PORT,
-  name: DB_NAME,
-  username: DB_USER,
-  password: DB_PASSWORD,
-  dialect: DB_DIALECT,
-};
+const database = env.db;
 
 const sequelize = new Sequelize(database.name, database.username, database.password, {
   host: database.host,
   port: database.port,
   dialect: database.dialect,
   logging: process.env.NODE_ENV !== 'production' ? console.log : false,
+  define: {
+    underscored: true,
+  },
   pool: {
     max: 5,
     min: 0,

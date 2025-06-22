@@ -29,6 +29,9 @@ import CaretUpFill from './caret-up-fill';
 import Inbox from './inbox';
 import ChevronDoubleLeft from './chevron-double-left';
 import ChevronDoubleRight from './chevron-double-right';
+import CloudArrowUp from './cloud-arrow-up';
+import User from './user';
+import TrashSolid from './trash-solid';
 
 export type IconProps = {
   className?: string;
@@ -69,6 +72,9 @@ const IconsDefine = {
   inbox: 'inbox',
   'chevron-double-left': 'chevron-double-left',
   'chevron-double-right': 'chevron-double-right',
+  'cloud-arrow-up': 'cloud-arrow-up',
+  user: 'user',
+  'trash-solid': 'trash-solid',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -162,6 +168,15 @@ export const Icons: IconsType = {
   },
   'chevron-double-right': (props: IconProps) => {
     return <ChevronDoubleRight {...props} />;
+  },
+  'cloud-arrow-up': (props: IconProps) => {
+    return <CloudArrowUp {...props} />;
+  },
+  user: (props: IconProps) => {
+    return <User {...props} />;
+  },
+  'trash-solid': (props: IconProps) => {
+    return <TrashSolid {...props} />;
   },
   // Add more icons here
 };

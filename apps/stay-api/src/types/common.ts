@@ -14,6 +14,7 @@ export interface IPaginationReq {
 
 export enum EUserRole {
   Admin = 'admin',
-  Employee = 'employee',
-  Employer = 'employer',
+  Plus = 'plus',
+  Member = 'member',
+  Guest = 'guest',
 }

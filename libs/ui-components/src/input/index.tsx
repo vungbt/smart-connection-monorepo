@@ -24,7 +24,7 @@ export type InputProps = {
     helperText?: string;
     error?: string;
   };
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'size'>;
+} & Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'required'>;
 
 const sizeClasses = {
   small: 'px-2 py-1 text-14',

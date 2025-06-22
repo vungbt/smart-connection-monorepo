@@ -1,3 +1,5 @@
+import ConfigsModel from '@/models/configs';
+
 export interface IConfigAttributes {
   id: string;
   createdAt?: Date;
@@ -11,6 +13,8 @@ export interface IConfigAttributes {
   type: string;
   isSpecialRoom: boolean;
 }
+
+export type ConfigItem = ConfigsModel;
 
 export type ConfigCreateBody = Omit<
   IConfigAttributes,

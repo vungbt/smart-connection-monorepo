@@ -1,0 +1,8 @@
+{
+  "name": "api-client",
+  "projectType": "library",
+  "sourceRoot": "libs/api-client/src",
+  "root": "libs/api-client",
+  "targets": {},
+  "tags": []
+}
