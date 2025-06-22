@@ -64,6 +64,14 @@
         "command": "cross-env NODE_ENV=development nodemon",
         "cwd": "apps/stay-api"
       }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/stay-api/**/*.{ts,tsx,js,jsx}"],
+        "maxWarnings": -1
+      }
     }
   },
   "tags": []

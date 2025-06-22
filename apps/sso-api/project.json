@@ -1,0 +1,78 @@
+{
+  "name": "sso-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/sso-api",
+  "projectType": "application",
+  "targets": {
+    "clean": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["rm -rf dist/apps/sso-api", "rm -rf apps/sso-api/dist"]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "production",
+      "options": {
+        "cwd": ".",
+        "commands": [
+          "rimraf dist/apps/sso-api",
+          "tsc -p apps/sso-api/tsconfig.json --outDir dist/apps/sso-api",
+          "cp -r apps/sso-api/src/assets dist/apps/sso-api/src/ 2>/dev/null || :",
+          "cp apps/sso-api/package.json dist/apps/sso-api/ 2>/dev/null || :"
+        ],
+        "parallel": false
+      },
+      "configurations": {
+        "development": {
+          "commands": [
+            "rimraf dist/apps/sso-api",
+            "tsc -p apps/sso-api/tsconfig.json --outDir dist/apps/sso-api --sourceMap",
+            "cp -r apps/sso-api/src/assets dist/apps/sso-api/src/ 2>/dev/null || :",
+            "cp apps/sso-api/package.json dist/apps/sso-api/ 2>/dev/null || :"
+          ]
+        },
+        "production": {
+          "commands": [
+            "rimraf dist/apps/sso-api",
+            "tsc -p apps/sso-api/tsconfig.json --outDir dist/apps/sso-api",
+            "cp -r apps/sso-api/src/assets dist/apps/sso-api/src/ 2>/dev/null || :",
+            "cp apps/sso-api/package.prod.json dist/apps/sso-api/package.json 2>/dev/null || :"
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "sso-api:build",
+        "watch": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "sso-api:build:development"
+        },
+        "production": {
+          "buildTarget": "sso-api:build:production"
+        }
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "NODE_ENV=development nodemon",
+        "cwd": "apps/sso-api"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "maxWarnings": -1,
+        "lintFilePatterns": ["apps/sso-api/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  },
+  "tags": []
+}

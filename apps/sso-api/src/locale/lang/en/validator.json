@@ -1,0 +1,14 @@
+{
+  "attribute": {
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "refreshToken": "Refresh token"
+  },
+  "message": {
+    "required": "The :attribute field is required",
+    "email": "The :attribute must be a valid email address",
+    "min": "The :attribute must be at least :min characters",
+    "string": "The :attribute must be a string"
+  }
+}
