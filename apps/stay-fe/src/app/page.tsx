@@ -187,6 +187,7 @@ export default function ConfigsPage() {
         data={Array.isArray(configs) ? configs : []}
         rowKey="id"
         loading={isLoading}
+        customClasses={{ root: 'h-[500px]' }}
       />
     </div>
   );

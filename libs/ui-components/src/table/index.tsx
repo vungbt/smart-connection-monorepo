@@ -169,8 +169,8 @@ export const Table = <T extends Record<string, any>>({
 
   return (
     <div className={clsx('w-full', customClasses.root)}>
-      <div className={clsx('overflow-y-auto', scroll?.y && `max-h-[${scroll?.y}px]`)}>
-        <table className="min-w-full table-auto">
+      <div className={clsx('overflow-y-auto h-full', scroll?.y && `max-h-[${scroll?.y}px]`)}>
+        <table className="min-w-full table-auto h-full">
           <TableHeader headers={table.getHeaderGroups() as TableHeaderType<T>} />
           <tbody className="relative">
             {rows.length > 0 ? (
