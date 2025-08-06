@@ -1,6 +1,7 @@
 import React from 'react';
 import { Checkbox } from '.';
 import clsx from 'clsx';
+import { FormErrorMessage } from '../form/form-error-message';
 
 export interface CheckboxOption {
   label: React.ReactNode;
@@ -10,41 +11,43 @@ export interface CheckboxOption {
 
 interface CheckboxGroupProps {
   options: CheckboxOption[];
-  value?: string;
-  onChange?: (value: string) => void;
   name?: string;
   disabled?: boolean;
   className?: string;
   customClasses?: {
     root?: string;
+    error?: string;
   };
   size?: 'small' | 'middle' | 'large';
   color?: 'primary' | 'secondary' | 'success' | 'error' | 'pending' | 'neutral';
+  error?: string;
+  onChange?: (value: string[]) => void;
+  value?: string[];
 }
 
 export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   options,
-  value,
-  onChange,
   name,
   size = 'middle',
   color,
   disabled,
   className,
   customClasses,
+  error,
+  ...reset
 }) => {
+  const colorClass = error ? 'error' : color;
   return (
     <div className={clsx(className, customClasses?.root, 'flex items-center')}>
       {options.map(option => (
         <Checkbox
+          {...(reset as any)}
           key={option.value}
           label={option.label}
           name={name}
-          value={option.value}
           size={size}
-          color={color}
-          checked={value === option.value}
-          onChange={() => onChange?.(option.value)}
+          value={option.value}
+          color={colorClass}
           disabled={disabled || option.disabled}
         />
       ))}

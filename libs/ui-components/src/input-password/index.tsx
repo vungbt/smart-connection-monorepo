@@ -27,7 +27,7 @@ export type InputPasswordProps = {
 
 const sizeClasses = {
   small: 'px-2 py-1 text-14',
-  middle: 'px-4 py-2 text-16',
+  middle: 'px-4 py-2 text-14',
   large: 'px-6 py-3 text-16',
 };
 
@@ -63,11 +63,10 @@ const colorClasses = {
       'text-success bg-transparent border border-dashed border-success hover:bg-success-bg focus:shadow-none',
   },
   error: {
-    solid: 'bg-error-bg border-error text-error focus:border-error-base focus:shadow-error-bg',
-    outline: 'bg-transparent border-error text-error focus:border-error-base focus:shadow-error-bg',
-    subtle: 'bg-error-bg border-error-bg text-error focus:border-error focus:shadow-error-bg',
-    ghost:
-      'text-error bg-transparent border border-dashed border-error hover:bg-error-bg focus:shadow-none',
+    solid: 'bg-error-bg border-error focus:border-error-base focus:shadow-error-bg',
+    outline: 'bg-transparent border-error focus:border-error-base focus:shadow-error-bg',
+    subtle: 'bg-error-bg border-error-bg focus:border-error focus:shadow-error-bg',
+    ghost: 'bg-transparent border border-dashed border-error hover:bg-error-bg focus:shadow-none',
   },
   pending: {
     solid:
@@ -81,13 +80,13 @@ const colorClasses = {
   },
   neutral: {
     solid:
-      'bg-neutral-bg border-neutral text-neutral focus:border-neutral-text-primary focus:shadow-neutral-bg',
+      'bg-neutral-bg border-neutral text-neutral-text-primary focus:border-neutral-text-primary focus:shadow-neutral-bg',
     outline:
-      'bg-transparent border-neutral text-neutral focus:border-neutral-text-primary focus:shadow-neutral-bg',
+      'bg-transparent border-neutral text-neutral-text-primary focus:border-neutral-text-primary focus:shadow-neutral-bg',
     subtle:
-      'bg-neutral-bg border-neutral-bg text-neutral focus:border-neutral focus:shadow-neutral-bg',
+      'bg-neutral-bg border-neutral-bg text-neutral-text-primary focus:border-neutral focus:shadow-neutral-bg',
     ghost:
-      'text-neutral bg-transparent border border-dashed border-neutral hover:bg-neutral-bg focus:shadow-none',
+      'text-neutral-text-primary bg-transparent border border-dashed border-neutral hover:bg-neutral-bg focus:shadow-none',
   },
 };
 
@@ -124,17 +123,6 @@ export const InputPassword = forwardRef<HTMLInputElement, InputPasswordProps>(
       }
     };
 
-    const getLabelSize = (): string => {
-      switch (size) {
-        case 'small':
-          return 'text-14';
-        case 'large':
-          return 'text-16';
-        default:
-          return 'text-16';
-      }
-    };
-
     const getHelperTextSize = (): string => {
       switch (size) {
         case 'small':
@@ -142,27 +130,12 @@ export const InputPassword = forwardRef<HTMLInputElement, InputPasswordProps>(
         case 'large':
           return 'text-16';
         default:
-          return 'text-16';
+          return 'text-14';
       }
     };
 
     return (
       <div className={clsx('w-full', customClasses?.root)}>
-        {label && (
-          <label
-            htmlFor={id}
-            className={clsx(
-              'block font-medium mb-1 w-fit',
-              getLabelSize(),
-              error ? 'text-error' : 'text-neutral-text-primary',
-              customClasses?.label
-            )}
-          >
-            {label}
-            {required && <span className="text-error ml-1">*</span>}
-          </label>
-        )}
-
         <div className="relative">
           {icon && (
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
@@ -202,25 +175,17 @@ export const InputPassword = forwardRef<HTMLInputElement, InputPasswordProps>(
           </div>
         </div>
 
-        {(helperText || error) && (
+        {helperText && (
           <div className="mt-1">
-            {error ? (
-              <p className={clsx('text-error', getHelperTextSize(), customClasses?.error)}>
-                {error}
-              </p>
-            ) : (
-              helperText && (
-                <p
-                  className={clsx(
-                    'text-neutral-placeholder',
-                    getHelperTextSize(),
-                    customClasses?.helperText
-                  )}
-                >
-                  {helperText}
-                </p>
-              )
-            )}
+            <p
+              className={clsx(
+                'text-neutral-placeholder',
+                getHelperTextSize(),
+                customClasses?.helperText
+              )}
+            >
+              {helperText}
+            </p>
           </div>
         )}
       </div>

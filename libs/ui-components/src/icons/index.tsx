@@ -32,6 +32,7 @@ import ChevronDoubleRight from './chevron-double-right';
 import CloudArrowUp from './cloud-arrow-up';
 import User from './user';
 import TrashSolid from './trash-solid';
+import ChevronDown from './chevron-down';
 
 export type IconProps = {
   className?: string;
@@ -75,6 +76,7 @@ const IconsDefine = {
   'cloud-arrow-up': 'cloud-arrow-up',
   user: 'user',
   'trash-solid': 'trash-solid',
+  'chevron-down': 'chevron-down',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -177,6 +179,9 @@ export const Icons: IconsType = {
   },
   'trash-solid': (props: IconProps) => {
     return <TrashSolid {...props} />;
+  },
+  'chevron-down': (props: IconProps) => {
+    return <ChevronDown {...props} />;
   },
   // Add more icons here
 };

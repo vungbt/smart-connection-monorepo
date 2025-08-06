@@ -22,6 +22,9 @@ export const useApiQuery = <TData = unknown, TParams = unknown>(
   return useQuery<TData, Error, TData>({
     ...options,
     queryKey: finalQueryKey,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchInterval: false,
     queryFn: async () => {
       const response = await axiosClient.get<TParams, TData>(endpoint, params);
       return response.data;

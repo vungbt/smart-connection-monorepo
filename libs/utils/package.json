@@ -1,6 +1,6 @@
 {
-  "name": "@smart-connection-monorepo/ui-components",
-  "version": "0.0.1",
+  "name": "@smart-connection-monorepo/utils",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "main": "./dist/index.js",
@@ -16,6 +16,6 @@
     }
   },
   "dependencies": {
-    "@smart-connection-monorepo/utils": "workspace:*"
+    "chroma-js": "^3.1.2"
   }
 }
