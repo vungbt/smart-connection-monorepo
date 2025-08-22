@@ -155,15 +155,6 @@ export default function ConfigsPage() {
     }
   };
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editing) {
-      updateConfig({ endpoint: `/configs/${editing.id}`, body: form });
-    } else {
-      createConfig({ endpoint: '/configs', body: form });
-    }
-  };
-
   // Show error state
   if (isError) {
     return <div>Error: {error instanceof Error ? error.message : 'Something went wrong'}</div>;

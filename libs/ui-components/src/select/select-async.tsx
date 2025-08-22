@@ -1,17 +1,13 @@
 'use client';
 import clsx from 'clsx';
 import { forwardRef } from 'react';
-import ReactSelect, { GroupBase, Props as ReactSelectProps, components } from 'react-select';
+import AsyncSelect from 'react-select/async';
+import { GroupBase, Props as ReactSelectProps, components } from 'react-select';
 import { IconName, RenderIcon } from '../icons';
 import { Tag } from '../tag';
+import type { SelectOption } from './select';
 
-export type SelectOption = {
-  label: string;
-  value: string | number;
-  isDisabled?: boolean;
-};
-
-export type SelectProps = {
+export type SelectAsyncProps = {
   className?: string;
   disabled?: boolean;
   loading?: boolean;
@@ -20,14 +16,15 @@ export type SelectProps = {
   variant?: 'solid' | 'outline' | 'subtle' | 'ghost';
   icon?: IconName;
   iconRight?: IconName;
-  label?: string;
-  helperText?: string;
   error?: string;
-  required?: boolean;
   placeholder?: string;
   isClearable?: boolean;
   isSearchable?: boolean;
   isMulti?: boolean;
+  loadOptions: (
+    inputValue: string,
+    callback: (options: SelectOption[]) => void
+  ) => void | Promise<SelectOption[]>;
   customClasses?: {
     root?: string;
     label?: string;
@@ -37,7 +34,10 @@ export type SelectProps = {
     helperText?: string;
     error?: string;
   };
-} & Omit<ReactSelectProps<SelectOption, boolean, GroupBase<SelectOption>>, 'size' | 'required'>;
+} & Omit<
+  ReactSelectProps<SelectOption, boolean, GroupBase<SelectOption>>,
+  'size' | 'required' | 'options'
+>;
 
 const sizeClasses = {
   small: 'text-14',
@@ -104,7 +104,7 @@ const colorClasses = {
     ghost:
       'text-neutral-text-primary bg-transparent border border-dashed border-neutral hover:bg-neutral-bg focus-within:shadow-none',
   },
-};
+} as const;
 
 const getPaddingClasses = (
   size: 'small' | 'middle' | 'large',
@@ -126,34 +126,28 @@ const getPaddingClasses = (
   return `${basePadding[size]} ${rightPadding[size]}`;
 };
 
-// Custom Dropdown Indicator
-const DropdownIndicator = (props: any) => {
-  return (
-    <components.DropdownIndicator {...props}>
-      <RenderIcon
-        name="chevron-down"
-        className={clsx(
-          'text-neutral-placeholder transition-transform duration-200 !w-5 !h-5',
-          props.selectProps.menuIsOpen ? 'rotate-180' : ''
-        )}
-      />
-    </components.DropdownIndicator>
-  );
-};
+const DropdownIndicator = (props: any) => (
+  <components.DropdownIndicator {...props}>
+    <RenderIcon
+      name="chevron-down"
+      className={clsx(
+        'text-neutral-placeholder transition-transform duration-200 !w-5 !h-5',
+        props.selectProps.menuIsOpen ? 'rotate-180' : ''
+      )}
+    />
+  </components.DropdownIndicator>
+);
 
-// Custom Clear Indicator
-const ClearIndicator = (props: any) => {
-  return (
-    <components.ClearIndicator {...props}>
-      <RenderIcon
-        name="x-mark"
-        className="text-neutral-placeholder hover:text-error transition-colors duration-200 !w-5 !h-5 cursor-pointer"
-      />
-    </components.ClearIndicator>
-  );
-};
+const ClearIndicator = (props: any) => (
+  <components.ClearIndicator {...props}>
+    <RenderIcon
+      name="x-mark"
+      className="text-neutral-placeholder hover:text-error transition-colors duration-200 !w-5 !h-5 cursor-pointer"
+    />
+  </components.ClearIndicator>
+);
 
-export const Select = forwardRef<any, SelectProps>(
+export const SelectAsync = forwardRef<any, SelectAsyncProps>(
   (
     {
       className,
@@ -169,9 +163,9 @@ export const Select = forwardRef<any, SelectProps>(
       isClearable = false,
       isSearchable = true,
       isMulti = false,
+      loadOptions,
       customClasses,
       id,
-      options = [],
       ...rest
     },
     ref
@@ -189,28 +183,6 @@ export const Select = forwardRef<any, SelectProps>(
       }
     };
 
-    const getLabelSize = (): string => {
-      switch (size) {
-        case 'small':
-          return 'text-14';
-        case 'large':
-          return 'text-16';
-        default:
-          return 'text-14';
-      }
-    };
-
-    const getHelperTextSize = (): string => {
-      switch (size) {
-        case 'small':
-          return 'text-14';
-        case 'large':
-          return 'text-16';
-        default:
-          return 'text-14';
-      }
-    };
-
     const getHeightClasses = (): string => {
       switch (size) {
         case 'small':
@@ -223,7 +195,7 @@ export const Select = forwardRef<any, SelectProps>(
     };
 
     const customStyles = {
-      control: (provided: any, state: any) => ({
+      control: (provided: any) => ({
         ...provided,
         minHeight: size === 'small' ? '32px' : size === 'large' ? '48px' : '40px',
         border: 'none',
@@ -231,9 +203,6 @@ export const Select = forwardRef<any, SelectProps>(
         backgroundColor: 'transparent',
         '&:hover': {
           border: 'none',
-        },
-        '&:focus-within': {
-          boxShadow: 'none',
         },
       }),
       valueContainer: (provided: any) => ({
@@ -288,7 +257,6 @@ export const Select = forwardRef<any, SelectProps>(
       }),
     };
 
-    // Custom MultiValue chip using Tag component
     const MultiValue = (props: any) => {
       const { data, removeProps } = props;
       return (
@@ -327,11 +295,12 @@ export const Select = forwardRef<any, SelectProps>(
             customClasses?.select
           )}
         >
-          <ReactSelect
-            ref={ref}
+          <AsyncSelect
+            ref={ref as any}
             id={id}
             instanceId={id}
-            options={options}
+            defaultOptions
+            loadOptions={loadOptions as any}
             placeholder={placeholder}
             isDisabled={disabled || loading}
             isLoading={loading}
@@ -363,4 +332,4 @@ export const Select = forwardRef<any, SelectProps>(
   }
 );
 
-Select.displayName = 'Select';
+SelectAsync.displayName = 'SelectAsync';

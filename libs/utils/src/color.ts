@@ -198,7 +198,7 @@ export type ColorName =
   | 'yellow'
   | 'yellowgreen';
 
-type BrewerPaletteName =
+export type BrewerPaletteName =
   | 'OrRd'
   | 'PuBu'
   | 'BuPu'
