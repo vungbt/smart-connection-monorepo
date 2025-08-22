@@ -1,7 +1,6 @@
 import React from 'react';
 import { Checkbox } from '.';
 import clsx from 'clsx';
-import { FormErrorMessage } from '../form/form-error-message';
 
 export interface CheckboxOption {
   label: React.ReactNode;

@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import React from 'react';
 import { RenderIcon } from '../icons';
-import { FormErrorMessage } from '../form/form-error-message';
 export interface CheckboxProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size'> {
   label?: React.ReactNode;
   size?: 'small' | 'middle' | 'large';

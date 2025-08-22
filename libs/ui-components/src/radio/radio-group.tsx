@@ -1,8 +1,6 @@
 import React from 'react';
 import { Radio } from '.';
 import clsx from 'clsx';
-import { FormErrorMessage } from '../form/form-error-message';
-
 export interface RadioOption {
   label: React.ReactNode;
   value: string;

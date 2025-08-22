@@ -189,28 +189,6 @@ export const Select = forwardRef<any, SelectProps>(
       }
     };
 
-    const getLabelSize = (): string => {
-      switch (size) {
-        case 'small':
-          return 'text-14';
-        case 'large':
-          return 'text-16';
-        default:
-          return 'text-14';
-      }
-    };
-
-    const getHelperTextSize = (): string => {
-      switch (size) {
-        case 'small':
-          return 'text-14';
-        case 'large':
-          return 'text-16';
-        default:
-          return 'text-14';
-      }
-    };
-
     const getHeightClasses = (): string => {
       switch (size) {
         case 'small':
