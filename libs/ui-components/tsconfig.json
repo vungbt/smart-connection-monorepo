@@ -8,6 +8,14 @@
     },
     {
       "path": "./tsconfig.storybook.json"
+    },
+    {
+      "path": "../../libs/utils"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@smart-connection-monorepo/utils": ["../../libs/utils/src/index.ts"]
+    }
+  }
 }

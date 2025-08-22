@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 import { useApiQuery, useApiMutation } from '@smart-connection-monorepo/api-client';
 import {
@@ -95,8 +96,7 @@ const interestOptions = [
 ];
 
 export default function ConfigsPage() {
-  const [editing, setEditing] = useState<Config | null>(null);
-  const [form, setForm] = useState<Partial<Config>>({});
+  const [, setForm] = useState<Partial<Config>>({});
   const formikRef = useRef<FormikProps<FormValues>>(null);
   // GET configs
   const {
@@ -116,26 +116,7 @@ export default function ConfigsPage() {
     }
   );
 
-  // Create config
-  const { mutate: createConfig } = useApiMutation<Config, Partial<Config>>('post', {
-    onSuccess: () => {
-      setForm({});
-    },
-    onError: (error: ApiError) => {
-      console.error('Error creating config:', error);
-    },
-  });
-
-  // Update config
-  const { mutate: updateConfig } = useApiMutation<Config, Partial<Config>>('put', {
-    onSuccess: () => {
-      setEditing(null);
-      setForm({});
-    },
-    onError: (error: ApiError) => {
-      console.error('Error updating config:', error);
-    },
-  });
+  // Note: create/update mutations omitted until used
 
   // Delete config
   const { mutate: deleteConfig } = useApiMutation<unknown, Record<string, never>>('delete', {
@@ -145,7 +126,6 @@ export default function ConfigsPage() {
   });
 
   const onEdit = (config: Config) => {
-    setEditing(config);
     setForm(config);
   };
 
