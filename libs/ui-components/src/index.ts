@@ -19,3 +19,4 @@ export * from './form/form-error-message';
 export * from './form/form-label';
 export * from './select';
 export * from './tag';
+export * from './datepicker';

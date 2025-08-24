@@ -14,6 +14,8 @@ import {
   CheckboxGroup,
   Select,
   Tag,
+  DatePicker,
+  DateRangePicker,
 } from '@smart-connection-monorepo/ui-components';
 import { FormikProps } from 'formik';
 import { useRef, useState } from 'react';
@@ -41,6 +43,8 @@ interface FormValues {
   terms: boolean;
   room: string;
   rooms: string[];
+  date: Date | null;
+  dateRange: [Date | null, Date | null];
 }
 
 const initialValues: FormValues = {
@@ -52,6 +56,8 @@ const initialValues: FormValues = {
   terms: false,
   room: '',
   rooms: [],
+  date: null,
+  dateRange: [null, null],
 };
 
 const validationSchema = yup.object({
@@ -67,7 +73,6 @@ const validationSchema = yup.object({
   room: yup
     .mixed()
     .test('is-valid-room', 'Please select a room', value => {
-      // Handle both string values and react-select objects
       if (typeof value === 'string') return value.length > 0;
       if (value && typeof value === 'object' && 'value' in value) {
         const objValue = value as { value: any };
@@ -77,6 +82,15 @@ const validationSchema = yup.object({
     })
     .required('Please select a room'),
   rooms: yup.array().min(1, 'Please select at least one room').required('Please select rooms'),
+  date: yup.date().required('Please select a date'),
+  dateRange: yup
+    .array()
+    .of(yup.date().nullable())
+    .test('both-dates-required', 'Both start and end dates are required', function (value) {
+      if (!value || value.length !== 2) return false;
+      return value[0] !== null && value[1] !== null;
+    })
+    .required('Please select a date range'),
 });
 
 // Radio options for gender
@@ -223,6 +237,14 @@ export default function ConfigsPage() {
               isSearchable
               isMulti
             />
+          </FormikItem>
+
+          <FormikItem name="date">
+            <DatePicker />
+          </FormikItem>
+
+          <FormikItem name="dateRange">
+            <DateRangePicker />
           </FormikItem>
 
           <button type="submit" className="bg-primary text-white px-4 py-2 rounded">

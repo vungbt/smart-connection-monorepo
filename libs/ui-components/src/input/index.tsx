@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import { InputHTMLAttributes, forwardRef } from 'react';
 import { IconName, RenderIcon } from '../icons';
 import { FormLabel } from '../form/form-label';
+import { getIconSize } from '../common';
 
 export type InputProps = {
   className?: string;
@@ -114,16 +115,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     ref
   ) => {
     const colorClass = error ? colorClasses.error[variant] : colorClasses[color][variant];
-    const getIconSize = (): string => {
-      switch (size) {
-        case 'small':
-          return '!h-4 !w-4';
-        case 'large':
-          return '!h-5 !w-5';
-        default:
-          return '!h-4 !w-4';
-      }
-    };
 
     const getHelperTextSize = (): string => {
       switch (size) {
@@ -149,12 +140,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
               <RenderIcon
                 name={loading ? 'loading' : icon}
-                className={clsx(getIconSize(), customClasses?.icon, loading && 'animate-spin')}
+                className={clsx(getIconSize(size), customClasses?.icon, loading && 'animate-spin')}
               />
             </div>
           )}
 
           <input
+            {...rest}
             ref={ref}
             id={id}
             className={clsx(
@@ -168,14 +160,13 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               customClasses?.input
             )}
             disabled={disabled || loading}
-            {...rest}
           />
 
           {iconRight && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
               <RenderIcon
                 name={iconRight}
-                className={clsx(getIconSize(), customClasses?.iconRight)}
+                className={clsx(getIconSize(size), customClasses?.iconRight)}
               />
             </div>
           )}

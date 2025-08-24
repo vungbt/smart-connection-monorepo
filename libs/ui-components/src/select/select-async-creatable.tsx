@@ -6,6 +6,7 @@ import { GroupBase, Props as ReactSelectProps, components } from 'react-select';
 import { IconName, RenderIcon } from '../icons';
 import { Tag } from '../tag';
 import type { SelectOption } from './select';
+import { getIconSize } from '../common';
 
 export type SelectAsyncCreatableProps = {
   className?: string;
@@ -174,28 +175,6 @@ export const SelectAsyncCreatable = forwardRef<any, SelectAsyncCreatableProps>(
   ) => {
     const colorClass = error ? colorClasses.error[variant] : colorClasses[color][variant];
 
-    const getIconSize = (): string => {
-      switch (size) {
-        case 'small':
-          return '!h-4 !w-4';
-        case 'large':
-          return '!h-5 !w-5';
-        default:
-          return '!h-4 !w-4';
-      }
-    };
-
-    const getHeightClasses = (): string => {
-      switch (size) {
-        case 'small':
-          return 'min-h-[32px]';
-        case 'large':
-          return 'min-h-[48px]';
-        default:
-          return 'min-h-[40px]';
-      }
-    };
-
     const customStyles = {
       control: (provided: any) => ({
         ...provided,
@@ -280,7 +259,7 @@ export const SelectAsyncCreatable = forwardRef<any, SelectAsyncCreatableProps>(
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10">
             <RenderIcon
               name={loading ? 'loading' : icon}
-              className={clsx(getIconSize(), customClasses?.icon, loading && 'animate-spin')}
+              className={clsx(getIconSize(size), customClasses?.icon, loading && 'animate-spin')}
             />
           </div>
         )}
@@ -288,7 +267,6 @@ export const SelectAsyncCreatable = forwardRef<any, SelectAsyncCreatableProps>(
         <div
           className={clsx(
             'relative',
-            getHeightClasses(),
             getPaddingClasses(size, !!icon, !!iconRight),
             'border rounded-lg transition-all ease-in-out focus-within:shadow-border',
             colorClass,
@@ -298,6 +276,7 @@ export const SelectAsyncCreatable = forwardRef<any, SelectAsyncCreatableProps>(
           )}
         >
           <AsyncCreatableSelect
+            {...rest}
             ref={ref as any}
             id={id}
             instanceId={id}
@@ -318,7 +297,6 @@ export const SelectAsyncCreatable = forwardRef<any, SelectAsyncCreatableProps>(
               MultiValue,
               ...rest.components,
             }}
-            {...rest}
           />
         </div>
 
@@ -326,7 +304,7 @@ export const SelectAsyncCreatable = forwardRef<any, SelectAsyncCreatableProps>(
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10">
             <RenderIcon
               name={iconRight}
-              className={clsx(getIconSize(), customClasses?.iconRight)}
+              className={clsx(getIconSize(size), customClasses?.iconRight)}
             />
           </div>
         )}

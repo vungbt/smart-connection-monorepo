@@ -1,9 +1,78 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'react-datepicker/dist/react-datepicker.css';
+@import 'react-tabs/style/react-tabs.css';
 
 @layer base {
   main {
     @apply font-primary;
+  }
+}
+
+.datepicker-custom {
+  .react-datepicker-wrapper {
+    @apply w-full;
+
+    .react-datepicker__input-container {
+      .react-datepicker__close-icon {
+        @apply hidden;
+      }
+    }
+  }
+}
+
+.datepicker-popper-custom {
+  @apply bg-neutral-white;
+
+  .react-datepicker__triangle {
+    color: var(--color-neutral-white) !important;
+    fill: var(--color-neutral-white) !important;
+    stroke: var(--color-neutral) !important;
+  }
+
+  .react-datepicker {
+    @apply border border-solid border-neutral font-primary;
+
+    .react-datepicker__month-container {
+      .react-datepicker__header {
+        @apply bg-neutral-white border-b-neutral;
+      }
+
+      .react-datepicker__month {
+        @apply bg-neutral-white font-medium;
+
+        .react-datepicker__week {
+          .react-datepicker__day {
+            @apply font-medium text-black transition-all ease-linear;
+
+            &:hover {
+              @apply bg-neutral-bg;
+            }
+          }
+
+          .react-datepicker__day--keyboard-selected {
+            @apply bg-transparent;
+          }
+
+          .react-datepicker__day--selected,
+          .react-datepicker__day--in-range {
+            @apply bg-primary border-none text-neutral-white transition-all ease-linear outline-none;
+
+            &:hover {
+              @apply text-black;
+            }
+          }
+
+          .react-datepicker__day--in-selecting-range {
+            @apply bg-primary-background;
+          }
+
+          .react-datepicker__day--selecting-range-start {
+            @apply !bg-primary !text-white;
+          }
+        }
+      }
+    }
   }
 }

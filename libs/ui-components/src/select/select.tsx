@@ -1,9 +1,10 @@
 'use client';
 import clsx from 'clsx';
-import { forwardRef } from 'react';
+import { forwardRef, useId } from 'react';
 import ReactSelect, { GroupBase, Props as ReactSelectProps, components } from 'react-select';
 import { IconName, RenderIcon } from '../icons';
 import { Tag } from '../tag';
+import { getIconSize } from '../common';
 
 export type SelectOption = {
   label: string;
@@ -157,8 +158,8 @@ export const Select = forwardRef<any, SelectProps>(
   (
     {
       className,
-      disabled,
-      loading,
+      disabled = false,
+      loading = false,
       size = 'middle',
       color = 'neutral',
       variant = 'outline',
@@ -177,28 +178,7 @@ export const Select = forwardRef<any, SelectProps>(
     ref
   ) => {
     const colorClass = error ? colorClasses.error[variant] : colorClasses[color][variant];
-
-    const getIconSize = (): string => {
-      switch (size) {
-        case 'small':
-          return '!h-4 !w-4';
-        case 'large':
-          return '!h-5 !w-5';
-        default:
-          return '!h-4 !w-4';
-      }
-    };
-
-    const getHeightClasses = (): string => {
-      switch (size) {
-        case 'small':
-          return 'min-h-[32px]';
-        case 'large':
-          return 'min-h-[48px]';
-        default:
-          return 'min-h-[40px]';
-      }
-    };
+    const reactId = useId(); // consistent between SSR and client
 
     const customStyles = {
       control: (provided: any, state: any) => ({
@@ -283,12 +263,12 @@ export const Select = forwardRef<any, SelectProps>(
     };
 
     return (
-      <div className={clsx('w-full relative', customClasses?.root)}>
+      <div className={clsx('w-full relative', customClasses?.root)} suppressHydrationWarning>
         {icon && (
           <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10">
             <RenderIcon
               name={loading ? 'loading' : icon}
-              className={clsx(getIconSize(), customClasses?.icon, loading && 'animate-spin')}
+              className={clsx(getIconSize(size), customClasses?.icon, loading && 'animate-spin')}
             />
           </div>
         )}
@@ -296,7 +276,6 @@ export const Select = forwardRef<any, SelectProps>(
         <div
           className={clsx(
             'relative',
-            getHeightClasses(),
             getPaddingClasses(size, !!icon, !!iconRight),
             'border rounded-lg transition-all ease-in-out focus-within:shadow-border',
             colorClass,
@@ -306,11 +285,11 @@ export const Select = forwardRef<any, SelectProps>(
           )}
         >
           <ReactSelect
+            {...rest}
             ref={ref}
             id={id}
-            instanceId={id}
+            instanceId={reactId}
             options={options}
-            placeholder={placeholder}
             isDisabled={disabled || loading}
             isLoading={loading}
             isClearable={isClearable}
@@ -318,13 +297,13 @@ export const Select = forwardRef<any, SelectProps>(
             isMulti={isMulti}
             styles={customStyles}
             className={sizeClasses[size]}
+            placeholder={placeholder}
             components={{
               DropdownIndicator,
               ClearIndicator,
               MultiValue,
               ...rest.components,
             }}
-            {...rest}
           />
         </div>
 
@@ -332,7 +311,7 @@ export const Select = forwardRef<any, SelectProps>(
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10">
             <RenderIcon
               name={iconRight}
-              className={clsx(getIconSize(), customClasses?.iconRight)}
+              className={clsx(getIconSize(size), customClasses?.iconRight)}
             />
           </div>
         )}
