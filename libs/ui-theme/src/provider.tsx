@@ -155,12 +155,16 @@ export function UIProvider(props: ThemeProviderProps) {
 
   return (
     <UIContext.Provider value={{ theme, setTheme }}>
-      <main style={getStyle(theme)} className="h-screen">
-        {theme?.stylesheets?.map((stylesheet, index) => (
-          <link key={index} rel="stylesheet" href={stylesheet} />
-        ))}
-        {props.children}
-      </main>
+      <html lang="en" style={getStyle(theme)} suppressHydrationWarning>
+        <body>
+          <main className="h-screen">
+            {theme?.stylesheets?.map((stylesheet, index) => (
+              <link key={index} rel="stylesheet" href={stylesheet} />
+            ))}
+            {props.children}
+          </main>
+        </body>
+      </html>
     </UIContext.Provider>
   );
 }

@@ -2,7 +2,6 @@
 import clsx from 'clsx';
 import React, { ReactNode } from 'react';
 import { Tabs as ReactTabs, Tab, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css';
 import { IconName, RenderIcon } from '../icons';
 
 export type TabItem = {

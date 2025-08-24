@@ -33,6 +33,14 @@ import CloudArrowUp from './cloud-arrow-up';
 import User from './user';
 import TrashSolid from './trash-solid';
 import ChevronDown from './chevron-down';
+import Calendar from './calendar';
+import CalendarSolid from './calendar-solid';
+import CalendarDays from './calendar-days';
+import CalendarDaysSolid from './calendar-days-solid';
+import CalendarDateRange from './calendar-date-range';
+import CalendarDateRangeSolid from './calendar-date-range-solid';
+import Clock from './clock';
+import ClockSolid from './clock-solid';
 
 export type IconProps = {
   className?: string;
@@ -77,6 +85,14 @@ const IconsDefine = {
   user: 'user',
   'trash-solid': 'trash-solid',
   'chevron-down': 'chevron-down',
+  calendar: 'calendar',
+  'calendar-solid': 'calendar-solid',
+  'calendar-days': 'calendar-days',
+  'calendar-days-solid': 'calendar-days-solid',
+  'calendar-date-range': 'calendar-date-range',
+  'calendar-date-range-solid': 'calendar-date-range-solid',
+  clock: 'clock',
+  'clock-solid': 'clock-solid',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -182,6 +198,30 @@ export const Icons: IconsType = {
   },
   'chevron-down': (props: IconProps) => {
     return <ChevronDown {...props} />;
+  },
+  calendar: (props: IconProps) => {
+    return <Calendar {...props} />;
+  },
+  'calendar-solid': (props: IconProps) => {
+    return <CalendarSolid {...props} />;
+  },
+  'calendar-days': (props: IconProps) => {
+    return <CalendarDays {...props} />;
+  },
+  'calendar-days-solid': (props: IconProps) => {
+    return <CalendarDaysSolid {...props} />;
+  },
+  'calendar-date-range': (props: IconProps) => {
+    return <CalendarDateRange {...props} />;
+  },
+  'calendar-date-range-solid': (props: IconProps) => {
+    return <CalendarDateRangeSolid {...props} />;
+  },
+  clock: (props: IconProps) => {
+    return <Clock {...props} />;
+  },
+  'clock-solid': (props: IconProps) => {
+    return <ClockSolid {...props} />;
   },
   // Add more icons here
 };
