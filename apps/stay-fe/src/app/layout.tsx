@@ -7,12 +7,8 @@ import '@/styles/index.css';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
-        <UIProvider config={themeToken.variants}>
-          <ApiQueryProvider>{children}</ApiQueryProvider>
-        </UIProvider>
-      </body>
-    </html>
+    <UIProvider config={themeToken.variants}>
+      <ApiQueryProvider>{children}</ApiQueryProvider>
+    </UIProvider>
   );
 }

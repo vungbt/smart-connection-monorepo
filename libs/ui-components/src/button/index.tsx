@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import React, { ButtonHTMLAttributes, forwardRef } from 'react';
 import { IconName, RenderIcon } from '../icons';
+import { getIconSize } from '../common';
 
 export type ButtonProps = {
   children?: React.ReactNode;
@@ -107,17 +108,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ) => {
     const colorClass = danger ? colorClasses.error[variant] : colorClasses[color][variant];
 
-    const getIconSize = (): string => {
-      switch (size) {
-        case 'small':
-          return '!h-4 !w-4';
-        case 'large':
-          return '!h-5 !w-5';
-        default:
-          return '!h-4 !w-4';
-      }
-    };
-
     return (
       <button
         ref={ref}
@@ -136,13 +126,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {loading ? (
           <RenderIcon
             name="loading"
-            className={clsx(getIconSize(), children ? 'mr-2' : '', customClasses?.icon)}
+            className={clsx(getIconSize(size), children ? 'mr-2' : '', customClasses?.icon)}
           />
         ) : (
           icon && (
             <RenderIcon
               name={icon}
-              className={clsx(getIconSize(), children ? 'mr-2' : '', customClasses?.icon)}
+              className={clsx(getIconSize(size), children ? 'mr-2' : '', customClasses?.icon)}
             />
           )
         )}
@@ -150,7 +140,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {iconRight && (
           <RenderIcon
             name={iconRight}
-            className={clsx(getIconSize(), children ? 'ml-2' : '', customClasses?.iconRight)}
+            className={clsx(getIconSize(size), children ? 'ml-2' : '', customClasses?.iconRight)}
           />
         )}
       </button>

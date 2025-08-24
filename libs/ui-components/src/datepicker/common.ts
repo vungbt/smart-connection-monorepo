@@ -1,9 +1,6 @@
-import clsx from 'clsx';
-import { InputHTMLAttributes, forwardRef, useState } from 'react';
-import { IconName, RenderIcon } from '../icons';
-import { getIconSize } from '../common';
+import { IconName } from '../icons';
 
-export type InputPasswordProps = {
+export type BaseDatePickerProps = {
   className?: string;
   disabled?: boolean;
   loading?: boolean;
@@ -11,10 +8,16 @@ export type InputPasswordProps = {
   color?: 'primary' | 'secondary' | 'success' | 'error' | 'pending' | 'neutral';
   variant?: 'solid' | 'outline' | 'subtle' | 'ghost';
   icon?: IconName;
-  label?: string;
-  helperText?: string;
   error?: string;
-  required?: boolean;
+  placeholder?: string;
+  dateFormat?: string;
+  popperClassName?: string;
+  minDate?: Date;
+  maxDate?: Date;
+  isClearable?: boolean;
+  showTimeSelect?: boolean;
+  timeIntervals?: number;
+  locale?: string;
   customClasses?: {
     root?: string;
     label?: string;
@@ -24,15 +27,15 @@ export type InputPasswordProps = {
     helperText?: string;
     error?: string;
   };
-} & Omit<InputHTMLAttributes<HTMLInputElement>, 'size' | 'password'>;
+};
 
-const sizeClasses = {
+export const sizeClasses = {
   small: 'px-2 py-1 text-14',
   middle: 'px-4 py-2 text-14',
   large: 'px-6 py-3 text-16',
 };
 
-const colorClasses = {
+export const colorClasses = {
   primary: {
     solid:
       'bg-primary-background border-primary text-primary-base focus:border-primary focus:shadow-primary-background',
@@ -91,95 +94,22 @@ const colorClasses = {
   },
 };
 
-export const InputPassword = forwardRef<HTMLInputElement, InputPasswordProps>(
-  (
-    {
-      className,
-      disabled,
-      loading,
-      size = 'middle',
-      color = 'neutral',
-      variant = 'outline',
-      icon,
-      helperText,
-      error,
-      customClasses,
-      id,
-      ...rest
-    },
-    ref
-  ) => {
-    const [showPassword, setShowPassword] = useState(false);
-    const colorClass = error ? colorClasses.error[variant] : colorClasses[color][variant];
+export const getPaddingClasses = (
+  size: 'small' | 'middle' | 'large',
+  hasIcon: boolean,
+  hasIconRight: boolean
+): string => {
+  const basePadding = {
+    small: hasIcon ? 'pl-8' : 'pl-2',
+    middle: hasIcon ? 'pl-10' : 'pl-4',
+    large: hasIcon ? 'pl-12' : 'pl-6',
+  };
 
-    const getHelperTextSize = (): string => {
-      switch (size) {
-        case 'small':
-          return 'text-14';
-        case 'large':
-          return 'text-16';
-        default:
-          return 'text-14';
-      }
-    };
+  const rightPadding = {
+    small: hasIconRight ? 'pr-8' : 'pr-2',
+    middle: hasIconRight ? 'pr-10' : 'pr-2',
+    large: hasIconRight ? 'pr-12' : 'pr-4',
+  };
 
-    return (
-      <div className={clsx('w-full', customClasses?.root)}>
-        <div className="relative">
-          {icon && (
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-              <RenderIcon
-                name={loading ? 'loading' : icon}
-                className={clsx(getIconSize(size), customClasses?.icon, loading && 'animate-spin')}
-              />
-            </div>
-          )}
-
-          <input
-            ref={ref}
-            id={id}
-            type={showPassword ? 'text' : 'password'}
-            className={clsx(
-              'w-full border rounded-lg transition-all ease-in-out outline-none focus:shadow-border',
-              sizeClasses[size],
-              colorClass,
-              icon ? (size === 'small' ? 'pl-8' : size === 'large' ? 'pl-12' : 'pl-10') : '',
-              size === 'small' ? 'pr-8' : size === 'large' ? 'pr-12' : 'pr-10',
-              disabled || loading ? 'opacity-50 cursor-not-allowed' : '',
-              className,
-              customClasses?.input
-            )}
-            disabled={disabled || loading}
-            {...rest}
-          />
-
-          <div
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 w-fit cursor-pointer z-[1]"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            <RenderIcon
-              name={showPassword ? 'eye' : 'eye-slash'}
-              className={clsx(getIconSize(size), customClasses?.iconRight)}
-            />
-          </div>
-        </div>
-
-        {helperText && (
-          <div className="mt-1">
-            <p
-              className={clsx(
-                'text-neutral-placeholder',
-                getHelperTextSize(),
-                customClasses?.helperText
-              )}
-            >
-              {helperText}
-            </p>
-          </div>
-        )}
-      </div>
-    );
-  }
-);
-
-InputPassword.displayName = 'InputPassword';
+  return `${basePadding[size]} ${rightPadding[size]}`;
+};

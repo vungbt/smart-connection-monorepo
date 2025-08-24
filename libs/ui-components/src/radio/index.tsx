@@ -63,7 +63,7 @@ const colorClasses = {
     },
     default: {
       root: 'flex items-center gap-1',
-      circle: 'peer-checked:border-primary group-hover:border-primary',
+      circle: 'peer-checked:border-primary group-hover:border-primary border-neutral',
       label: '',
     },
   },
@@ -76,59 +76,61 @@ const colorClasses = {
     },
     default: {
       root: 'flex items-center gap-1',
-      circle: 'peer-checked:border-secondary group-hover:border-secondary',
+      circle: 'peer-checked:border-secondary group-hover:border-secondary border-neutral',
       label: '',
     },
   },
   success: {
     button: {
       root: 'flex items-center gap-1',
-      circle: '',
+      circle: 'border-success',
       label:
         'hover:text-success peer-checked:bg-success peer-checked:text-white peer-checked:border-success',
     },
     default: {
       root: 'flex items-center gap-1',
-      circle: 'peer-checked:border-success group-hover:border-success',
+      circle:
+        'border-success peer-checked:border-success group-hover:border-success border-neutral',
       label: '',
     },
   },
   error: {
     button: {
       root: 'flex items-center gap-1',
-      circle: '',
+      circle: 'border-error',
       label:
         'hover:text-error peer-checked:bg-error peer-checked:text-white peer-checked:border-error',
     },
     default: {
       root: 'flex items-center gap-1',
-      circle: 'peer-checked:border-error group-hover:border-error',
+      circle: 'border-error peer-checked:border-error group-hover:border-error',
       label: '',
     },
   },
   pending: {
     button: {
       root: 'flex items-center gap-1',
-      circle: '',
+      circle: 'border-pending',
       label:
         'hover:text-pending peer-checked:bg-pending peer-checked:text-white peer-checked:border-pending',
     },
     default: {
       root: 'flex items-center gap-1',
-      circle: 'peer-checked:border-pending group-hover:border-pending',
+      circle: 'peer-checked:border-pending group-hover:border-pending border-neutral',
       label: '',
     },
   },
   neutral: {
     button: {
       root: 'flex items-center gap-1',
-      circle: '',
+      circle: 'border-neutral',
       label:
         'hover:text-neutral peer-checked:bg-neutral peer-checked:text-white peer-checked:border-neutral',
     },
     default: {
       root: 'flex items-center gap-1',
-      circle: 'peer-checked:border-neutral group-hover:border-neutral',
+      circle:
+        'border-neutral peer-checked:border-neutral group-hover:border-neutral border-neutral',
       label: '',
     },
   },
@@ -138,17 +140,17 @@ const optionClasses = {
   default: {
     small: {
       root: 'flex items-center gap-1',
-      circle: 'w-3 h-3 rounded-full border border-solid border-neutral peer-checked:border-[4px]',
+      circle: 'w-3 h-3 rounded-full border border-solid peer-checked:border-[4px]',
       label: 'text-14 px-1',
     },
     middle: {
       root: 'flex items-center gap-1',
-      circle: 'w-4 h-4 rounded-full border border-solid border-neutral peer-checked:border-[5px]',
+      circle: 'w-4 h-4 rounded-full border border-solid peer-checked:border-[5px]',
       label: 'text-14 px-1',
     },
     large: {
       root: 'flex items-center gap-1',
-      circle: 'w-5 h-5 rounded-full border border-solid border-neutral peer-checked:border-[6px]',
+      circle: 'w-5 h-5 rounded-full border border-solid peer-checked:border-[6px]',
       label: 'text-16 px-1',
     },
   },

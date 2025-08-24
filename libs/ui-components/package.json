@@ -15,5 +15,7 @@
       "default": "./dist/index.js"
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "@smart-connection-monorepo/utils": "workspace:*"
+  }
 }
