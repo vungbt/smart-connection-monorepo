@@ -16,6 +16,7 @@ import {
   Tag,
   DatePicker,
   DateRangePicker,
+  Editor,
 } from '@smart-connection-monorepo/ui-components';
 import { FormikProps } from 'formik';
 import { useRef, useState } from 'react';
@@ -45,6 +46,7 @@ interface FormValues {
   rooms: string[];
   date: Date | null;
   dateRange: [Date | null, Date | null];
+  editor: string;
 }
 
 const initialValues: FormValues = {
@@ -58,6 +60,7 @@ const initialValues: FormValues = {
   rooms: [],
   date: null,
   dateRange: [null, null],
+  editor: '',
 };
 
 const validationSchema = yup.object({
@@ -91,6 +94,7 @@ const validationSchema = yup.object({
       return value[0] !== null && value[1] !== null;
     })
     .required('Please select a date range'),
+  editor: yup.string().required('Please enter a description'),
 });
 
 // Radio options for gender
@@ -245,6 +249,10 @@ export default function ConfigsPage() {
 
           <FormikItem name="dateRange">
             <DateRangePicker />
+          </FormikItem>
+
+          <FormikItem name="editor" label="Editor">
+            <Editor />
           </FormikItem>
 
           <button type="submit" className="bg-primary text-white px-4 py-2 rounded">

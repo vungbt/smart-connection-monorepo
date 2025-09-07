@@ -15,6 +15,7 @@ export const getStyle = (uiConfig: UIConfig) => {
     '--color-primary-hover': uiConfig.colors.primary._500,
     '--color-primary-base': uiConfig.colors.primary._600,
     '--color-primary-clicked': uiConfig.colors.primary._800,
+    '--color-primary-border': uiConfig.colors.primary._500,
 
     // Secondary Color
     '--color-secondary': uiConfig.colors.secondary.default,
@@ -22,6 +23,7 @@ export const getStyle = (uiConfig: UIConfig) => {
     '--color-secondary-hover': uiConfig.colors.secondary._500,
     '--color-secondary-base': uiConfig.colors.secondary._600,
     '--color-secondary-clicked': uiConfig.colors.secondary._800,
+    '--color-secondary-border': uiConfig.colors.secondary._500,
 
     // Neutral Color
     '--color-neutral': uiConfig.colors.neutral.default,

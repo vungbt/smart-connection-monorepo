@@ -1,7 +1,12 @@
 'use client';
 import clsx from 'clsx';
 import { forwardRef, useId } from 'react';
-import ReactSelect, { GroupBase, Props as ReactSelectProps, components } from 'react-select';
+import ReactSelect, {
+  GroupBase,
+  PlaceholderProps,
+  Props as ReactSelectProps,
+  components,
+} from 'react-select';
 import { IconName, RenderIcon } from '../icons';
 import { Tag } from '../tag';
 import { getIconSize } from '../common';
@@ -37,6 +42,7 @@ export type SelectProps = {
     iconRight?: string;
     helperText?: string;
     error?: string;
+    indicatorClassName?: string;
   };
 } & Omit<ReactSelectProps<SelectOption, boolean, GroupBase<SelectOption>>, 'size' | 'required'>;
 
@@ -97,9 +103,9 @@ const colorClasses = {
   },
   neutral: {
     solid:
-      'bg-neutral-bg border-neutral text-neutral-text-primary focus-within:border-neutral-text-primary focus-within:shadow-neutral-bg',
+      'bg-neutral-bg border-neutral text-neutral-text-primary focus-within:border-primary-border focus-within:shadow-neutral-bg',
     outline:
-      'bg-transparent border-neutral text-neutral-text-primary focus-within:border-neutral-text-primary focus-within:shadow-neutral-bg',
+      'bg-transparent border-neutral text-neutral-text-primary focus-within:border-primary-border focus-within:shadow-neutral-bg',
     subtle:
       'bg-neutral-bg border-neutral-bg text-neutral-text-primary focus-within:border-neutral focus-within:shadow-neutral-bg',
     ghost:
@@ -135,7 +141,8 @@ const DropdownIndicator = (props: any) => {
         name="chevron-down"
         className={clsx(
           'text-neutral-placeholder transition-transform duration-200 !w-5 !h-5',
-          props.selectProps.menuIsOpen ? 'rotate-180' : ''
+          props.selectProps.menuIsOpen ? 'rotate-180' : '',
+          props.indicatorClassName
         )}
       />
     </components.DropdownIndicator>
@@ -152,6 +159,10 @@ const ClearIndicator = (props: any) => {
       />
     </components.ClearIndicator>
   );
+};
+
+const Placeholder = (props: PlaceholderProps<SelectOption>) => {
+  return <components.Placeholder {...props} className="!text-neutral-placeholder" />;
 };
 
 export const Select = forwardRef<any, SelectProps>(
@@ -226,22 +237,20 @@ export const Select = forwardRef<any, SelectProps>(
       option: (provided: any, state: any) => ({
         ...provided,
         backgroundColor: state.isSelected
-          ? 'var(--color-primary-500)'
+          ? 'var(--color-primary-bg)'
           : state.isFocused
-          ? 'var(--color-neutral-100)'
+          ? 'var(--color-primary-bg)'
           : 'transparent',
-        color: state.isSelected ? 'white' : 'var(--color-neutral-700)',
+        color: state.isSelected ? 'var(--color-primary-hover)' : '',
         '&:hover': {
-          backgroundColor: state.isSelected
-            ? 'var(--color-primary-600)'
-            : 'var(--color-neutral-100)',
+          backgroundColor: state.isSelected ? 'var(--color-primary-bg)' : 'var(--color-primary-bg)',
         },
       }),
       menu: (provided: any) => ({
         ...provided,
         zIndex: 50,
         boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        border: '1px solid var(--color-neutral-200)',
+        border: '1px solid var(--color-neutral)',
         borderRadius: '8px',
       }),
     };
@@ -299,9 +308,15 @@ export const Select = forwardRef<any, SelectProps>(
             className={sizeClasses[size]}
             placeholder={placeholder}
             components={{
-              DropdownIndicator,
+              DropdownIndicator: (props: any) => (
+                <DropdownIndicator
+                  {...props}
+                  indicatorClassName={customClasses?.indicatorClassName}
+                />
+              ),
               ClearIndicator,
               MultiValue,
+              Placeholder,
               ...rest.components,
             }}
           />

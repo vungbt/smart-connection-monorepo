@@ -30,7 +30,7 @@ export type InputProps = {
 
 const sizeClasses = {
   small: 'px-2 py-1 text-14',
-  middle: 'px-4 py-2 text-14',
+  middle: 'min-h-10 px-4 py-2 text-14',
   large: 'px-6 py-3 text-16',
 };
 
@@ -83,13 +83,13 @@ const colorClasses = {
   },
   neutral: {
     solid:
-      'bg-neutral-bg border-neutral text-neutral-text-primary focus:border-neutral-text-primary focus:shadow-neutral-bg',
+      'bg-neutral-bg border-neutral text-neutral-text-primary focus:border-primary-border focus:shadow-neutral-bg',
     outline:
-      'bg-transparent border-neutral text-neutral-text-primary focus:border-neutral-text-primary focus:shadow-neutral-bg',
+      'bg-transparent border-neutral text-neutral-text-primary focus:border-primary-border focus:shadow-neutral-bg',
     subtle:
-      'bg-neutral-bg border-neutral-bg text-neutral-text-primary focus:border-neutral focus:shadow-neutral-bg',
+      'bg-neutral-bg border-neutral-bg text-neutral-text-primary focus:border-primary-border focus:shadow-neutral-bg',
     ghost:
-      'text-neutral-text-primary bg-transparent border border-dashed border-neutral hover:bg-neutral-bg focus:shadow-none',
+      'text-neutral-text-primary bg-transparent border border-dashed border-primary-border hover:bg-neutral-bg focus:shadow-none',
   },
 };
 

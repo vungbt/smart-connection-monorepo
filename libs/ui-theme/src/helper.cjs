@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const createTWConfig = ({ content = [] } = {}) => {
   return {
     darkMode: 'class',
@@ -17,7 +18,7 @@ const createTWConfig = ({ content = [] } = {}) => {
         },
         boxShadow: {
           md: '0px 8px 12px rgba(56, 5, 89, 0.16)',
-          border: '0px 0px 0px 1px rgba(59, 130, 246, 1), 0px 0px 0px 2px rgba(59, 130, 246, 0.2)',
+          border: '0px 0px 0px 1px rgba(252, 114, 24, 1), 0px 0px 0px 2px rgba(252, 114, 24, 0.2)',
         },
         textShadow: {
           sm: '1px 1px 2px rgba(0, 0, 0, 0.25)',
@@ -42,6 +43,7 @@ const createTWConfig = ({ content = [] } = {}) => {
           hover: 'var(--color-primary-hover)',
           base: 'var(--color-primary-base)',
           clicked: 'var(--color-primary-clicked)',
+          border: 'var(--color-primary-border)',
         },
         secondary: {
           DEFAULT: 'var(--color-secondary)',
@@ -49,6 +51,7 @@ const createTWConfig = ({ content = [] } = {}) => {
           hover: 'var(--color-secondary-hover)',
           base: 'var(--color-secondary-base)',
           clicked: 'var(--color-secondary-clicked)',
+          border: 'var(--color-secondary-border)',
         },
         neutral: {
           DEFAULT: 'var(--color-neutral)',

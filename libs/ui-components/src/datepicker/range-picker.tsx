@@ -78,7 +78,7 @@ export const DateRangePicker = forwardRef<HTMLInputElement, DateRangePickerProps
           shouldCloseOnSelect={false}
         />
 
-        {isClearable ? (
+        {isClearable && (value || []).filter(Boolean)?.length ? (
           <span
             onClick={onHandleClear}
             className={clsx(
@@ -87,7 +87,11 @@ export const DateRangePicker = forwardRef<HTMLInputElement, DateRangePickerProps
           >
             <RenderIcon
               name="x-mark"
-              className={clsx('cursor-pointer !w-3 !h-3', getIconSize(size), customClasses?.icon)}
+              className={clsx(
+                'cursor-pointer !w-3 !h-3 text-neutral-placeholder',
+                getIconSize(size),
+                customClasses?.icon
+              )}
             />
           </span>
         ) : null}
@@ -95,7 +99,7 @@ export const DateRangePicker = forwardRef<HTMLInputElement, DateRangePickerProps
           <label>
             <RenderIcon
               className={clsx(
-                'absolute top-1/2 right-4 transform -translate-y-1/2',
+                'absolute top-1/2 right-4 transform -translate-y-1/2 text-neutral-placeholder',
                 getIconSize(size),
                 customClasses?.icon,
                 loading && 'animate-spin'
