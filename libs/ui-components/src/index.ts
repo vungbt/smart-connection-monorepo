@@ -20,3 +20,4 @@ export * from './form/form-label';
 export * from './select';
 export * from './tag';
 export * from './datepicker';
+export * from './editor';

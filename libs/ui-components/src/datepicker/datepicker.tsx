@@ -68,7 +68,7 @@ export const DatePicker = forwardRef<HTMLInputElement, DatePickerProps>(
           <label>
             <RenderIcon
               className={clsx(
-                'absolute top-1/2 right-4 transform -translate-y-1/2',
+                'absolute top-1/2 right-4 transform -translate-y-1/2 text-neutral-placeholder',
                 getIconSize(size),
                 customClasses?.icon,
                 loading && 'animate-spin'

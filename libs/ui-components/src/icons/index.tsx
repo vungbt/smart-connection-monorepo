@@ -41,6 +41,29 @@ import CalendarDateRange from './calendar-date-range';
 import CalendarDateRangeSolid from './calendar-date-range-solid';
 import Clock from './clock';
 import ClockSolid from './clock-solid';
+import LucideBold from './lucide-bold';
+import LucideItalic from './lucide-italic';
+import LucideUndo from './lucide-undo';
+import LucideRedo from './lucide-redo';
+import LucideEraser from './lucide-eraser';
+import LucideImage from './lucide-image';
+import LucideVideo from './lucide-video';
+import LucideQuote from './lucide-quote';
+import LucideUnderline from './lucide-underline';
+import LucideStrikethrough from './lucide-strikethrough';
+import LucideCode from './lucide-code';
+import LucideLink from './lucide-link';
+import LucideHeading1 from './lucide-heading1';
+import LucideHeading2 from './lucide-heading2';
+import LucideParagraph from './lucide-paragraph';
+import LucideList from './lucide-list';
+import LucideListOrdered from './lucide-list-ordered';
+import LucideLeft from './lucide-left';
+import LucideCenter from './lucide-center';
+import LucideRight from './lucide-right';
+import LucideJustify from './lucide-justify';
+import LucideLinkOff from './lucide-link-off';
+import Pencil from './pencil';
 
 export type IconProps = {
   className?: string;
@@ -93,6 +116,31 @@ const IconsDefine = {
   'calendar-date-range-solid': 'calendar-date-range-solid',
   clock: 'clock',
   'clock-solid': 'clock-solid',
+  undo: 'undo',
+  redo: 'redo',
+  bold: 'bold',
+  italic: 'italic',
+  underline: 'underline',
+  strikethrough: 'strikethrough',
+  code: 'code',
+  link: 'link',
+  'link-off': 'link-off',
+  h1: 'h1',
+  h2: 'h2',
+  paragraph: 'paragraph',
+  list: 'list',
+  'list-ordered': 'list-ordered',
+  left: 'left',
+  center: 'center',
+  right: 'right',
+  justify: 'justify',
+  eraser: 'eraser',
+  image: 'image',
+  video: 'video',
+  quote: 'quote',
+  ul: 'ul',
+  ol: 'ol',
+  pencil: 'pencil',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -222,6 +270,81 @@ export const Icons: IconsType = {
   },
   'clock-solid': (props: IconProps) => {
     return <ClockSolid {...props} />;
+  },
+  undo: (props: IconProps) => {
+    return <LucideUndo {...props} />;
+  },
+  redo: (props: IconProps) => {
+    return <LucideRedo {...props} />;
+  },
+  bold: (props: IconProps) => {
+    return <LucideBold {...props} />;
+  },
+  italic: (props: IconProps) => {
+    return <LucideItalic {...props} />;
+  },
+  underline: (props: IconProps) => {
+    return <LucideUnderline {...props} />;
+  },
+  strikethrough: (props: IconProps) => {
+    return <LucideStrikethrough {...props} />;
+  },
+  code: (props: IconProps) => {
+    return <LucideCode {...props} />;
+  },
+  link: (props: IconProps) => {
+    return <LucideLink {...props} />;
+  },
+  'link-off': (props: IconProps) => {
+    return <LucideLinkOff {...props} />;
+  },
+  h1: (props: IconProps) => {
+    return <LucideHeading1 {...props} />;
+  },
+  h2: (props: IconProps) => {
+    return <LucideHeading2 {...props} />;
+  },
+  paragraph: (props: IconProps) => {
+    return <LucideParagraph {...props} />;
+  },
+  list: (props: IconProps) => {
+    return <LucideList {...props} />;
+  },
+  'list-ordered': (props: IconProps) => {
+    return <LucideListOrdered {...props} />;
+  },
+  left: (props: IconProps) => {
+    return <LucideLeft {...props} />;
+  },
+  center: (props: IconProps) => {
+    return <LucideCenter {...props} />;
+  },
+  right: (props: IconProps) => {
+    return <LucideRight {...props} />;
+  },
+  justify: (props: IconProps) => {
+    return <LucideJustify {...props} />;
+  },
+  eraser: (props: IconProps) => {
+    return <LucideEraser {...props} />;
+  },
+  image: (props: IconProps) => {
+    return <LucideImage {...props} />;
+  },
+  video: (props: IconProps) => {
+    return <LucideVideo {...props} />;
+  },
+  quote: (props: IconProps) => {
+    return <LucideQuote {...props} />;
+  },
+  ul: (props: IconProps) => {
+    return <LucideList {...props} />;
+  },
+  ol: (props: IconProps) => {
+    return <LucideListOrdered {...props} />;
+  },
+  pencil: (props: IconProps) => {
+    return <Pencil {...props} />;
   },
   // Add more icons here
 };
