@@ -21,7 +21,8 @@
       "@/*": ["./src/*"],
       "@smart-connection-monorepo/ui-theme": ["../../libs/ui-theme/src/index.ts"],
       "@smart-connection-monorepo/ui-theme/theme-token/*": ["../../libs/ui-theme/theme-token/*"],
-      "@smart-connection-monorepo/ui-components": ["../../libs/ui-components/src/index.ts"]
+      "@smart-connection-monorepo/ui-components": ["../../libs/ui-components/src/index.ts"],
+      "@smart-connection-monorepo/ui-modules": ["../../libs/ui-modules/src/index.ts"]
     },
     "outDir": "dist",
     "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
@@ -53,6 +54,9 @@
     },
     {
       "path": "../../libs/ui-components"
+    },
+    {
+      "path": "../../libs/ui-modules"
     }
   ]
 }

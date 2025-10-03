@@ -2,6 +2,7 @@ import { useField } from 'formik';
 import React, { ReactElement, cloneElement } from 'react';
 import { FormLabel } from './form-label';
 import { FormErrorMessage } from './form-error-message';
+import clsx from 'clsx';
 
 interface FormikItemProps {
   name: string;
@@ -9,6 +10,7 @@ interface FormikItemProps {
   children: ReactElement<any>;
   required?: boolean;
   size?: 'small' | 'middle' | 'large';
+  className?: string;
 }
 
 export const FormikItem: React.FC<FormikItemProps> = ({
@@ -17,11 +19,12 @@ export const FormikItem: React.FC<FormikItemProps> = ({
   children,
   required,
   size,
+  className,
 }) => {
   const [field, meta] = useField(name);
   const isError = meta.touched && !!meta.error;
   return (
-    <div className="mb-4">
+    <div className={clsx('mb-4', className)}>
       {label && (
         <FormLabel id={name} size={size} required={required}>
           {label}

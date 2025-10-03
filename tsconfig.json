@@ -17,6 +17,9 @@
     },
     {
       "path": "./apps/stay-api"
+    },
+    {
+      "path": "./libs/ui-modules"
     }
   ],
   "ts-node": {

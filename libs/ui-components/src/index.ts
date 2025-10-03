@@ -21,3 +21,6 @@ export * from './select';
 export * from './tag';
 export * from './datepicker';
 export * from './editor';
+export * from './sidebar';
+export * from './menu';
+export * from './drawer';

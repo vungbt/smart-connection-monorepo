@@ -48,6 +48,10 @@ const config: StorybookConfig = {
             __dirname,
             '../../../libs/ui-components/src'
           ),
+          '@smart-connection-monorepo/ui-modules': path.resolve(
+            __dirname,
+            '../../../libs/ui-modules/src'
+          ),
         },
         extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json'],
       },

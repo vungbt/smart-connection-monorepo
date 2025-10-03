@@ -1,0 +1,22 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./tsconfig.storybook.json"
+    },
+    {
+      "path": "../../libs/utils"
+    }
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@smart-connection-monorepo/utils": ["../../libs/utils/src/index.ts"],
+      "@smart-connection-monorepo/ui-components": ["../../libs/ui-components/src/index.ts"]
+    }
+  }
+}

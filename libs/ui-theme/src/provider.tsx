@@ -146,6 +146,7 @@ const UIContext = createContext<UIContextType>(initState);
 export type ThemeProviderProps = {
   config: UIConfig;
   children: JSX.Element | React.ReactNode;
+  className?: string;
 };
 
 export function UIProvider(props: ThemeProviderProps) {
@@ -158,13 +159,14 @@ export function UIProvider(props: ThemeProviderProps) {
   return (
     <UIContext.Provider value={{ theme, setTheme }}>
       <html lang="en" style={getStyle(theme)} suppressHydrationWarning>
-        <body>
-          <main className="h-screen">
-            {theme?.stylesheets?.map((stylesheet, index) => (
-              <link key={index} rel="stylesheet" href={stylesheet} />
-            ))}
-            {props.children}
-          </main>
+        <head>
+          <link rel="icon" href="/favicon.ico" sizes="any" />
+        </head>
+        <body className={`${props.className} flex bg-success-bg`}>
+          {theme?.stylesheets?.map((stylesheet, index) => (
+            <link key={index} rel="stylesheet" href={stylesheet} />
+          ))}
+          {props.children}
         </body>
       </html>
     </UIContext.Provider>

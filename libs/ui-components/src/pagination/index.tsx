@@ -6,10 +6,11 @@ import { RenderIcon } from '../icons';
 type PaginationProps = {
   limit: number;
   page: number;
-  pageCount: number;
+  pageCount?: number;
   total: number;
   className?: string;
   customClasses?: {
+    root?: string;
     container?: string;
     page?: string;
     active?: string;
@@ -28,7 +29,15 @@ export const Pagination = ({
   onChangePage,
 }: PaginationProps): ReactNode => {
   return (
-    <>
+    <div
+      data-testid="pagination-component"
+      className={clsx('flex items-center gap-2 justify-between w-full', customClasses?.root)}
+    >
+      <div className="flex items-center text-sm gap-[5px]">
+        Showing <span className="font-semibold">{limit * (page - 1)}</span> to{' '}
+        <span className="font-semibold">{limit * page}</span> of{' '}
+        <span className="font-semibold">{total}</span> results
+      </div>
       <ReactPaginate
         breakLabel="..."
         nextLabel={renderItemPageFL(true, page === pageCount)}
@@ -68,7 +77,7 @@ export const Pagination = ({
           }
         )}
       />
-    </>
+    </div>
   );
 };
 

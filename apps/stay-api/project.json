@@ -72,6 +72,41 @@
         "lintFilePatterns": ["apps/stay-api/**/*.{ts,tsx,js,jsx}"],
         "maxWarnings": -1
       }
+    },
+    "create-migration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/create-migration.js --name {args.name}",
+        "cwd": "apps/stay-api"
+      }
+    },
+    "migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "sequelize db:migrate --env development",
+        "cwd": "apps/stay-api"
+      }
+    },
+    "migrate:undo": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "sequelize db:migrate:undo --env development",
+        "cwd": "apps/stay-api"
+      }
+    },
+    "migrate:undo:all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "sequelize db:migrate:undo:all --env development",
+        "cwd": "apps/stay-api"
+      }
+    },
+    "create:migration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "sequelize migration:generate --name {args.name} --env development",
+        "cwd": "apps/stay-api"
+      }
     }
   },
   "tags": []

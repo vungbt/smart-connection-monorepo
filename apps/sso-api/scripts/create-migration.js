@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-
-const migrationName = process.argv[2];
+const migrationName = process.argv[4];
 
 if (!migrationName) {
   console.error('Please provide a migration name');
