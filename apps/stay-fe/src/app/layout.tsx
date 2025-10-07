@@ -1,14 +1,9 @@
-'use client';
+import { generateMetadata } from '@/constants/route';
+import { MainLayout } from '@/libraries';
+import { Metadata } from 'next';
 
-import { UIProvider } from '@smart-connection-monorepo/ui-theme';
-import themeToken from '@smart-connection-monorepo/ui-theme/theme-token/stay-fe.json';
-import { ApiQueryProvider } from '@smart-connection-monorepo/api-client';
-import '@/styles/index.css';
+export const metadata: Metadata = generateMetadata({ page: 'Home' });
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <UIProvider config={themeToken.variants}>
-      <ApiQueryProvider>{children}</ApiQueryProvider>
-    </UIProvider>
-  );
+  return <MainLayout>{children}</MainLayout>;
 }

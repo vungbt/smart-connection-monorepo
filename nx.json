@@ -81,5 +81,10 @@
         "linter": "none"
       }
     }
+  },
+  "targetDefaults": {
+    "test": {
+      "dependsOn": ["^build"]
+    }
   }
 }

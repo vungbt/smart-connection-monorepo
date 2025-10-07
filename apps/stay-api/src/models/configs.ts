@@ -1,7 +1,7 @@
 import sequelize from '@/configs/database';
 import { DataTypes, Model } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
-import { IConfigAttributes } from '@/types';
+import { EConfigType, IConfigAttributes } from '@/types';
 
 class ConfigsModel extends Model<IConfigAttributes> implements IConfigAttributes {
   public id!: string;
@@ -13,7 +13,7 @@ class ConfigsModel extends Model<IConfigAttributes> implements IConfigAttributes
   public electricFee!: number;
   public commonServiceFee!: number;
   public internetFee!: number;
-  public type!: string;
+  public type!: EConfigType;
   public isSpecialRoom!: boolean;
 }
 
@@ -45,7 +45,7 @@ ConfigsModel.init(
       allowNull: false,
     },
     type: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM(...Object.values(EConfigType)),
       allowNull: false,
     },
     isSpecialRoom: {

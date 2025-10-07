@@ -10,8 +10,14 @@ export interface IConfigAttributes {
   electricFee: number;
   commonServiceFee: number;
   internetFee: number;
-  type: string;
+  type: EConfigType;
   isSpecialRoom: boolean;
+}
+
+export enum EConfigType {
+  DELUXE = 'DELUXE',
+  LUXURY = 'LUXURY',
+  PREMIUM = 'PREMIUM',
 }
 
 export type ConfigItem = ConfigsModel;

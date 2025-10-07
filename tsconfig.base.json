@@ -19,6 +19,7 @@
     "customConditions": ["development"],
     "paths": {
       "@smart-connection-monorepo/ui-components": ["./libs/ui-components/src/index.ts"],
+      "@smart-connection-monorepo/ui-modules": ["./libs/ui-modules/src/index.ts"],
       "@smart-connection-monorepo/ui-theme": ["./libs/ui-theme/src/index.ts"],
       "@smart-connection-monorepo/utils": ["./libs/utils/src/index.ts"]
     }

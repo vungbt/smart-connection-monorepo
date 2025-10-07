@@ -68,7 +68,10 @@ const bootstrap = async () => {
   server.listen(port, async () => {
     try {
       await sequelize.authenticate();
-      await sequelize.sync();
+      if (env.server.env === 'development') {
+        await sequelize.sync();
+        logger.info(`[ORM] ✅ Syncing database...`);
+      }
       logger.info(`[DB] ✅ Connection has been established successfully.`);
       logger.info(`[App] ✅ started on worker ${process.pid} http://localhost:${port}/api`);
     } catch (error) {

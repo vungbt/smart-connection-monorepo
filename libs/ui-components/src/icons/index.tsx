@@ -64,6 +64,16 @@ import LucideRight from './lucide-right';
 import LucideJustify from './lucide-justify';
 import LucideLinkOff from './lucide-link-off';
 import Pencil from './pencil';
+import VuesaxElement from './vuesax-element';
+import UserGroup from './user-group';
+import Users from './users';
+import BuildingStorefront from './building-storefront';
+import VuesaxEmptyWalletChange from './vuesax-empty-wallet-change';
+import CollapseLeft from './collapse-left';
+import CollapseRight from './collapse-right';
+import Bell from './bell';
+import AdjustmentsVertical from './adjustments-vertical';
+import Plus from './plus';
 
 export type IconProps = {
   className?: string;
@@ -141,6 +151,16 @@ const IconsDefine = {
   ul: 'ul',
   ol: 'ol',
   pencil: 'pencil',
+  'vuesax-element': 'vuesax-element',
+  'user-group': 'user-group',
+  users: 'users',
+  'building-storefront': 'building-storefront',
+  'vuesax-empty-wallet-change': 'vuesax-empty-wallet-change',
+  'collapse-left': 'collapse-left',
+  'collapse-right': 'collapse-right',
+  bell: 'bell',
+  plus: 'plus',
+  'adjustments-vertical': 'adjustments-vertical',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -345,6 +365,36 @@ export const Icons: IconsType = {
   },
   pencil: (props: IconProps) => {
     return <Pencil {...props} />;
+  },
+  'vuesax-element': (props: IconProps) => {
+    return <VuesaxElement {...props} />;
+  },
+  'user-group': (props: IconProps) => {
+    return <UserGroup {...props} />;
+  },
+  users: (props: IconProps) => {
+    return <Users {...props} />;
+  },
+  'building-storefront': (props: IconProps) => {
+    return <BuildingStorefront {...props} />;
+  },
+  'vuesax-empty-wallet-change': (props: IconProps) => {
+    return <VuesaxEmptyWalletChange {...props} />;
+  },
+  'collapse-left': (props: IconProps) => {
+    return <CollapseLeft {...props} />;
+  },
+  'collapse-right': (props: IconProps) => {
+    return <CollapseRight {...props} />;
+  },
+  bell: (props: IconProps) => {
+    return <Bell {...props} />;
+  },
+  'adjustments-vertical': (props: IconProps) => {
+    return <AdjustmentsVertical {...props} />;
+  },
+  plus: (props: IconProps) => {
+    return <Plus {...props} />;
   },
   // Add more icons here
 };

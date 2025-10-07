@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@smart-connection-monorepo/ui-components": "workspace:*",
+    "@smart-connection-monorepo/ui-modules": "workspace:*",
     "@smart-connection-monorepo/ui-theme": "workspace:*",
     "@smart-connection-monorepo/api-client": "workspace:*",
     "next": "~15.2.4",

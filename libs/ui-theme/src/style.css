@@ -3,6 +3,7 @@
 @tailwind utilities;
 @import 'react-datepicker/dist/react-datepicker.css';
 @import 'react-tabs/style/react-tabs.css';
+@import 'rc-drawer/assets/index.css';
 
 @layer base {
   main {
@@ -335,4 +336,224 @@
   height: 20px;
   width: 20px;
   vertical-align: -0.25em;
+}
+
+.navbar-custom {
+  border: none !important;
+  width: 100% !important;
+  min-width: 100% !important;
+}
+
+.navbar-custom .ps-sidebar-container {
+  background: transparent !important;
+}
+
+.navbar-custom .ps-menu-button {
+  @apply p-3 gap-2 transition-all ease-linear rounded-xl;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
+
+.navbar-custom .ps-menu-button.ps-open {
+  color: var(--color-primary);
+}
+
+.navbar-custom .ps-menu-button:hover {
+  background-color: var(--color-primary-bg) !important;
+  @apply text-primary;
+}
+
+.navbar-custom .ps-menu-button:hover .ps-menu-icon {
+  @apply text-error;
+}
+
+.navbar-custom .ps-menu-icon {
+  @apply w-fit h-fit min-w-fit m-0;
+}
+
+.navbar-custom .ps-menu-label {
+  @apply text-15 font-medium;
+}
+
+.navbar-custom .ps-menu-button.ps-active {
+  background-color: var(--color-primary-bg) !important;
+  color: var(--color-primary);
+}
+
+.navbar-custom .ps-menu-button.ps-active .ps-menu-icon {
+  @apply text-error;
+}
+
+.navbar-custom.ps-collapsed {
+  width: 80px !important;
+  min-width: 80px !important;
+}
+
+/* Duration variable */
+:root {
+  --duration: 0.3s;
+}
+
+/* =====================
+   Mask Motion
+===================== */
+
+.mask-motion-enter-active,
+.mask-motion-appear-active,
+.mask-motion-leave-active {
+  transition: all var(--duration);
+}
+
+.mask-motion-enter,
+.mask-motion-appear {
+  opacity: 0;
+}
+
+.mask-motion-enter-active,
+.mask-motion-appear-active {
+  opacity: 1;
+}
+
+.mask-motion-leave {
+  opacity: 1;
+}
+
+.mask-motion-leave-active {
+  opacity: 0;
+}
+
+/* =====================
+   Panel Motion (Left)
+===================== */
+
+.panel-motion-left-enter-start,
+.panel-motion-left-appear-start,
+.panel-motion-left-leave-start {
+  transition: none !important;
+}
+
+.panel-motion-left-enter-active,
+.panel-motion-left-appear-active,
+.panel-motion-left-leave-active {
+  transition: all var(--duration);
+}
+
+.panel-motion-left-enter,
+.panel-motion-left-appear {
+  transform: translateX(-100%);
+}
+
+.panel-motion-left-enter-active,
+.panel-motion-left-appear-active {
+  transform: translateX(0);
+}
+
+.panel-motion-left-leave {
+  transform: translateX(0);
+}
+
+.panel-motion-left-leave-active {
+  transform: translateX(-100%) !important;
+}
+
+/* =====================
+   Panel Motion (Right)
+===================== */
+
+.panel-motion-right-enter-start,
+.panel-motion-right-appear-start,
+.panel-motion-right-leave-start {
+  transition: none !important;
+}
+
+.panel-motion-right-enter-active,
+.panel-motion-right-appear-active,
+.panel-motion-right-leave-active {
+  transition: all var(--duration);
+}
+
+.panel-motion-right-enter,
+.panel-motion-right-appear {
+  transform: translateX(100%);
+}
+
+.panel-motion-right-enter-active,
+.panel-motion-right-appear-active {
+  transform: translateX(0);
+}
+
+.panel-motion-right-leave {
+  transform: translateX(0);
+}
+
+.panel-motion-right-leave-active {
+  transform: translateX(100%) !important;
+}
+
+/* =====================
+   Panel Motion (Top)
+===================== */
+
+.panel-motion-top-enter-start,
+.panel-motion-top-appear-start,
+.panel-motion-top-leave-start {
+  transition: none !important;
+}
+
+.panel-motion-top-enter-active,
+.panel-motion-top-appear-active,
+.panel-motion-top-leave-active {
+  transition: all var(--duration);
+}
+
+.panel-motion-top-enter,
+.panel-motion-top-appear {
+  transform: translateY(-100%);
+}
+
+.panel-motion-top-enter-active,
+.panel-motion-top-appear-active {
+  transform: translateY(0);
+}
+
+.panel-motion-top-leave {
+  transform: translateY(0);
+}
+
+.panel-motion-top-leave-active {
+  transform: translateY(-100%) !important;
+}
+
+/* =====================
+   Panel Motion (Bottom)
+===================== */
+
+.panel-motion-bottom-enter-start,
+.panel-motion-bottom-appear-start,
+.panel-motion-bottom-leave-start {
+  transition: none !important;
+}
+
+.panel-motion-bottom-enter-active,
+.panel-motion-bottom-appear-active,
+.panel-motion-bottom-leave-active {
+  transition: all var(--duration);
+}
+
+.panel-motion-bottom-enter,
+.panel-motion-bottom-appear {
+  transform: translateY(100%);
+}
+
+.panel-motion-bottom-enter-active,
+.panel-motion-bottom-appear-active {
+  transform: translateY(0);
+}
+
+.panel-motion-bottom-leave {
+  transform: translateY(0);
+}
+
+.panel-motion-bottom-leave-active {
+  transform: translateY(100%) !important;
 }
