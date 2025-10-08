@@ -62,6 +62,14 @@ export const getStyle = (uiConfig: UIConfig) => {
     '--color-success-clicked': uiConfig.colors.success._600,
     '--color-success-border': uiConfig.colors.success._800,
 
+    // Info Color
+    '--color-info': uiConfig.colors.info.default,
+    '--color-info-bg': uiConfig.colors.info._50,
+    '--color-info-hover': uiConfig.colors.info._500,
+    '--color-info-base': uiConfig.colors.info._700,
+    '--color-info-clicked': uiConfig.colors.info._600,
+    '--color-info-border': uiConfig.colors.info._800,
+
     // --- FONT ---
     '--font-primary': uiConfig.font.primary,
   };
@@ -133,6 +141,9 @@ const initState: UIContextType = {
       success: {
         default: '',
       },
+      info: {
+        default: '',
+      },
     },
     font: {
       primary: 'sans-serif, serif, monospace, cursive',
@@ -162,7 +173,7 @@ export function UIProvider(props: ThemeProviderProps) {
         <head>
           <link rel="icon" href="/favicon.ico" sizes="any" />
         </head>
-        <body className={`${props.className} flex bg-success-bg`}>
+        <body className={`${props.className} flex bg-secondary-background`}>
           {theme?.stylesheets?.map((stylesheet, index) => (
             <link key={index} rel="stylesheet" href={stylesheet} />
           ))}

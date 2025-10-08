@@ -34,7 +34,6 @@ export const FormikItem: React.FC<FormikItemProps> = ({
       {cloneElement(children, {
         ...field,
         onChange: (value: any) => {
-          console.log('value', value);
           if (value?.target) return field.onChange(value);
           field.onChange({
             target: {

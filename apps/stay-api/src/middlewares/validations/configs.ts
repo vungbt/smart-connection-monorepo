@@ -1,26 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
 import validator from '@/utils/validator';
+import { EConfigType } from '@/types';
 
 const create = (req: Request, res: Response, next: NextFunction) =>
   validator(req, res, next, {
     data: req.body,
     rules: {
-      config: 'required|numeric|min:0',
+      roomFee: 'required|numeric|min:0',
       waterFee: 'required|numeric|min:0',
       electricFee: 'required|numeric|min:0',
       commonServiceFee: 'required|numeric|min:0',
       internetFee: 'required|numeric|min:0',
-      type: 'required|string',
-      isSpecialRoom: 'required|boolean',
+      type: `required|in:${Object.values(EConfigType).join(',')}`,
     },
     attributes: {
-      config: 'Room Fee',
+      roomFee: 'Room Fee',
       waterFee: 'Water Fee',
       electricFee: 'Electric Fee',
       commonServiceFee: 'Common Service Fee',
       internetFee: 'Internet Fee',
       type: 'Room Type',
-      isSpecialRoom: 'Special Room Flag',
     },
     message: 'Validation failed for config creation',
   });
@@ -29,27 +28,41 @@ const update = (req: Request, res: Response, next: NextFunction) =>
   validator(req, res, next, {
     data: req.body,
     rules: {
-      config: 'numeric|min:0',
+      roomFee: 'numeric|min:0',
       waterFee: 'numeric|min:0',
       electricFee: 'numeric|min:0',
       commonServiceFee: 'numeric|min:0',
       internetFee: 'numeric|min:0',
       type: 'string',
-      isSpecialRoom: 'boolean',
     },
     attributes: {
-      config: 'Room Fee',
+      roomFee: 'Room Fee',
       waterFee: 'Water Fee',
       electricFee: 'Electric Fee',
       commonServiceFee: 'Common Service Fee',
       internetFee: 'Internet Fee',
       type: 'Room Type',
-      isSpecialRoom: 'Special Room Flag',
     },
     message: 'Validation failed for config update',
+  });
+
+const list = (req: Request, res: Response, next: NextFunction) =>
+  validator(req, res, next, {
+    data: req.query,
+    rules: {
+      types: 'array',
+      'types.*': `in:${Object.values(EConfigType).join(',')}`,
+      q: 'string',
+    },
+    attributes: {
+      types: 'Room Types',
+      q: 'Search Query',
+    },
+    message: 'Validation failed for config list',
   });
 
 export const ConfigValidations = {
   create,
   update,
+  list,
 };

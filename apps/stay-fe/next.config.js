@@ -12,6 +12,7 @@ const nextConfig = {
   nx: {},
   env: {
     API_DOMAIN: process.env.API_DOMAIN,
+    ENABLE_DEV_TOOLS: process.env.ENABLE_DEV_TOOLS,
   },
 };
 

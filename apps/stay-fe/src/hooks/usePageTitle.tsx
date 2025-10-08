@@ -1,3 +1,4 @@
+'use client';
 import { IconName, RenderIcon } from '@smart-connection-monorepo/ui-components';
 import { useHeader } from '@smart-connection-monorepo/ui-modules';
 import { useEffect } from 'react';

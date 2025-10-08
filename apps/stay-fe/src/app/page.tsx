@@ -137,7 +137,7 @@ export default function ConfigsPage() {
   // Note: create/update mutations omitted until used
 
   // Delete config
-  const { mutate: deleteConfig } = useApiMutation<unknown, Record<string, never>>('delete', {
+  const { mutate: deleteConfig } = useApiMutation<unknown, Record<string, never>>('DELETE', {
     onError: (error: ApiError) => {
       console.error('Error deleting config:', error);
     },

@@ -12,7 +12,7 @@ import {
 import { ReactNode, useState } from 'react';
 import { TableEmpty } from './table-empty';
 import { TableHeader } from './table-header';
-import { TableRow } from './table-row';
+import { TableRow, TableRowEmpty } from './table-row';
 import { TableLoading } from './table-loading';
 import clsx from 'clsx';
 import { Checkbox, Radio, Pagination } from '..';
@@ -38,7 +38,7 @@ type TableProps<T> = {
     page?: number;
     pageCount?: number;
     limit?: number;
-    onChangePage: (value: number) => void;
+    onChangePage?: (value: number) => void;
   };
 
   // sections
@@ -166,17 +166,26 @@ export const Table = <T extends Record<string, any>>({
 
   const pageCount = totalPage || Math.ceil(total / limit);
   const rows = table.getRowModel().rows;
+  const missingRows = limit && rows.length < limit ? limit - rows.length : 0;
 
   return (
-    <div className={clsx('w-full', customClasses.root)}>
+    <div className={clsx('w-full bg-neutral-white', customClasses.root)}>
       <div className={clsx('overflow-y-auto h-full', scroll?.y && `max-h-[${scroll?.y}px]`)}>
         <table className="min-w-full table-auto h-full">
           <TableHeader headers={table.getHeaderGroups() as TableHeaderType<T>} />
           <tbody className="relative">
             {rows.length > 0 ? (
-              <TableRow rows={rows} rowKey={rowKey} selectedKeys={selectedKeys} />
+              <>
+                <TableRow rows={rows} rowKey={rowKey} selectedKeys={selectedKeys} />
+                {missingRows > 0 && (
+                  <TableRowEmpty
+                    columnLength={columns.length}
+                    height={scroll?.y || missingRows * 56}
+                  />
+                )}
+              </>
             ) : (
-              <TableEmpty columnLength={columns.length} />
+              <TableEmpty columnLength={columns.length} height={scroll?.y || limit * 56} />
             )}
 
             {loading && <TableLoading />}
@@ -184,7 +193,7 @@ export const Table = <T extends Record<string, any>>({
         </table>
       </div>
 
-      {pageCount > 1 && (
+      {pageCount > 1 && onChangePage && (
         <div className="mt-4 w-full flex items-center justify-end">
           <Pagination
             pageCount={pageCount}

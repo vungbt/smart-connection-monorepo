@@ -1,5 +1,7 @@
-if (process.env.NODE_ENV === 'production') {
-  require('module-alias/register');
+/* eslint-disable -- bootstrap: require() must run before @/ imports */
+if (__dirname.includes('/dist/') || process.env.NODE_ENV === 'production') {
+  const registerModuleAlias = require('module-alias') as (opts?: { base: string }) => void;
+  registerModuleAlias({ base: require('path').join(__dirname, '..') });
 }
 
 import dotenv from 'dotenv';

@@ -84,6 +84,12 @@ const createTWConfig = ({ content = [] } = {}) => {
           base: 'var(--color-success-base)',
           border: 'var(--color-success-border)',
         },
+        info: {
+          DEFAULT: 'var(--color-info)',
+          bg: 'var(--color-info-bg)',
+          base: 'var(--color-info-base)',
+          border: 'var(--color-info-border)',
+        },
       },
       fontSize: {
         48: 'var(--size-48)',
