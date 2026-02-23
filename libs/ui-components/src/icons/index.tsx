@@ -74,6 +74,8 @@ import CollapseRight from './collapse-right';
 import Bell from './bell';
 import AdjustmentsVertical from './adjustments-vertical';
 import Plus from './plus';
+import PencilSquare from './pencil-square';
+import InformationCircle from './information-circle';
 
 export type IconProps = {
   className?: string;
@@ -161,6 +163,8 @@ const IconsDefine = {
   bell: 'bell',
   plus: 'plus',
   'adjustments-vertical': 'adjustments-vertical',
+  'pencil-square': 'pencil-square',
+  'information-circle': 'information-circle',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -395,6 +399,12 @@ export const Icons: IconsType = {
   },
   plus: (props: IconProps) => {
     return <Plus {...props} />;
+  },
+  'pencil-square': (props: IconProps) => {
+    return <PencilSquare {...props} />;
+  },
+  'information-circle': (props: IconProps) => {
+    return <InformationCircle {...props} />;
   },
   // Add more icons here
 };

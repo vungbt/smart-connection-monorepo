@@ -8,13 +8,12 @@ class ConfigsModel extends Model<IConfigAttributes> implements IConfigAttributes
   public createdAt?: Date;
   public updatedAt?: Date;
   public deletedAt?: Date;
-  public config!: number;
+  public roomFee!: number;
   public waterFee!: number;
   public electricFee!: number;
   public commonServiceFee!: number;
   public internetFee!: number;
   public type!: EConfigType;
-  public isSpecialRoom!: boolean;
 }
 
 ConfigsModel.init(
@@ -24,7 +23,7 @@ ConfigsModel.init(
       defaultValue: () => uuidv4(),
       primaryKey: true,
     },
-    config: {
+    roomFee: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
@@ -46,10 +45,6 @@ ConfigsModel.init(
     },
     type: {
       type: DataTypes.ENUM(...Object.values(EConfigType)),
-      allowNull: false,
-    },
-    isSpecialRoom: {
-      type: DataTypes.BOOLEAN,
       allowNull: false,
     },
   },

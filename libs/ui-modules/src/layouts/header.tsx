@@ -22,7 +22,7 @@ export function Header({ items = [], avatarUrl }: HeaderProps) {
   const { collapse, title, notiCount, setCollapse } = useHeader();
 
   return (
-    <header className="w-full bg-white px-5 py-3 min-h-16 flex items-center justify-between shadow-border sticky top-0 z-[1000]">
+    <header className="w-full bg-white px-8 py-3 min-h-16 flex items-center justify-between shadow-border sticky top-0 z-[1000]">
       <div className="flex items-center gap-2">
         <button
           type="button"

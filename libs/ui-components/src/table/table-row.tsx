@@ -34,7 +34,7 @@ export const TableRow = <T extends Record<string, any>>({
             {row.getVisibleCells().map(cell => (
               <td
                 key={cell.id}
-                className="p-3 border-b border-neutral-divider text-14"
+                className="p-3 border-b border-neutral-divider text-14 h-14"
                 style={{ width: cell.column.columnDef.size, maxWidth: cell.column.columnDef.size }}
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -44,5 +44,19 @@ export const TableRow = <T extends Record<string, any>>({
         );
       })}
     </>
+  );
+};
+
+export const TableRowEmpty = ({
+  columnLength,
+  height,
+}: {
+  columnLength: number;
+  height: number;
+}) => {
+  return (
+    <tr>
+      <td colSpan={columnLength} style={{ height }} />
+    </tr>
   );
 };

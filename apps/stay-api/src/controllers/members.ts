@@ -16,7 +16,6 @@ const createMember = async (req: express.Request, res: express.Response) => {
     const member = await MemberServices.create(body);
     return res.jsonApi(200, { data: member });
   } catch (error) {
-    console.log(error);
     return res.sendStatus(500);
   }
 };

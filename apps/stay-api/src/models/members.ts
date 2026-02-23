@@ -13,7 +13,7 @@ class MembersModel extends Model<IMemberAttributes> implements IMemberAttributes
   public phone!: string;
   public address!: string;
   public isActive!: boolean;
-  public cccd!: string;
+  public identityCardNumber!: string;
   public roomId!: string;
 }
 
@@ -40,7 +40,7 @@ MembersModel.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },
-    cccd: {
+    identityCardNumber: {
       type: DataTypes.STRING,
       allowNull: false,
     },

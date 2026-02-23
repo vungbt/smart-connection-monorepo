@@ -40,3 +40,10 @@ export const FILE_VIDEO = {
   accepts: ['video/*'],
   size: 1024 * 1024 * 10, // 10MB,
 };
+
+export const DEFAULT_PAGINATION = {
+  page: 1,
+  pageSize: 10,
+  count: 0,
+  totalPages: 0,
+};

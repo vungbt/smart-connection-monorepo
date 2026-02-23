@@ -35,7 +35,7 @@ export const ModalConfirm = ({
   onClose,
   actions,
   isLoading,
-  message,
+  message = 'Are you sure you want to delete this item?',
   iconMain = 'exclamation-triangle',
   isOpen,
   warning,
@@ -52,7 +52,7 @@ export const ModalConfirm = ({
           onClick={onSubmit}
           icon={submitIcon ?? 'trash'}
           className={clsx(classNameSubmit)}
-          color={submitColor ?? 'danger'}
+          color={submitColor ?? 'error'}
           size="small"
           loading={isLoading}
         >
@@ -76,7 +76,7 @@ export const ModalConfirm = ({
 
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} className="max-w-[500px]">
-      <div className="flex flex-col py-2 px-4">
+      <div className="flex flex-col py-2 pb-4 px-4">
         {/* header */}
         <div className="w-full flex justify-end pb-1">
           <button onClick={onClose}>

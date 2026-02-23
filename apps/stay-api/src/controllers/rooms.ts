@@ -16,7 +16,6 @@ const createRoom = async (req: express.Request, res: express.Response) => {
     const room = await RoomServices.create(body);
     return res.jsonApi(200, { data: room });
   } catch (error) {
-    console.log(error);
     return res.sendStatus(500);
   }
 };

@@ -5,13 +5,12 @@ export interface IConfigAttributes {
   createdAt?: Date;
   updatedAt?: Date;
   deletedAt?: Date;
-  config: number;
+  roomFee: number;
   waterFee: number;
   electricFee: number;
   commonServiceFee: number;
   internetFee: number;
   type: EConfigType;
-  isSpecialRoom: boolean;
 }
 
 export enum EConfigType {
@@ -28,3 +27,8 @@ export type ConfigCreateBody = Omit<
 >;
 
 export type ConfigUpdateBody = Partial<Omit<IConfigAttributes, 'id' | 'createdAt' | 'deletedAt'>>;
+
+export type ConfigListParams = {
+  q?: string;
+  types?: EConfigType[];
+};

@@ -1,29 +1,57 @@
 import ConfigsModel from '@/models/configs';
-import { ConfigCreateBody, ConfigUpdateBody } from '@/types';
+import {
+  ConfigCreateBody,
+  ConfigListParams,
+  ConfigUpdateBody,
+  IConfigAttributes,
+  IPaginationReq,
+} from '@/types';
+import { resPagination } from '@/utils/helpers';
+import { Op } from 'sequelize';
+import { WhereOptions } from 'sequelize';
 
-const list = async () => {
-  return await ConfigsModel.findAll({
-    where: {
-      deletedAt: null,
-    },
+const list = async (params: ConfigListParams, pagination: IPaginationReq) => {
+  const { types } = params;
+  const whereCondition: WhereOptions<IConfigAttributes> = {};
+
+  if (types && types.length > 0) {
+    whereCondition.type = { [Op.in]: types };
+  }
+
+  const { count, rows } = await ConfigsModel.findAndCountAll({
+    where: whereCondition,
+    limit: pagination.limit,
+    offset: pagination.offset,
   });
+  const paginationRes = resPagination(count, pagination);
+  return {
+    items: rows,
+    metadata: {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      ...paginationRes,
+    },
+  };
 };
 
-const create = async (body: ConfigCreateBody): Promise<ConfigsModel> => {
-  return await ConfigsModel.create({ ...body });
+const create = async (body: ConfigCreateBody) => {
+  const result = await ConfigsModel.create({ ...body });
+  return { item: result };
 };
 
 const getById = async (id: string) => {
-  return await ConfigsModel.findOne({
+  const result = await ConfigsModel.findOne({
     where: { id, deletedAt: null },
   });
+  return { item: result };
 };
 
-const update = async (id: string, data: ConfigUpdateBody): Promise<ConfigsModel> => {
+const update = async (id: string, data: ConfigUpdateBody) => {
   const config = await ConfigsModel.findByPk(id);
   if (!config) throw new Error('Config not found');
 
-  return await config.update(data);
+  const result = await config.update(data);
+  return { item: result };
 };
 
 const remove = async (id: string) => {

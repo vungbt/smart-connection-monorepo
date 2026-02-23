@@ -10,7 +10,7 @@ export interface IMemberAttributes {
   phone: string;
   address: string;
   isActive: boolean;
-  cccd: string;
+  identityCardNumber: string;
   roomId: string;
 }
 

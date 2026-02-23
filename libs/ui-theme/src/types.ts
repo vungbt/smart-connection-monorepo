@@ -46,6 +46,7 @@ export type ColorPalette = {
   pending: ColorPaletteConfig;
   error: ColorPaletteConfig;
   success: ColorPaletteConfig;
+  info: ColorPaletteConfig;
 };
 
 export type ColorPaletteConfig = {

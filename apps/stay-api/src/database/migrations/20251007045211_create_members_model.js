@@ -14,11 +14,7 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      phone_number: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
+      phone: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -30,7 +26,7 @@ module.exports = {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      cccd: {
+      identity_card_number: {
         type: DataTypes.STRING,
         allowNull: false,
       },

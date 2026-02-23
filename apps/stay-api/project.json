@@ -47,7 +47,11 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "stay-api:build",
-        "watch": true
+        "watch": true,
+        "buildTargetOptions": {
+          "outputPath": "dist/apps/stay-api",
+          "outputFileName": "src/main.js"
+        }
       },
       "configurations": {
         "development": {

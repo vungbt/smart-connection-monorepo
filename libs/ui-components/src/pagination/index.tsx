@@ -35,7 +35,7 @@ export const Pagination = ({
     >
       <div className="flex items-center text-sm gap-[5px]">
         Showing <span className="font-semibold">{limit * (page - 1)}</span> to{' '}
-        <span className="font-semibold">{limit * page}</span> of{' '}
+        <span className="font-semibold">{total < limit * page ? total : limit * page}</span> of{' '}
         <span className="font-semibold">{total}</span> results
       </div>
       <ReactPaginate
