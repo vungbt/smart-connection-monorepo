@@ -78,8 +78,10 @@ const validationSchema = yup.object({
     .test('is-valid-room', 'Please select a room', value => {
       if (typeof value === 'string') return value.length > 0;
       if (value && typeof value === 'object' && 'value' in value) {
-        const objValue = value as { value: any };
-        return objValue.value && typeof objValue.value === 'string' && objValue.value.length > 0;
+        const objValue = value as { value: unknown };
+        return Boolean(
+          objValue.value && typeof objValue.value === 'string' && objValue.value.length > 0
+        );
       }
       return false;
     })
@@ -122,17 +124,10 @@ export default function ConfigsPage() {
     error,
     isError,
     isLoading,
-  } = useApiQuery<Config[]>(
-    {
-      endpoint: '/configs',
-      queryKey: ['configs'],
-    },
-    {
-      onError: (error: ApiError) => {
-        console.error('Error fetching configs:', error);
-      },
-    }
-  );
+  } = useApiQuery<Config[]>({
+    endpoint: '/configs',
+    queryKey: ['configs'],
+  });
 
   // Note: create/update mutations omitted until used
 

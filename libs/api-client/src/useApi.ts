@@ -2,9 +2,12 @@ import {
   useQuery,
   useMutation,
   UseQueryOptions,
+  UseQueryResult,
+  UseMutationResult,
   useQueryClient as useQueryClientTanstack,
   UseMutationOptions,
   QueryKey,
+  QueryClient,
 } from '@tanstack/react-query';
 import { axiosClient } from './axios-client';
 
@@ -39,7 +42,7 @@ type MutationArgs<TBody> = {
 export const useApiQuery = <TData = unknown, TParams = unknown>(
   { endpoint, params, queryKey }: QueryArgs<TParams>,
   options?: Omit<UseQueryOptions<TData, Error, TData>, 'queryKey' | 'queryFn'>
-) => {
+): UseQueryResult<TData, Error> => {
   const finalQueryKey = queryKey ?? [endpoint, params ?? {}];
 
   return useQuery<TData, Error, TData>({
@@ -52,14 +55,14 @@ export const useApiQuery = <TData = unknown, TParams = unknown>(
   });
 };
 
-export const useQueryClient = () => {
-  return useQueryClientTanstack();
+export const useQueryClient = (): QueryClient => {
+  return useQueryClientTanstack() as QueryClient;
 };
 
 export const useApiMutation = <TRes = unknown, TBody = unknown>(
   method: 'POST' | 'PUT' | 'DELETE',
   options?: Omit<UseMutationOptions<TRes, Error, MutationArgs<TBody>>, 'mutationFn'>
-) => {
+): UseMutationResult<TRes, Error, MutationArgs<TBody>> => {
   return useMutation({
     mutationFn: async ({ endpoint, body }) => {
       let response;
