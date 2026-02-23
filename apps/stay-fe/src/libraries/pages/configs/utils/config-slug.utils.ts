@@ -10,7 +10,7 @@ type ConfigSlugUtilsResult = {
 };
 export default function ConfigSlugUtils(): ConfigSlugUtilsResult {
   const { configId, isAdd } = useSlugParams();
-  const { data: config, isLoading: isLoadingDetail } = useApiQuery<ConfigListRes>(
+  const { isLoading: isLoadingDetail } = useApiQuery<ConfigListRes>(
     {
       endpoint: `${API_ROUTES.CONFIGS}/${configId}`,
       queryKey: configKeys.detail(configId as string),

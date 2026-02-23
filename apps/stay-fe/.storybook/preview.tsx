@@ -2,6 +2,7 @@ import React from 'react';
 import type { Preview, StoryFn } from '@storybook/react';
 import './tailwind-imports.css';
 import { UIProvider } from '@smart-connection-monorepo/ui-theme';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import themeToken from '../../../libs/ui-theme/theme-token/stay-fe.json';
 import { withThemeByClassName } from '@storybook/addon-themes';
 
