@@ -6,7 +6,7 @@ export interface IRoomAttributes {
   updatedAt?: Date;
   deletedAt?: Date;
   name: string;
-  configId: string;
+  serviceId: string;
 }
 
 export type RoomItem = RoomsModel;

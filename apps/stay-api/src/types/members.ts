@@ -1,5 +1,4 @@
 import MembersModel from '@/models/members';
-import { IRoomAttributes } from './rooms';
 
 export interface IMemberAttributes {
   id: string;

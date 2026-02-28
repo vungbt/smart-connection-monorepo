@@ -2,7 +2,7 @@ import sequelize from '@/configs/database';
 import { DataTypes, Model } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import { IRoomAttributes } from '@/types';
-import ConfigsModel from './configs';
+import ServicesModel from './services';
 
 class RoomsModel extends Model<IRoomAttributes> implements IRoomAttributes {
   public id!: string;
@@ -10,7 +10,7 @@ class RoomsModel extends Model<IRoomAttributes> implements IRoomAttributes {
   public updatedAt?: Date;
   public deletedAt?: Date;
   public name!: string;
-  public configId!: string;
+  public serviceId!: string;
 }
 
 RoomsModel.init(
@@ -24,11 +24,11 @@ RoomsModel.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    configId: {
+    serviceId: {
       type: DataTypes.UUID,
       allowNull: false,
       references: {
-        model: 'configs',
+        model: 'services',
         key: 'id',
       },
     },
@@ -45,13 +45,13 @@ RoomsModel.init(
   }
 );
 
-RoomsModel.belongsTo(ConfigsModel, {
-  foreignKey: 'configId',
-  as: 'config',
+RoomsModel.belongsTo(ServicesModel, {
+  foreignKey: 'serviceId',
+  as: 'service',
 });
 
-ConfigsModel.hasMany(RoomsModel, {
-  foreignKey: 'configId',
+ServicesModel.hasMany(RoomsModel, {
+  foreignKey: 'serviceId',
   as: 'rooms',
 });
 

@@ -1,7 +1,7 @@
 import { RoomServices } from '@/services';
-import express from 'express';
+import { ApiRequest, ApiResponse, IdParams, RoomCreateBody, RoomUpdateBody } from '@/types';
 
-const getAllRooms = async (req: express.Request, res: express.Response) => {
+const getAllRooms = async (req: ApiRequest, res: ApiResponse) => {
   try {
     const rooms = await RoomServices.list();
     return res.jsonApi(200, { data: rooms });
@@ -10,7 +10,10 @@ const getAllRooms = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const createRoom = async (req: express.Request, res: express.Response) => {
+const createRoom = async (
+  req: ApiRequest<Record<string, never>, RoomCreateBody>,
+  res: ApiResponse
+) => {
   try {
     const { body } = req;
     const room = await RoomServices.create(body);
@@ -20,7 +23,7 @@ const createRoom = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const getRoomById = async (req: express.Request, res: express.Response) => {
+const getRoomById = async (req: ApiRequest<IdParams>, res: ApiResponse) => {
   try {
     const { id } = req.params;
     const room = await RoomServices.getById(id);
@@ -31,7 +34,7 @@ const getRoomById = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const updateRoom = async (req: express.Request, res: express.Response) => {
+const updateRoom = async (req: ApiRequest<IdParams, RoomUpdateBody>, res: ApiResponse) => {
   try {
     const { id } = req.params;
     const { body } = req;
@@ -42,7 +45,7 @@ const updateRoom = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const deleteRoom = async (req: express.Request, res: express.Response) => {
+const deleteRoom = async (req: ApiRequest<IdParams>, res: ApiResponse) => {
   try {
     const { id } = req.params;
     const result = await RoomServices.remove(id);
