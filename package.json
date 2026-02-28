@@ -17,10 +17,16 @@
     "lint:fix": "nx lint --fix",
     "storybook": "nx run stay-fe:storybook",
     "build-storybook": "nx run stay-fe:build-storybook",
-    "stay-api:create:migration": "pnpm -C apps/stay-api run create-migration",
-    "stay-api:migrate": "pnpm -C apps/stay-api run migrate",
-    "stay-api:migrate:undo": "pnpm -C apps/stay-api run migrate:undo",
-    "stay-api:migrate:undo:all": "pnpm -C apps/stay-api run migrate:undo:all"
+    "docker:prod:db:up": "docker compose --env-file .env.prod -f docker-compose.db.yml up -d",
+    "docker:prod:app:up": "docker compose --env-file .env.prod up -d",
+    "docker:prod:up": "pnpm run docker:prod:db:up && pnpm run docker:prod:app:up",
+    "docker:prod:down": "docker compose --env-file .env.prod down && docker compose --env-file .env.prod -f docker-compose.db.yml down",
+    "docker:prod:restart": "pnpm run docker:prod:down && pnpm run docker:prod:up",
+    "docker:prod:ps": "docker compose --env-file .env.prod ps",
+    "stay-api:create:migration": "nx run stay-api:create-migration",
+    "stay-api:migrate": "nx run stay-api:migrate",
+    "stay-api:migrate:undo": "nx run stay-api:migrate:undo",
+    "stay-api:migrate:undo:all": "nx run stay-api:migrate:undo:all"
   },
   "private": true,
   "dependencies": {

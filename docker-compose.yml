@@ -35,7 +35,7 @@ services:
       - '${SSO_PORT:-5000}:${SSO_PORT:-5000}'
     environment:
       - NODE_ENV=production
-      - PORT=${SSO_PORT:-5000}
+      - SSO_PORT=${SSO_PORT:-5000}
       - JWT_SECRET_KEY=${JWT_SECRET_KEY:-SSOServiceSecret}
       - SSO_POSTGRES_DB=${SSO_POSTGRES_DB:-smartconnection_sso}
       - SSO_POSTGRES_USER=${SSO_POSTGRES_USER:-postgres}

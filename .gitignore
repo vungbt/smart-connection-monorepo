@@ -48,8 +48,10 @@ out
 vite.config.*.timestamp*
 vitest.config.*.timestamp*
 *.env
+*.env.prod
 apps/stay-fe/.env
+apps/stay-fe/.env.prod
 apps/stay-api/.env
-
+apps/stay-api/.env.prod
 
 storybook-static

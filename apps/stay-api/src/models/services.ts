@@ -1,9 +1,9 @@
 import sequelize from '@/configs/database';
 import { DataTypes, Model } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
-import { EConfigType, IConfigAttributes } from '@/types';
+import { EServiceType, IServiceAttributes } from '@/types';
 
-class ConfigsModel extends Model<IConfigAttributes> implements IConfigAttributes {
+class ServicesModel extends Model<IServiceAttributes> implements IServiceAttributes {
   public id!: string;
   public createdAt?: Date;
   public updatedAt?: Date;
@@ -11,12 +11,13 @@ class ConfigsModel extends Model<IConfigAttributes> implements IConfigAttributes
   public roomFee!: number;
   public waterFee!: number;
   public electricFee!: number;
+  public electricBikeFee!: number;
   public commonServiceFee!: number;
   public internetFee!: number;
-  public type!: EConfigType;
+  public type!: EServiceType;
 }
 
-ConfigsModel.init(
+ServicesModel.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -35,6 +36,10 @@ ConfigsModel.init(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    electricBikeFee: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
     commonServiceFee: {
       type: DataTypes.FLOAT,
       allowNull: false,
@@ -44,13 +49,13 @@ ConfigsModel.init(
       allowNull: false,
     },
     type: {
-      type: DataTypes.ENUM(...Object.values(EConfigType)),
+      type: DataTypes.ENUM(...Object.values(EServiceType)),
       allowNull: false,
     },
   },
   {
     sequelize: sequelize,
-    modelName: 'configs',
+    modelName: 'services',
     freezeTableName: true,
     timestamps: true,
     createdAt: true,
@@ -60,4 +65,4 @@ ConfigsModel.init(
   }
 );
 
-export default ConfigsModel;
+export default ServicesModel;

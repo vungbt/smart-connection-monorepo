@@ -11,6 +11,8 @@ interface FormikItemProps {
   required?: boolean;
   size?: 'small' | 'middle' | 'large';
   className?: string;
+  mapValue?: (value: any) => any;
+  mapOnChange?: (value: any) => any;
 }
 
 export const FormikItem: React.FC<FormikItemProps> = ({
@@ -20,6 +22,8 @@ export const FormikItem: React.FC<FormikItemProps> = ({
   required,
   size,
   className,
+  mapValue,
+  mapOnChange,
 }) => {
   const [field, meta] = useField(name);
   const isError = meta.touched && !!meta.error;
@@ -33,12 +37,24 @@ export const FormikItem: React.FC<FormikItemProps> = ({
 
       {cloneElement(children, {
         ...field,
+        value: mapValue ? mapValue(field.value) : field.value,
         onChange: (value: any) => {
-          if (value?.target) return field.onChange(value);
+          const mappedValue = mapOnChange ? mapOnChange(value) : value;
+          if (mappedValue?.target) return field.onChange(mappedValue);
+
+          if (mappedValue === undefined) {
+            return field.onChange({
+              target: {
+                name: field.name,
+                value: '',
+              },
+            });
+          }
+
           field.onChange({
             target: {
               name: field.name,
-              value: value,
+              value: mappedValue,
             },
           });
         },

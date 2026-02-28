@@ -13,7 +13,7 @@ import {
   SelectOption,
   yup,
 } from '@smart-connection-monorepo/ui-components';
-import ServiceSlugUtils from './utils/config-slug.utils';
+import ServiceSlugUtils from './utils/service-slug.utils';
 
 const serviceTypeOptions: SelectOption[] = [
   { label: EServiceType.DELUXE, value: EServiceType.DELUXE },

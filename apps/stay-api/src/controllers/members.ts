@@ -1,7 +1,7 @@
 import { MemberServices } from '@/services';
-import express from 'express';
+import { ApiRequest, ApiResponse, IdParams, MemberCreateBody, MemberUpdateBody } from '@/types';
 
-const getAllMembers = async (req: express.Request, res: express.Response) => {
+const getAllMembers = async (req: ApiRequest, res: ApiResponse) => {
   try {
     const members = await MemberServices.list();
     return res.jsonApi(200, { data: members });
@@ -10,7 +10,10 @@ const getAllMembers = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const createMember = async (req: express.Request, res: express.Response) => {
+const createMember = async (
+  req: ApiRequest<Record<string, never>, MemberCreateBody>,
+  res: ApiResponse
+) => {
   try {
     const { body } = req;
     const member = await MemberServices.create(body);
@@ -20,7 +23,7 @@ const createMember = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const getMemberById = async (req: express.Request, res: express.Response) => {
+const getMemberById = async (req: ApiRequest<IdParams>, res: ApiResponse) => {
   try {
     const { id } = req.params;
     const member = await MemberServices.getById(id);
@@ -31,7 +34,7 @@ const getMemberById = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const updateMember = async (req: express.Request, res: express.Response) => {
+const updateMember = async (req: ApiRequest<IdParams, MemberUpdateBody>, res: ApiResponse) => {
   try {
     const { id } = req.params;
     const { body } = req;
@@ -42,7 +45,7 @@ const updateMember = async (req: express.Request, res: express.Response) => {
   }
 };
 
-const deleteMember = async (req: express.Request, res: express.Response) => {
+const deleteMember = async (req: ApiRequest<IdParams>, res: ApiResponse) => {
   try {
     const { id } = req.params;
     const result = await MemberServices.remove(id);

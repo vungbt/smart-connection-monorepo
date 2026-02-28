@@ -17,6 +17,7 @@ import {
   DatePicker,
   DateRangePicker,
   Editor,
+  Breadcrumb,
 } from '@smart-connection-monorepo/ui-components';
 import { FormikProps } from 'formik';
 import { useRef, useState } from 'react';
@@ -24,13 +25,13 @@ import { useRef, useState } from 'react';
 // Config type definition
 type Config = {
   id: string;
-  config: number;
+  roomFee: number;
   waterFee: number;
   electricFee: number;
+  electricBikeFee: number;
   commonServiceFee: number;
   internetFee: number;
   type: string;
-  isSpecialRoom: boolean;
 };
 
 type ApiError = Error;
@@ -118,23 +119,23 @@ const interestOptions = [
 export default function ConfigsPage() {
   const [, setForm] = useState<Partial<Config>>({});
   const formikRef = useRef<FormikProps<FormValues>>(null);
-  // GET configs
+  // GET services
   const {
     data: configs,
     error,
     isError,
     isLoading,
   } = useApiQuery<Config[]>({
-    endpoint: '/configs',
-    queryKey: ['configs'],
+    endpoint: '/services',
+    queryKey: ['services'],
   });
 
   // Note: create/update mutations omitted until used
 
-  // Delete config
+  // Delete service
   const { mutate: deleteConfig } = useApiMutation<unknown, Record<string, never>>('DELETE', {
     onError: (error: ApiError) => {
-      console.error('Error deleting config:', error);
+      console.error('Error deleting service:', error);
     },
   });
 
@@ -143,8 +144,8 @@ export default function ConfigsPage() {
   };
 
   const onDelete = (id: string) => {
-    if (confirm('Delete this config?')) {
-      deleteConfig({ endpoint: `/configs/${id}`, body: {} });
+    if (confirm('Delete this service?')) {
+      deleteConfig({ endpoint: `/services/${id}`, body: {} });
     }
   };
 
@@ -155,13 +156,13 @@ export default function ConfigsPage() {
 
   const columns: TableColumn<Config> = [
     { header: 'ID', accessorKey: 'id' },
-    { header: 'Room Fee', accessorKey: 'config' },
+    { header: 'Room Fee', accessorKey: 'roomFee' },
     { header: 'Water Fee', accessorKey: 'waterFee' },
     { header: 'Electric Fee', accessorKey: 'electricFee' },
+    { header: 'Electric Bike Fee', accessorKey: 'electricBikeFee' },
     { header: 'Common Service Fee', accessorKey: 'commonServiceFee' },
     { header: 'Internet Fee', accessorKey: 'internetFee' },
     { header: 'Type', accessorKey: 'type' },
-    { header: 'Special Room', accessorKey: 'isSpecialRoom' },
     {
       header: 'Actions',
       cell: ({ row }) => (
@@ -179,7 +180,8 @@ export default function ConfigsPage() {
 
   return (
     <div className="p-5">
-      <h2>Configs CRUD Demo</h2>
+      <h2>Services CRUD Demo</h2>
+      <Breadcrumb items={[{ title: 'Home', href: '/' }, { title: 'Services' }]} />
       <Tag content="Hello" />
 
       {/* Form with Radio and Checkbox components */}

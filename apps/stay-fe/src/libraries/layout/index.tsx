@@ -23,10 +23,10 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
               navKey: 'room',
             },
             {
-              title: 'Configs',
+              title: 'Services',
               icon: 'vuesax-empty-wallet-change',
-              navKey: 'config',
-              href: ROUTES.CONFIGS,
+              navKey: 'service',
+              href: ROUTES.SERVICES,
             },
           ]}
           logoHref="/logo/logo.webp"

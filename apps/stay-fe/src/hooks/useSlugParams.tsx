@@ -7,9 +7,11 @@ export const useSlugParams = () => {
     if (['add'].includes(slug as string))
       return {
         isAdd: true,
+        itemId: null,
         configId: null,
       };
     return {
+      itemId: slug,
       configId: slug,
       isAdd: false,
     };

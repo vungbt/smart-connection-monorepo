@@ -1,5 +1,5 @@
-import { EUserRole, IPaginationReq } from '@types';
-import { i18n, TFunction } from 'i18next';
+import type { EUserRole, IPaginationReq } from '@/types/common';
+import type { i18n, TFunction } from 'i18next';
 
 export type DataResponse =
   | ({

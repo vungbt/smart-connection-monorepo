@@ -1,4 +1,5 @@
 import { queryKeysFactory } from '@smart-connection-monorepo/api-client';
 
-export const configKeys = queryKeysFactory('configs');
+export const serviceKeys = queryKeysFactory('services');
+export const configKeys = serviceKeys;
 export const roomKeys = queryKeysFactory('rooms');

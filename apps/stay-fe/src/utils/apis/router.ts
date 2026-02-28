@@ -1,3 +1,4 @@
 export const API_ROUTES = {
-  CONFIGS: '/configs',
+  SERVICES: '/services',
+  CONFIGS: '/services',
 };

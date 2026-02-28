@@ -3,6 +3,7 @@ import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { EServiceType, ServiceItem } from '@/types/services';
 import { getCellIndex } from '@/utils/common';
+import { formatPrice } from '@/utils/formater';
 import {
   Button,
   ModalConfirm,
@@ -12,7 +13,7 @@ import {
 } from '@smart-connection-monorepo/ui-components';
 import { ActionButtons, FilterForm } from '@smart-connection-monorepo/ui-modules';
 import Link from 'next/link';
-import ServiceListUtils from './utils/config-list.utils';
+import ServiceListUtils from './utils/service-list.utils';
 
 const serviceTypeTagColors: Record<EServiceType, 'orange' | 'blue' | 'green' | 'red'> = {
   [EServiceType.DELUXE]: 'orange',
@@ -46,12 +47,30 @@ export default function ServiceListPage() {
         </Link>
       ),
     },
-    { header: 'Room Fee', accessorKey: 'roomFee' },
-    { header: 'Water Fee', accessorKey: 'waterFee' },
-    { header: 'Electric Fee', accessorKey: 'electricFee' },
-    { header: 'Electric Bike Fee', accessorKey: 'electricBikeFee' },
-    { header: 'Common Service Fee', accessorKey: 'commonServiceFee' },
-    { header: 'Internet Fee', accessorKey: 'internetFee' },
+    {
+      header: 'Room Fee',
+      cell: ({ row }) => formatPrice(row.original.roomFee),
+    },
+    {
+      header: 'Water Fee',
+      cell: ({ row }) => formatPrice(row.original.waterFee),
+    },
+    {
+      header: 'Electric Fee',
+      cell: ({ row }) => formatPrice(row.original.electricFee),
+    },
+    {
+      header: 'Electric Bike Fee',
+      cell: ({ row }) => formatPrice(row.original.electricBikeFee),
+    },
+    {
+      header: 'Common Service Fee',
+      cell: ({ row }) => formatPrice(row.original.commonServiceFee),
+    },
+    {
+      header: 'Internet Fee',
+      cell: ({ row }) => formatPrice(row.original.internetFee),
+    },
     {
       header: 'Type',
       cell: ({ row }) => (
