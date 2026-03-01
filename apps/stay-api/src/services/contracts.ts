@@ -1,29 +1,100 @@
 import ContractsModel from '@/models/contracts';
-import { ContractCreateBody, ContractUpdateBody } from '@/types';
+import {
+  ContractCreateBody,
+  ContractListParams,
+  ContractUpdateBody,
+  EContractStatus,
+  IContractAttributes,
+  IPaginationReq,
+} from '@/types';
+import { resPagination } from '@/utils/helpers';
+import { Op, WhereOptions } from 'sequelize';
 
-const list = async () => {
-  return await ContractsModel.findAll({
-    where: {
-      deletedAt: null,
-    },
-  });
+const toStringArray = (value?: string[] | string) => {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
 };
 
-const create = async (body: ContractCreateBody): Promise<ContractsModel> => {
-  return await ContractsModel.create({ ...body });
+const toStatusArray = (value?: EContractStatus[] | string[] | EContractStatus | string) => {
+  if (!value) return [];
+  const values = Array.isArray(value) ? value : [value];
+  const availableStatuses = Object.values(EContractStatus);
+
+  return values.filter((item): item is EContractStatus =>
+    availableStatuses.includes(item as EContractStatus)
+  );
+};
+
+const list = async (params: ContractListParams, pagination: IPaginationReq) => {
+  const { roomIds, memberIds, serviceIds, statuses, q } = params;
+  const whereCondition: WhereOptions<IContractAttributes> = {};
+
+  const normalizedRoomIds = toStringArray(roomIds);
+  if (normalizedRoomIds.length > 0) {
+    whereCondition.roomId = { [Op.in]: normalizedRoomIds };
+  }
+
+  const normalizedMemberIds = toStringArray(memberIds);
+  if (normalizedMemberIds.length > 0) {
+    whereCondition.memberId = { [Op.in]: normalizedMemberIds };
+  }
+
+  const normalizedServiceIds = toStringArray(serviceIds);
+  if (normalizedServiceIds.length > 0) {
+    whereCondition.serviceId = { [Op.in]: normalizedServiceIds };
+  }
+
+  const normalizedStatuses = toStatusArray(statuses);
+  if (normalizedStatuses.length > 0) {
+    whereCondition.status = { [Op.in]: normalizedStatuses };
+  }
+
+  if (q && q.length > 0) {
+    whereCondition[Op.or] = [
+      { roomId: { [Op.like]: `%${q}%` } },
+      { memberId: { [Op.like]: `%${q}%` } },
+      { serviceId: { [Op.like]: `%${q}%` } },
+    ];
+  }
+
+  const { count, rows } = await ContractsModel.findAndCountAll({
+    where: {
+      deletedAt: null,
+      ...whereCondition,
+    },
+    limit: pagination.limit,
+    offset: pagination.offset,
+  });
+
+  const paginationRes = resPagination(count, pagination);
+  return {
+    items: rows,
+    metadata: {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      ...paginationRes,
+    },
+  };
+};
+
+const create = async (body: ContractCreateBody) => {
+  const result = await ContractsModel.create({ ...body });
+  return { item: result };
 };
 
 const getById = async (id: string) => {
-  return await ContractsModel.findOne({
+  const result = await ContractsModel.findOne({
     where: { id, deletedAt: null },
   });
+  return { item: result };
 };
 
-const update = async (id: string, data: ContractUpdateBody): Promise<ContractsModel> => {
+const update = async (id: string, data: ContractUpdateBody) => {
   const contract = await ContractsModel.findByPk(id);
   if (!contract) throw new Error('Contract not found');
 
-  return await contract.update(data);
+  const result = await contract.update(data);
+  return { item: result };
 };
 
 const remove = async (id: string) => {

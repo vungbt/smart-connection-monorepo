@@ -29,7 +29,23 @@ const update = (req: Request, res: Response, next: NextFunction) =>
     message: 'Validation failed for room update',
   });
 
+const list = (req: Request, res: Response, next: NextFunction) =>
+  validator(req, res, next, {
+    data: req.query,
+    rules: {
+      serviceIds: 'array',
+      'serviceIds.*': 'string',
+      q: 'string',
+    },
+    attributes: {
+      serviceIds: 'Service IDs',
+      q: 'Search Query',
+    },
+    message: 'Validation failed for room list',
+  });
+
 export const RoomValidations = {
   create,
   update,
+  list,
 };

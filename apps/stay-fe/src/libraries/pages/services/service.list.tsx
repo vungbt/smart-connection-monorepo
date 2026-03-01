@@ -1,7 +1,8 @@
 'use client';
+import { SERVICE_TYPE_TAG_COLORS } from '@/constants/common';
 import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { EServiceType, ServiceItem } from '@/types/services';
+import { ServiceItem } from '@/types/services';
 import { getCellIndex } from '@/utils/common';
 import { formatPrice } from '@/utils/formater';
 import {
@@ -14,13 +15,6 @@ import {
 import { ActionButtons, FilterForm } from '@smart-connection-monorepo/ui-modules';
 import Link from 'next/link';
 import ServiceListUtils from './utils/service-list.utils';
-
-const serviceTypeTagColors: Record<EServiceType, 'orange' | 'blue' | 'green' | 'red'> = {
-  [EServiceType.DELUXE]: 'orange',
-  [EServiceType.LUXURY]: 'blue',
-  [EServiceType.PREMIUM]: 'green',
-  [EServiceType.BUSINESS]: 'red',
-};
 
 export default function ServiceListPage() {
   const {
@@ -76,7 +70,7 @@ export default function ServiceListPage() {
       cell: ({ row }) => (
         <Tag
           content={row.original.type}
-          color={serviceTypeTagColors[row.original.type]}
+          color={SERVICE_TYPE_TAG_COLORS[row.original.type]}
           type="outline"
         />
       ),

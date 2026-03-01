@@ -15,6 +15,12 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         <Navbar
           items={[
             { title: 'Home', icon: 'vuesax-element', navKey: 'home', href: ROUTES.HOME },
+            {
+              title: 'Bills',
+              icon: 'vuesax-money-receive',
+              navKey: 'bill',
+              href: ROUTES.BILLS,
+            },
             { title: 'Users', icon: 'user-group', navKey: 'user', href: ROUTES.USERS },
             {
               title: 'Rooms',

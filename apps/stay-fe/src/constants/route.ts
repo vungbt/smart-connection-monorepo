@@ -14,6 +14,9 @@ export const ROUTES = {
   USERS: '/users',
   USERS_SLUG: '/users/:slug',
   USERS_ADD: '/users/add',
+  BILLS: '/bills',
+  BILLS_SLUG: '/bills/:slug',
+  BILLS_ADD: '/bills/add',
 };
 
 export const PageName = 'Stay Easy';
