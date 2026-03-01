@@ -46,7 +46,32 @@ const update = (req: Request, res: Response, next: NextFunction) =>
     message: 'Validation failed for contract update',
   });
 
+const list = (req: Request, res: Response, next: NextFunction) =>
+  validator(req, res, next, {
+    data: req.query,
+    rules: {
+      roomIds: 'array',
+      'roomIds.*': 'string',
+      memberIds: 'array',
+      'memberIds.*': 'string',
+      serviceIds: 'array',
+      'serviceIds.*': 'string',
+      statuses: 'array',
+      'statuses.*': `in:${Object.values(EContractStatus).join(',')}`,
+      q: 'string',
+    },
+    attributes: {
+      roomIds: 'Room IDs',
+      memberIds: 'Member IDs',
+      serviceIds: 'Service IDs',
+      statuses: 'Contract Statuses',
+      q: 'Search Query',
+    },
+    message: 'Validation failed for contract list',
+  });
+
 export const ContractValidations = {
   create,
   update,
+  list,
 };

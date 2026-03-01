@@ -31,7 +31,26 @@ const update = (req: Request, res: Response, next: NextFunction) =>
     message: 'Validation failed for member update',
   });
 
+const list = (req: Request, res: Response, next: NextFunction) =>
+  validator(req, res, next, {
+    data: req.query,
+    rules: {
+      roomIds: 'array',
+      'roomIds.*': 'string',
+      isActives: 'array',
+      'isActives.*': 'boolean',
+      q: 'string',
+    },
+    attributes: {
+      roomIds: 'Room IDs',
+      isActives: 'Active States',
+      q: 'Search Query',
+    },
+    message: 'Validation failed for member list',
+  });
+
 export const MemberValidations = {
   create,
   update,
+  list,
 };

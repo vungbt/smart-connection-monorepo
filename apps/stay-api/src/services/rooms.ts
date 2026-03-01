@@ -1,29 +1,70 @@
 import RoomsModel from '@/models/rooms';
-import { RoomCreateBody, RoomUpdateBody } from '@/types';
+import {
+  IPaginationReq,
+  IRoomAttributes,
+  RoomCreateBody,
+  RoomListParams,
+  RoomUpdateBody,
+} from '@/types';
+import { resPagination } from '@/utils/helpers';
+import { Op, WhereOptions } from 'sequelize';
 
-const list = async () => {
-  return await RoomsModel.findAll({
-    where: {
-      deletedAt: null,
-    },
-  });
+const toStringArray = (value?: string[] | string) => {
+  if (!value) return [];
+  return Array.isArray(value) ? value : [value];
 };
 
-const create = async (body: RoomCreateBody): Promise<RoomsModel> => {
-  return await RoomsModel.create({ ...body });
+const list = async (params: RoomListParams, pagination: IPaginationReq) => {
+  const { serviceIds, q } = params;
+  const whereCondition: WhereOptions<IRoomAttributes> = {};
+
+  const normalizedServiceIds = toStringArray(serviceIds);
+  if (normalizedServiceIds.length > 0) {
+    whereCondition.serviceId = { [Op.in]: normalizedServiceIds };
+  }
+
+  if (q && q.length > 0) {
+    whereCondition.name = { [Op.like]: `%${q}%` };
+  }
+
+  const { count, rows } = await RoomsModel.findAndCountAll({
+    where: {
+      deletedAt: null,
+      ...whereCondition,
+    },
+    limit: pagination.limit,
+    offset: pagination.offset,
+  });
+
+  const paginationRes = resPagination(count, pagination);
+  return {
+    items: rows,
+    metadata: {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      ...paginationRes,
+    },
+  };
+};
+
+const create = async (body: RoomCreateBody) => {
+  const result = await RoomsModel.create({ ...body });
+  return { item: result };
 };
 
 const getById = async (id: string) => {
-  return await RoomsModel.findOne({
+  const result = await RoomsModel.findOne({
     where: { id, deletedAt: null },
   });
+  return { item: result };
 };
 
-const update = async (id: string, data: RoomUpdateBody): Promise<RoomsModel> => {
+const update = async (id: string, data: RoomUpdateBody) => {
   const room = await RoomsModel.findByPk(id);
   if (!room) throw new Error('Room not found');
 
-  return await room.update(data);
+  const result = await room.update(data);
+  return { item: result };
 };
 
 const remove = async (id: string) => {

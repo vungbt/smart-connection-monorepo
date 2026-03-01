@@ -21,3 +21,9 @@ export type MemberCreateBody = Omit<
 >;
 
 export type MemberUpdateBody = Partial<Omit<IMemberAttributes, 'id' | 'createdAt' | 'deletedAt'>>;
+
+export type MemberListParams = {
+  roomIds?: string[];
+  isActives?: boolean[];
+  q?: string;
+};

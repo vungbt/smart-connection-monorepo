@@ -4,15 +4,22 @@ import {
   ApiRequest,
   ApiResponse,
   ContractCreateBody,
+  ContractListParams,
   ContractUpdateBody,
   IdParams,
 } from '@/types';
 import HttpStatus from 'http-status-codes';
 
-const getAllContracts = async (req: ApiRequest, res: ApiResponse, next: ApiNext) => {
+const getAllContracts = async (
+  req: ApiRequest<Record<string, never>, Record<string, never>, ContractListParams>,
+  res: ApiResponse,
+  next: ApiNext
+) => {
   try {
-    const contracts = await ContractServices.list();
-    return res.jsonApi(HttpStatus.OK, { data: contracts });
+    const pagination = req.pagination;
+    const params = req.query;
+    const results = await ContractServices.list(params, pagination);
+    return res.jsonApi(HttpStatus.OK, results);
   } catch (error) {
     return next(error);
   }
@@ -26,7 +33,7 @@ const createContract = async (
   try {
     const { body } = req;
     const result = await ContractServices.create(body);
-    return res.jsonApi(HttpStatus.OK, { data: result });
+    return res.jsonApi(HttpStatus.OK, result);
   } catch (error) {
     return next(error);
   }
@@ -35,9 +42,9 @@ const createContract = async (
 const getContractById = async (req: ApiRequest<IdParams>, res: ApiResponse, next: ApiNext) => {
   try {
     const { id } = req.params;
-    const contract = await ContractServices.getById(id);
-    if (!contract) return res.sendStatus(HttpStatus.NOT_FOUND);
-    return res.jsonApi(HttpStatus.OK, { data: contract });
+    const result = await ContractServices.getById(id);
+    if (!result.item) return res.sendStatus(HttpStatus.NOT_FOUND);
+    return res.jsonApi(HttpStatus.OK, result);
   } catch (error) {
     return next(error);
   }
@@ -51,8 +58,8 @@ const updateContract = async (
   try {
     const { id } = req.params;
     const { body } = req;
-    const contract = await ContractServices.update(id, body);
-    return res.jsonApi(HttpStatus.OK, { data: contract });
+    const result = await ContractServices.update(id, body);
+    return res.jsonApi(HttpStatus.OK, result);
   } catch (error) {
     return next(error);
   }

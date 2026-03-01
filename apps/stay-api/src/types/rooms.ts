@@ -14,3 +14,8 @@ export type RoomItem = RoomsModel;
 export type RoomCreateBody = Omit<IRoomAttributes, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
 
 export type RoomUpdateBody = Partial<Omit<IRoomAttributes, 'id' | 'createdAt' | 'deletedAt'>>;
+
+export type RoomListParams = {
+  serviceIds?: string[];
+  q?: string;
+};

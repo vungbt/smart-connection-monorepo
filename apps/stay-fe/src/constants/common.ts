@@ -1,3 +1,5 @@
+import { EServiceType } from '@/types/services';
+
 export const FILE_IMAGE = {
   accepts: ['image/png', 'image/jpeg', 'image/jpg', 'image/webp', 'image/gif'],
   size: 1024 * 1024 * 5, // 5MB,
@@ -46,4 +48,11 @@ export const DEFAULT_PAGINATION = {
   pageSize: 10,
   count: 0,
   totalPages: 0,
+};
+
+export const SERVICE_TYPE_TAG_COLORS: Record<EServiceType, 'orange' | 'blue' | 'green' | 'red'> = {
+  [EServiceType.DELUXE]: 'orange',
+  [EServiceType.LUXURY]: 'blue',
+  [EServiceType.PREMIUM]: 'green',
+  [EServiceType.BUSINESS]: 'red',
 };

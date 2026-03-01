@@ -29,3 +29,11 @@ export type ContractCreateBody = Omit<
 export type ContractUpdateBody = Partial<
   Omit<IContractAttributes, 'id' | 'createdAt' | 'deletedAt'>
 >;
+
+export type ContractListParams = {
+  roomIds?: string[];
+  memberIds?: string[];
+  serviceIds?: string[];
+  statuses?: EContractStatus[];
+  q?: string;
+};

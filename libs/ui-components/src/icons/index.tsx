@@ -165,6 +165,7 @@ const IconsDefine = {
   'adjustments-vertical': 'adjustments-vertical',
   'pencil-square': 'pencil-square',
   'information-circle': 'information-circle',
+  'vuesax-money-receive': 'vuesax-money-receive',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -404,6 +405,9 @@ export const Icons: IconsType = {
     return <PencilSquare {...props} />;
   },
   'information-circle': (props: IconProps) => {
+    return <InformationCircle {...props} />;
+  },
+  'vuesax-money-receive': (props: IconProps) => {
     return <InformationCircle {...props} />;
   },
   // Add more icons here

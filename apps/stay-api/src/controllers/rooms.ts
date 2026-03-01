@@ -1,57 +1,77 @@
 import { RoomServices } from '@/services';
-import { ApiRequest, ApiResponse, IdParams, RoomCreateBody, RoomUpdateBody } from '@/types';
+import {
+  ApiNext,
+  ApiRequest,
+  ApiResponse,
+  IdParams,
+  RoomCreateBody,
+  RoomListParams,
+  RoomUpdateBody,
+} from '@/types';
+import HttpStatus from 'http-status-codes';
 
-const getAllRooms = async (req: ApiRequest, res: ApiResponse) => {
+const getAllRooms = async (
+  req: ApiRequest<Record<string, never>, Record<string, never>, RoomListParams>,
+  res: ApiResponse,
+  next: ApiNext
+) => {
   try {
-    const rooms = await RoomServices.list();
-    return res.jsonApi(200, { data: rooms });
+    const pagination = req.pagination;
+    const params = req.query;
+    const results = await RoomServices.list(params, pagination);
+    return res.jsonApi(HttpStatus.OK, results);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
 const createRoom = async (
   req: ApiRequest<Record<string, never>, RoomCreateBody>,
-  res: ApiResponse
+  res: ApiResponse,
+  next: ApiNext
 ) => {
   try {
     const { body } = req;
-    const room = await RoomServices.create(body);
-    return res.jsonApi(200, { data: room });
+    const result = await RoomServices.create(body);
+    return res.jsonApi(HttpStatus.OK, result);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
-const getRoomById = async (req: ApiRequest<IdParams>, res: ApiResponse) => {
+const getRoomById = async (req: ApiRequest<IdParams>, res: ApiResponse, next: ApiNext) => {
   try {
     const { id } = req.params;
-    const room = await RoomServices.getById(id);
-    if (!room) return res.sendStatus(404);
-    return res.jsonApi(200, { data: room });
+    const result = await RoomServices.getById(id);
+    if (!result.item) return res.sendStatus(HttpStatus.NOT_FOUND);
+    return res.jsonApi(HttpStatus.OK, result);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
-const updateRoom = async (req: ApiRequest<IdParams, RoomUpdateBody>, res: ApiResponse) => {
+const updateRoom = async (
+  req: ApiRequest<IdParams, RoomUpdateBody>,
+  res: ApiResponse,
+  next: ApiNext
+) => {
   try {
     const { id } = req.params;
     const { body } = req;
-    const updatedRoom = await RoomServices.update(id, body);
-    return res.jsonApi(200, { data: updatedRoom });
+    const result = await RoomServices.update(id, body);
+    return res.jsonApi(HttpStatus.OK, result);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
-const deleteRoom = async (req: ApiRequest<IdParams>, res: ApiResponse) => {
+const deleteRoom = async (req: ApiRequest<IdParams>, res: ApiResponse, next: ApiNext) => {
   try {
     const { id } = req.params;
     const result = await RoomServices.remove(id);
-    return res.jsonApi(200, result);
+    return res.jsonApi(HttpStatus.OK, result);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
