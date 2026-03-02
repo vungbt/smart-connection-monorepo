@@ -81,16 +81,8 @@ export default function ServiceSlugPage() {
             { title: 'Services', href: ROUTES.SERVICES },
             { title: isAdd ? 'Create New Service' : 'Edit Service' },
           ]}
+          description="Configure service pricing and monthly fees for selected room type."
         />
-
-        <div>
-          <h2 className="text-32 font-semibold text-neutral-text-primary">
-            {isAdd ? 'Create New Service' : 'Edit Service'}
-          </h2>
-          <p className="mt-1 text-14 text-neutral-placeholder">
-            Configure service pricing and monthly fees for selected room type.
-          </p>
-        </div>
 
         <Box>
           <h3 className="mb-4 text-20 font-semibold text-neutral-text-primary">

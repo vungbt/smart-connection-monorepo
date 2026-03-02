@@ -56,3 +56,10 @@ export const CustomItemRender: Story = {
       ),
   },
 };
+
+export const WithDescription: Story = {
+  args: {
+    items: [{ title: 'Home', href: '/' }, { title: 'Users', href: '/users' }, { title: 'Profile' }],
+    description: 'Manage tenant profile and related information.',
+  },
+};

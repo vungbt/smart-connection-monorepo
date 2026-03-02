@@ -20,4 +20,5 @@ export type RoomDetailRes = {
 export type RoomFormValues = {
   name: string;
   serviceId: string;
+  userIds: string[];
 };

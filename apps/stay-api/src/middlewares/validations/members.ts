@@ -7,16 +7,44 @@ const create = (req: Request, res: Response, next: NextFunction) =>
     rules: {
       name: 'required|string',
       phone: 'required|string',
-      email: 'required|string',
       address: 'required|string',
       isActive: 'required|boolean',
-      cccd: 'required|string',
+      identityCardNumber: 'required|string',
       roomId: 'required|string',
     },
     attributes: {
       name: 'Member name',
+      phone: 'Phone number',
+      address: 'Address',
+      isActive: 'Active status',
+      identityCardNumber: 'Identity Card Number',
+      roomId: 'Room ID',
     },
     message: 'Validation failed for member creation',
+  });
+
+const importMany = (req: Request, res: Response, next: NextFunction) =>
+  validator(req, res, next, {
+    data: req.body,
+    rules: {
+      items: 'required|array',
+      'items.*.name': 'required|string',
+      'items.*.isActive': 'required|boolean',
+      'items.*.phone': 'string',
+      'items.*.address': 'string',
+      'items.*.identityCardNumber': 'string',
+      'items.*.roomId': 'string',
+    },
+    attributes: {
+      items: 'Import items',
+      'items.*.name': 'Member name',
+      'items.*.isActive': 'Active status',
+      'items.*.phone': 'Phone number',
+      'items.*.address': 'Address',
+      'items.*.identityCardNumber': 'Identity Card Number',
+      'items.*.roomId': 'Room ID',
+    },
+    message: 'Validation failed for member import',
   });
 
 const update = (req: Request, res: Response, next: NextFunction) =>
@@ -51,6 +79,7 @@ const list = (req: Request, res: Response, next: NextFunction) =>
 
 export const MemberValidations = {
   create,
+  importMany,
   update,
   list,
 };

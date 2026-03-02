@@ -1,4 +1,6 @@
 import { ROUTES } from '@/constants/route';
+import { usePagination } from '@/hooks/usePagination';
+import { Metadata } from '@/types/common';
 import { RoomItem, RoomListRes } from '@/types/rooms';
 import { ServiceItem, ServiceListRes } from '@/types/services';
 import { roomKeys } from '@/utils/apis/api-keys';
@@ -7,10 +9,11 @@ import { useApiMutation, useApiQuery, useQueryClient } from '@smart-connection-m
 import { toastError, toastSuccess } from '@smart-connection-monorepo/ui-components';
 import { useFilterForm } from '@smart-connection-monorepo/ui-modules';
 import { useRouter } from 'next/navigation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type RoomListUtilsResult = {
   rooms: RoomItem[];
+  metadata?: Metadata;
   isLoading: boolean;
   isLoadingDelete: boolean;
   itemIdDelete: string | null;
@@ -22,6 +25,7 @@ type RoomListUtilsResult = {
 };
 
 export default function RoomListUtils(): RoomListUtilsResult {
+  const { pagination, setPagination } = usePagination({});
   const [itemIdDelete, setItemIdDelete] = useState<string | null>(null);
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -30,11 +34,24 @@ export default function RoomListUtils(): RoomListUtilsResult {
 
   const { data: roomData, isLoading: isLoadingRooms } = useApiQuery<RoomListRes>({
     endpoint: API_ROUTES.ROOMS,
-    queryKey: roomKeys.list({ q: searchKeyword }),
+    queryKey: roomKeys.list({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      q: searchKeyword,
+    }),
     params: {
+      page: pagination.page,
+      pageSize: pagination.pageSize,
       q: searchKeyword || undefined,
     },
   });
+
+  useEffect(() => {
+    setPagination({
+      count: roomData?.metadata?.count || 0,
+      totalPages: roomData?.metadata?.totalPages || 0,
+    });
+  }, [roomData?.metadata]);
 
   const { data: serviceData, isLoading: isLoadingServices } = useApiQuery<ServiceListRes>({
     endpoint: API_ROUTES.SERVICES,
@@ -73,6 +90,10 @@ export default function RoomListUtils(): RoomListUtilsResult {
           queryClient.invalidateQueries({
             queryKey: roomKeys.list(),
           });
+          setPagination({
+            ...pagination,
+            page: 1,
+          });
         },
         onError: error => {
           setItemIdDelete(null);
@@ -84,6 +105,7 @@ export default function RoomListUtils(): RoomListUtilsResult {
 
   return {
     rooms: roomData?.items || [],
+    metadata: roomData?.metadata,
     isLoading: isLoadingRooms || isLoadingServices,
     isLoadingDelete,
     itemIdDelete,
