@@ -77,7 +77,7 @@ export default function BillListPage() {
         enableSorting: true,
         cell: ({ row }) => {
           const value = row.original.room?.name ?? '--';
-          return <Text>{value}</Text>;
+          return value;
         },
       },
       {
