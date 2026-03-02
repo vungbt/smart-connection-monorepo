@@ -5,6 +5,7 @@ import {
   ApiResponse,
   IdParams,
   MemberCreateBody,
+  MemberImportManyBody,
   MemberListParams,
   MemberUpdateBody,
 } from '@/types';
@@ -33,6 +34,20 @@ const createMember = async (
   try {
     const { body } = req;
     const result = await MemberServices.create(body);
+    return res.jsonApi(HttpStatus.OK, result);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+const importMembers = async (
+  req: ApiRequest<Record<string, never>, MemberImportManyBody>,
+  res: ApiResponse,
+  next: ApiNext
+) => {
+  try {
+    const { items } = req.body;
+    const result = await MemberServices.createImportMany(items);
     return res.jsonApi(HttpStatus.OK, result);
   } catch (error) {
     return next(error);
@@ -78,6 +93,7 @@ const deleteMember = async (req: ApiRequest<IdParams>, res: ApiResponse, next: A
 export const MemberControllers = {
   getAllMembers,
   createMember,
+  importMembers,
   getMemberById,
   updateMember,
   deleteMember,

@@ -12,18 +12,22 @@ export type BreadcrumbItem = {
 export type BreadcrumbProps = {
   items: BreadcrumbItem[];
   separator?: ReactNode;
+  description?: ReactNode;
   className?: string;
   itemClassName?: string;
   separatorClassName?: string;
+  descriptionClassName?: string;
   itemRender?: (item: BreadcrumbItem, isLast: boolean) => ReactNode;
 };
 
 export function Breadcrumb({
   items,
   separator = '/',
+  description,
   className,
   itemClassName,
   separatorClassName,
+  descriptionClassName,
   itemRender,
 }: BreadcrumbProps) {
   return (
@@ -48,6 +52,12 @@ export function Breadcrumb({
           );
         })}
       </ol>
+
+      {description ? (
+        <p className={clsx('mt-1 text-14 text-neutral-placeholder', descriptionClassName)}>
+          {description}
+        </p>
+      ) : null}
     </nav>
   );
 }

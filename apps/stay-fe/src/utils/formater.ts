@@ -1,3 +1,5 @@
+import { format as formatDateFns, isValid, parseISO } from 'date-fns';
+
 export type FormatPriceOptions = {
   locale?: string;
   currency?: string;
@@ -37,4 +39,30 @@ export const formatPrice = (
     minimumFractionDigits,
     maximumFractionDigits,
   }).format(amount);
+};
+
+export enum EDateFormatPattern {
+  MMM_DD_YYYY = 'MMM dd, yyyy',
+  DD_MM_YYYY = 'dd/MM/yyyy',
+  YYYY_MM_DD = 'yyyy-MM-dd',
+  HH_MM_DD_MM_YYYY = 'HH:mm dd/MM/yyyy',
+}
+
+export const formatDate = (
+  value?: Date | string | null,
+  pattern: EDateFormatPattern = EDateFormatPattern.MMM_DD_YYYY
+): string => {
+  const fallback = '-';
+
+  if (!value) {
+    return fallback;
+  }
+
+  const dateValue = typeof value === 'string' ? parseISO(value) : value;
+
+  if (!isValid(dateValue)) {
+    return fallback;
+  }
+
+  return formatDateFns(dateValue, pattern);
 };

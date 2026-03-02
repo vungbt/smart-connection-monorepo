@@ -3,6 +3,7 @@ import { SERVICE_TYPE_TAG_COLORS } from '@/constants/common';
 import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { RoomItem } from '@/types/rooms';
+import { getCellIndex } from '@/utils/common';
 import { formatPrice } from '@/utils/formater';
 import {
   Button,
@@ -18,6 +19,7 @@ import RoomListUtils from './utils/room-list.utils';
 export default function RoomListPage() {
   const {
     rooms,
+    metadata,
     isLoading,
     isLoadingDelete,
     itemIdDelete,
@@ -32,7 +34,7 @@ export default function RoomListPage() {
   const columns: TableColumn<RoomItem> = [
     {
       header: 'N°',
-      cell: ({ row }) => row.index + 1,
+      cell: ({ row }) => getCellIndex(metadata, row.index),
     },
     {
       header: 'Room Name',

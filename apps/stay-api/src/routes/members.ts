@@ -6,6 +6,7 @@ import express, { Router } from 'express';
 const router: Router = express.Router();
 
 router.get('/', pagingMiddleware, MemberValidations.list, MemberControllers.getAllMembers);
+router.post('/import', MemberValidations.importMany, MemberControllers.importMembers);
 router.post('/', MemberValidations.create, MemberControllers.createMember);
 router.get('/:id', MemberControllers.getMemberById);
 router.put('/:id', MemberValidations.update, MemberControllers.updateMember);

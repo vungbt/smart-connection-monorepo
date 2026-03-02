@@ -181,7 +181,10 @@ export default function ConfigsPage() {
   return (
     <div className="p-5">
       <h2>Services CRUD Demo</h2>
-      <Breadcrumb items={[{ title: 'Home', href: '/' }, { title: 'Services' }]} />
+      <Breadcrumb
+        items={[{ title: 'Home', href: '/' }, { title: 'Services' }]}
+        description="Services CRUD demo and form controls showcase."
+      />
       <Tag content="Hello" />
 
       {/* Form with Radio and Checkbox components */}

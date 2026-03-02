@@ -20,6 +20,13 @@ export type MemberCreateBody = Omit<
   'id' | 'createdAt' | 'updatedAt' | 'deletedAt'
 >;
 
+export type MemberImportBody = Partial<MemberCreateBody> &
+  Pick<MemberCreateBody, 'name' | 'isActive'>;
+
+export type MemberImportManyBody = {
+  items: MemberImportBody[];
+};
+
 export type MemberUpdateBody = Partial<Omit<IMemberAttributes, 'id' | 'createdAt' | 'deletedAt'>>;
 
 export type MemberListParams = {

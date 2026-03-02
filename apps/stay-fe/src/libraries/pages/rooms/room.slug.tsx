@@ -54,16 +54,8 @@ export default function RoomSlugPage() {
             { title: 'Rooms', href: ROUTES.ROOMS },
             { title: isAdd ? 'Add New Room' : 'Edit Room' },
           ]}
+          description="Configure room information and assign a service package."
         />
-
-        <div>
-          <h2 className="text-32 font-semibold text-neutral-text-primary">
-            {isAdd ? 'Add New Room' : 'Edit Room'}
-          </h2>
-          <p className="mt-1 text-14 text-neutral-placeholder">
-            Configure room information and assign a service package.
-          </p>
-        </div>
 
         <Box>
           <h3 className="mb-4 text-20 font-semibold text-neutral-text-primary">
