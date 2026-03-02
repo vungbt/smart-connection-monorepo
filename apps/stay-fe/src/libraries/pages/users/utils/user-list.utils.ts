@@ -1,6 +1,5 @@
 import { ROUTES } from '@/constants/route';
 import { usePagination } from '@/hooks/usePagination';
-import { RoomItem, RoomListRes } from '@/types/rooms';
 import {
   UserImportBody,
   UserImportItem,
@@ -11,10 +10,14 @@ import {
 import { userKeys } from '@/utils/apis/api-keys';
 import { API_ROUTES } from '@/utils/apis/router';
 import { useApiMutation, useApiQuery, useQueryClient } from '@smart-connection-monorepo/api-client';
-import { toastError, toastSuccess } from '@smart-connection-monorepo/ui-components';
+import {
+  TableSortingType,
+  toastError,
+  toastSuccess,
+} from '@smart-connection-monorepo/ui-components';
 import { useFilterForm } from '@smart-connection-monorepo/ui-modules';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type UserListUtilsResult = {
   users: UserItem[];
@@ -23,12 +26,31 @@ type UserListUtilsResult = {
   isLoadingDelete: boolean;
   isImporting: boolean;
   itemIdDelete: string | null;
-  getRoomById: (roomId: string) => RoomItem | undefined;
+  sorting: TableSortingType;
   onEdit: (user: UserItem) => void;
   onDelete: (userId: string) => void;
   onImportCsv: (file: File) => Promise<void>;
   onSubmitDelete: () => void;
   setItemIdDelete: (id: string | null) => void;
+  setSorting: (sorting: TableSortingType) => void;
+};
+
+type UserSortBy =
+  | 'createdAt'
+  | 'name'
+  | 'phone'
+  | 'address'
+  | 'isActive'
+  | 'isRoomLeader'
+  | 'roomName';
+
+const sortFieldMap: Record<string, UserSortBy> = {
+  name: 'name',
+  phone: 'phone',
+  address: 'address',
+  roomName: 'roomName',
+  isActive: 'isActive',
+  isRoomLeader: 'isRoomLeader',
 };
 
 const parseCsvRow = (line: string) => {
@@ -109,10 +131,13 @@ const parseUserImportCsv = (rawCsv: string): UserImportItem[] => {
       const address = getField(columns, 'address');
       const identityCardNumber = getField(columns, 'identityCardNumber');
       const roomId = getField(columns, 'roomId');
+      const isRoomLeaderRaw = getField(columns, 'isRoomLeader');
+      const isRoomLeader = isRoomLeaderRaw ? parseActive(isRoomLeaderRaw) : null;
 
       return {
         name,
         isActive,
+        isRoomLeader: isRoomLeader === null ? undefined : isRoomLeader,
         phone,
         address,
         identityCardNumber,
@@ -124,12 +149,16 @@ const parseUserImportCsv = (rawCsv: string): UserImportItem[] => {
 
 export default function UserListUtils(): UserListUtilsResult {
   const [itemIdDelete, setItemIdDelete] = useState<string | null>(null);
+  const [sorting, setSorting] = useState<TableSortingType>([{ id: 'roomName', desc: false }]);
   const queryClient = useQueryClient();
   const router = useRouter();
   const { q } = useFilterForm();
   const { pagination, setPagination } = usePagination({});
 
   const searchKeyword = q.trim();
+  const activeSort = sorting[0];
+  const sortBy = activeSort ? sortFieldMap[activeSort.id] || 'roomName' : 'roomName';
+  const sortOrder = activeSort?.desc ? 'DESC' : 'ASC';
 
   const { data: userData, isLoading: isLoadingUsers } = useApiQuery<UserListRes>({
     endpoint: API_ROUTES.USERS,
@@ -137,20 +166,15 @@ export default function UserListUtils(): UserListUtilsResult {
       page: pagination.page,
       pageSize: pagination.pageSize,
       q: searchKeyword,
+      sortBy,
+      sortOrder,
     }),
     params: {
       page: pagination.page,
       pageSize: pagination.pageSize,
       q: searchKeyword || undefined,
-    },
-  });
-
-  const { data: roomData, isLoading: isLoadingRooms } = useApiQuery<RoomListRes>({
-    endpoint: API_ROUTES.ROOMS,
-    queryKey: ['rooms', 'all'],
-    params: {
-      page: 1,
-      pageSize: 1000,
+      sortBy,
+      sortOrder,
     },
   });
 
@@ -160,10 +184,6 @@ export default function UserListUtils(): UserListUtilsResult {
       totalPages: userData?.metadata?.totalPages || 0,
     });
   }, [userData?.metadata]);
-
-  const roomMap = useMemo(() => {
-    return new Map((roomData?.items || []).map(room => [room.id, room]));
-  }, [roomData?.items]);
 
   const { mutate: deleteUser, isPending: isLoadingDelete } = useApiMutation<
     { message: string },
@@ -240,15 +260,16 @@ export default function UserListUtils(): UserListUtilsResult {
   return {
     users: userData?.items || [],
     metadata: userData?.metadata,
-    isLoading: isLoadingUsers || isLoadingRooms,
+    isLoading: isLoadingUsers,
     isLoadingDelete,
     isImporting,
     itemIdDelete,
-    getRoomById: (roomId: string) => roomMap.get(roomId),
+    sorting,
     onEdit,
     onDelete,
     onImportCsv,
     setItemIdDelete,
+    setSorting,
     onSubmitDelete,
   };
 }

@@ -1,4 +1,5 @@
 import RoomsModel from '@/models/rooms';
+import MembersModel from '@/models/members';
 import {
   IPaginationReq,
   IRoomAttributes,
@@ -7,7 +8,7 @@ import {
   RoomUpdateBody,
 } from '@/types';
 import { resPagination } from '@/utils/helpers';
-import { Op, WhereOptions } from 'sequelize';
+import { Includeable, Op, WhereOptions } from 'sequelize';
 
 const toStringArray = (value?: string[] | string) => {
   if (!value) return [];
@@ -15,8 +16,26 @@ const toStringArray = (value?: string[] | string) => {
 };
 
 const list = async (params: RoomListParams, pagination: IPaginationReq) => {
-  const { serviceIds, q } = params;
+  const { serviceIds, q, includeMembers } = params;
   const whereCondition: WhereOptions<IRoomAttributes> = {};
+  const shouldIncludeMembers =
+    includeMembers === true ||
+    `${includeMembers || ''}`.toLowerCase() === 'true' ||
+    `${includeMembers || ''}` === '1';
+
+  const include: Includeable[] = shouldIncludeMembers
+    ? [
+        {
+          model: MembersModel,
+          as: 'members',
+          required: false,
+          attributes: ['id', 'name', 'phone', 'address', 'isActive', 'isRoomLeader', 'roomId'],
+          where: {
+            deletedAt: null,
+          },
+        },
+      ]
+    : [];
 
   const normalizedServiceIds = toStringArray(serviceIds);
   if (normalizedServiceIds.length > 0) {
@@ -28,10 +47,12 @@ const list = async (params: RoomListParams, pagination: IPaginationReq) => {
   }
 
   const { count, rows } = await RoomsModel.findAndCountAll({
+    include,
     where: {
       deletedAt: null,
       ...whereCondition,
     },
+    distinct: true,
     limit: pagination.limit,
     offset: pagination.offset,
   });

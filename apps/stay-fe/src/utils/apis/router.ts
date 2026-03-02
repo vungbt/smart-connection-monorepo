@@ -3,7 +3,7 @@ export const API_ROUTES = {
   MEMBERS: '/members',
   USERS: '/members',
   USERS_IMPORT: '/members/import',
-  CONTRACTS: '/contracts',
+  BILLS: '/bills',
   SERVICES: '/services',
   CONFIGS: '/services',
 };

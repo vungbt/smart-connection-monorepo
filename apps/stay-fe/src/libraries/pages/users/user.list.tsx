@@ -23,11 +23,12 @@ export default function UserListPage() {
     isLoadingDelete,
     isImporting,
     itemIdDelete,
-    getRoomById,
+    sorting,
     onEdit,
     onDelete,
     onImportCsv,
     setItemIdDelete,
+    setSorting,
     onSubmitDelete,
   } = UserListUtils();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -46,25 +47,45 @@ export default function UserListPage() {
     {
       header: 'User Name',
       accessorKey: 'name',
+      enableSorting: true,
     },
     {
       header: 'Phone',
       accessorKey: 'phone',
+      enableSorting: true,
     },
     {
       header: 'Address',
       accessorKey: 'address',
+      enableSorting: true,
     },
     {
       header: 'Room',
-      cell: ({ row }) => row.original.room?.name || getRoomById(row.original.roomId)?.name || '-',
+      id: 'roomName',
+      enableSorting: true,
+      accessorFn: row => row.room?.name || '',
+      cell: ({ row }) => row.original.room?.name || '-',
     },
     {
       header: 'Status',
+      id: 'isActive',
+      enableSorting: true,
       cell: ({ row }) => (
         <Tag
           content={row.original.isActive ? 'ACTIVE' : 'INACTIVE'}
           color={row.original.isActive ? 'green' : 'red'}
+          type="outline"
+        />
+      ),
+    },
+    {
+      header: 'Role',
+      id: 'isRoomLeader',
+      enableSorting: true,
+      cell: ({ row }) => (
+        <Tag
+          content={row.original.isRoomLeader ? 'ROOM LEADER' : 'ROOM MEMBER'}
+          color={row.original.isRoomLeader ? 'blue' : 'green'}
           type="outline"
         />
       ),
@@ -100,7 +121,7 @@ export default function UserListPage() {
           2342342
         </FilterForm>
         <Button
-          icon="plus"
+          icon="vuesax-document-upload"
           variant="outline"
           loading={isImporting}
           onClick={() => fileInputRef.current?.click()}
@@ -117,6 +138,7 @@ export default function UserListPage() {
         data={users}
         rowKey="id"
         loading={isLoading}
+        sortable={{ sorting, onSorting: setSorting }}
         customClasses={{ root: 'mt-6' }}
       />
 

@@ -9,6 +9,7 @@ export interface IMemberAttributes {
   phone: string;
   address: string;
   isActive: boolean;
+  isRoomLeader: boolean;
   identityCardNumber: string;
   roomId: string;
 }
@@ -33,4 +34,7 @@ export type MemberListParams = {
   roomIds?: string[];
   isActives?: boolean[];
   q?: string;
+  sortBy?: 'createdAt' | 'name' | 'phone' | 'address' | 'isActive' | 'isRoomLeader' | 'roomName';
+  sortOrder?: 'ASC' | 'DESC';
+  includeRoomService?: boolean | string;
 };
