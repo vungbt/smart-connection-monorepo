@@ -21,7 +21,8 @@ type BillSortBy =
   | 'billingYear'
   | 'billingMonth'
   | 'electricNumberNew'
-  | 'waterNumberNew';
+  | 'waterNumberNew'
+  | 'roomName';
 
 const sortFieldMap: Record<string, BillSortBy> = {
   issueDate: 'createdAt',
