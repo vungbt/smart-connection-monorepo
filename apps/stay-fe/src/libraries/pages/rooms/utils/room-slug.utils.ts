@@ -22,6 +22,8 @@ type RoomSlugUtilsResult = {
   onCancel: () => void;
 };
 
+type RoomMutationPayload = Omit<RoomFormValues, 'userIds'>;
+
 const defaultInitialValues: RoomFormValues = {
   name: '',
   serviceId: '',
@@ -88,12 +90,12 @@ export default function RoomSlugUtils(): RoomSlugUtilsResult {
 
   const { mutate: createRoom, isPending: isCreating } = useApiMutation<
     RoomDetailRes,
-    RoomFormValues
+    RoomMutationPayload
   >('POST');
 
   const { mutate: updateRoom, isPending: isUpdating } = useApiMutation<
     RoomDetailRes,
-    RoomFormValues
+    RoomMutationPayload
   >('PUT');
 
   const { mutateAsync: updateUserRoom, isPending: isUpdatingUserRoom } = useApiMutation<
