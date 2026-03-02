@@ -1,14 +1,9 @@
 import { ROUTES } from '@/constants/route';
 import { useSlugParams } from '@/hooks/useSlugParams';
+import { BillItem, BillListRes } from '@/types/bills';
 import { RoomItem, RoomListRes } from '@/types/rooms';
 import { ServiceItem, ServiceListRes } from '@/types/services';
-import {
-  EContractStatus,
-  UserContractItem,
-  UserContractListRes,
-  UserDetailRes,
-  UserFormValues,
-} from '@/types/users';
+import { UserDetailRes, UserFormValues } from '@/types/users';
 import { userKeys } from '@/utils/apis/api-keys';
 import { API_ROUTES } from '@/utils/apis/router';
 import { useApiMutation, useApiQuery, useQueryClient } from '@smart-connection-monorepo/api-client';
@@ -32,17 +27,10 @@ type UserSlugUtilsResult = {
   onCancelAdd: () => void;
   userRoom?: RoomItem;
   userService?: ServiceItem;
-  latestContract?: UserContractItem;
-  contracts: UserContractItem[];
+  latestBill?: BillItem;
+  bills: BillItem[];
   leaseStatusText: string;
   leaseStatusColor: 'green' | 'blue' | 'orange' | 'red';
-};
-
-const getLeaseStatus = (status?: EContractStatus): UserSlugUtilsResult['leaseStatusColor'] => {
-  if (!status) return 'orange';
-  if (status === EContractStatus.ACTIVE) return 'green';
-  if (status === EContractStatus.INACTIVE) return 'blue';
-  return 'red';
 };
 
 export default function UserSlugUtils(): UserSlugUtilsResult {
@@ -56,6 +44,7 @@ export default function UserSlugUtils(): UserSlugUtilsResult {
     phone: '',
     address: '',
     isActive: true,
+    isRoomLeader: false,
     identityCardNumber: '',
     roomId: '',
   };
@@ -89,17 +78,19 @@ export default function UserSlugUtils(): UserSlugUtilsResult {
     },
   });
 
-  const { data: contractData, isLoading: isLoadingContracts } = useApiQuery<UserContractListRes>(
+  const roomId = userData?.item?.roomId;
+
+  const { data: billData, isLoading: isLoadingBills } = useApiQuery<BillListRes>(
     {
-      endpoint: API_ROUTES.CONTRACTS,
-      queryKey: ['contracts', 'by-member', userId],
+      endpoint: API_ROUTES.BILLS,
+      queryKey: ['bills', 'by-room', roomId],
       params: {
         page: 1,
         pageSize: 100,
-        memberIds: userId ? [userId] : undefined,
+        roomIds: roomId ? [roomId] : undefined,
       },
     },
-    { enabled: !!userId && !isAdd }
+    { enabled: !!roomId && !isAdd }
   );
 
   const { mutate: createUser, isPending: isCreating } = useApiMutation<
@@ -173,29 +164,35 @@ export default function UserSlugUtils(): UserSlugUtilsResult {
     return new Map((serviceData?.items || []).map(service => [service.id, service]));
   }, [serviceData?.items]);
 
-  const contracts = useMemo(() => {
-    const items = contractData?.items || [];
+  const bills = useMemo(() => {
+    const items = billData?.items || [];
     return [...items].sort(
-      (left, right) => new Date(right.startDate).getTime() - new Date(left.startDate).getTime()
+      (left, right) =>
+        new Date(right.createdAt || 0).getTime() - new Date(left.createdAt || 0).getTime()
     );
-  }, [contractData?.items]);
+  }, [billData?.items]);
 
-  const latestContract = contracts[0];
+  const latestBill = bills[0];
   const user = userData?.item;
   const editInitialValues: UserFormValues = {
     name: user?.name || '',
     phone: user?.phone || '',
     address: user?.address || '',
     isActive: user?.isActive ?? true,
+    isRoomLeader: user?.isRoomLeader ?? false,
     identityCardNumber: user?.identityCardNumber || '',
     roomId: user?.roomId || '',
   };
-  const userRoom = roomMap.get(user?.roomId || latestContract?.roomId || '');
-  const userService = serviceMap.get(latestContract?.serviceId || userRoom?.serviceId || '');
+  const userRoom = roomMap.get(user?.roomId || '');
+  const userService = serviceMap.get(userRoom?.serviceId || '');
+  const leaseStatusText = user?.isActive ? 'ACTIVE' : 'INACTIVE';
+  const leaseStatusColor: UserSlugUtilsResult['leaseStatusColor'] = user?.isActive
+    ? 'green'
+    : 'red';
 
   return {
     isAdd,
-    isLoading: isLoadingUser || isLoadingRooms || isLoadingServices || isLoadingContracts,
+    isLoading: isLoadingUser || isLoadingRooms || isLoadingServices || isLoadingBills,
     isSubmitting: isCreating || isUpdating,
     isEditing,
     user,
@@ -209,9 +206,9 @@ export default function UserSlugUtils(): UserSlugUtilsResult {
     onCancelAdd,
     userRoom,
     userService,
-    latestContract,
-    contracts,
-    leaseStatusText: latestContract?.status || 'PENDING',
-    leaseStatusColor: getLeaseStatus(latestContract?.status),
+    latestBill,
+    bills,
+    leaseStatusText,
+    leaseStatusColor,
   };
 }

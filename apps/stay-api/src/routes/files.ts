@@ -1,7 +1,5 @@
 import { FileControllers } from '@/controllers';
-import { authenticateToken } from '@/middlewares/authMiddleware';
 import { FileValidations } from '@/middlewares/validations';
-import { EUserRole } from '@/types';
 import express, { Router } from 'express';
 
 const router: Router = express.Router();

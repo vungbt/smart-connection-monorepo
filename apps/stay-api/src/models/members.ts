@@ -13,6 +13,7 @@ class MembersModel extends Model<IMemberAttributes> implements IMemberAttributes
   public phone!: string;
   public address!: string;
   public isActive!: boolean;
+  public isRoomLeader!: boolean;
   public identityCardNumber!: string;
   public roomId!: string;
 }
@@ -39,6 +40,11 @@ MembersModel.init(
     isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
+    },
+    isRoomLeader: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: false,
     },
     identityCardNumber: {
       type: DataTypes.STRING,

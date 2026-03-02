@@ -18,4 +18,5 @@ export type RoomUpdateBody = Partial<Omit<IRoomAttributes, 'id' | 'createdAt' | 
 export type RoomListParams = {
   serviceIds?: string[];
   q?: string;
+  includeMembers?: boolean | string;
 };

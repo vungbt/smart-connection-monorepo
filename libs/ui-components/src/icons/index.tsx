@@ -76,6 +76,10 @@ import AdjustmentsVertical from './adjustments-vertical';
 import Plus from './plus';
 import PencilSquare from './pencil-square';
 import InformationCircle from './information-circle';
+import Printer from './printer';
+import ArrowDownTray from './arrow-down-tray';
+import VuesaxDocumentUpload from './vuesax-document-upload';
+import VuesaxDocumentDownload from './vuesax-document-download';
 
 export type IconProps = {
   className?: string;
@@ -166,6 +170,10 @@ const IconsDefine = {
   'pencil-square': 'pencil-square',
   'information-circle': 'information-circle',
   'vuesax-money-receive': 'vuesax-money-receive',
+  'arrow-down-tray': 'arrow-down-tray',
+  printer: 'printer',
+  'vuesax-document-upload': 'vuesax-document-upload',
+  'vuesax-document-download': 'vuesax-document-download',
 };
 
 export type IconName = keyof typeof IconsDefine;
@@ -410,6 +418,18 @@ export const Icons: IconsType = {
   'vuesax-money-receive': (props: IconProps) => {
     return <InformationCircle {...props} />;
   },
+  'arrow-down-tray': (props: IconProps) => {
+    return <ArrowDownTray {...props} />;
+  },
+  printer: (props: IconProps) => {
+    return <Printer {...props} />;
+  },
+  'vuesax-document-upload': (props: IconProps) => {
+    return <VuesaxDocumentUpload {...props} />;
+  },
+  'vuesax-document-download': (props: IconProps) => {
+    return <VuesaxDocumentDownload {...props} />;
+  },
   // Add more icons here
 };
 
@@ -418,6 +438,9 @@ export const RenderIcon = ({ name, ...reset }: IconProps & { name?: IconName }) 
     return null;
   }
   const Icon = Icons[name];
+  if (!Icon) {
+    return null;
+  }
   return <Icon {...reset} />;
 };
 

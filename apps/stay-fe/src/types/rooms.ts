@@ -7,6 +7,15 @@ export type RoomItem = {
   deletedAt?: Date;
   name: string;
   serviceId: string;
+  members?: {
+    id: string;
+    name: string;
+    phone: string;
+    address: string;
+    isActive: boolean;
+    isRoomLeader: boolean;
+    roomId: string;
+  }[];
 };
 
 export type RoomListRes = {

@@ -1,4 +1,5 @@
 import { ListRes, SingleRes } from '@/types/common';
+import { ServiceItem } from '@/types/services';
 
 export type UserItem = {
   id: string;
@@ -9,12 +10,14 @@ export type UserItem = {
   phone: string;
   address: string;
   isActive: boolean;
+  isRoomLeader: boolean;
   identityCardNumber: string;
   roomId: string;
   room?: {
     id: string;
     name: string;
     serviceId: string;
+    service?: ServiceItem;
   };
 };
 
@@ -27,6 +30,7 @@ export type UserFormValues = {
   phone: string;
   address: string;
   isActive: boolean;
+  isRoomLeader: boolean;
   identityCardNumber: string;
   roomId: string;
 };
@@ -34,6 +38,7 @@ export type UserFormValues = {
 export type UserImportItem = {
   name: string;
   isActive: boolean;
+  isRoomLeader?: boolean;
   phone?: string;
   address?: string;
   identityCardNumber?: string;
@@ -47,21 +52,3 @@ export type UserImportBody = {
 export type UserImportRes = {
   items: UserItem[];
 };
-
-export enum EContractStatus {
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  TERMINATED = 'TERMINATED',
-}
-
-export type UserContractItem = {
-  id: string;
-  roomId: string;
-  memberId: string;
-  serviceId: string;
-  startDate: Date;
-  endDate?: Date;
-  status: EContractStatus;
-};
-
-export type UserContractListRes = ListRes<UserContractItem>;

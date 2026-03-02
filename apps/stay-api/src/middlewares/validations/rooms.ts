@@ -36,10 +36,12 @@ const list = (req: Request, res: Response, next: NextFunction) =>
       serviceIds: 'array',
       'serviceIds.*': 'string',
       q: 'string',
+      includeMembers: 'string|in:true,false,1,0',
     },
     attributes: {
       serviceIds: 'Service IDs',
       q: 'Search Query',
+      includeMembers: 'Include members',
     },
     message: 'Validation failed for room list',
   });

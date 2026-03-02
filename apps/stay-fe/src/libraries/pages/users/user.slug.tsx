@@ -25,6 +25,7 @@ const addUserValidationSchema = yup.object({
   address: yup.string().required('Address is required'),
   identityCardNumber: yup.string().required('Identity card is required'),
   roomId: yup.string().required('Please select a room'),
+  isRoomLeader: yup.boolean().required(),
 });
 
 export default function UserSlugPage() {
@@ -44,8 +45,8 @@ export default function UserSlugPage() {
     user,
     userRoom,
     userService,
-    latestContract,
-    contracts,
+    latestBill,
+    bills,
     leaseStatusText,
     leaseStatusColor,
   } = UserSlugUtils();
@@ -59,6 +60,14 @@ export default function UserSlugPage() {
     () => [
       { value: 'true', label: 'Active' },
       { value: 'false', label: 'Inactive' },
+    ],
+    []
+  );
+
+  const roomLeaderOptions: SelectOption[] = useMemo(
+    () => [
+      { value: 'true', label: 'Room Leader' },
+      { value: 'false', label: 'Room Member' },
     ],
     []
   );
@@ -123,6 +132,19 @@ export default function UserSlugPage() {
             }}
           >
             <Select options={roomOptions} placeholder="Select room" loading={isSubmitting} />
+          </FormikItem>
+
+          <FormikItem
+            name="isRoomLeader"
+            required
+            label="Role In Room"
+            mapValue={value => roomLeaderOptions.find(item => item.value === String(value)) || null}
+            mapOnChange={option => {
+              const selectedOption = option as SelectOption | null;
+              return selectedOption?.value === 'true';
+            }}
+          >
+            <Select options={roomLeaderOptions} placeholder="Select role" loading={isSubmitting} />
           </FormikItem>
         </div>
       </Box>
@@ -205,6 +227,9 @@ export default function UserSlugPage() {
                 color={user?.isActive ? 'green' : 'red'}
                 type="outline"
               />
+              {user?.isRoomLeader && (
+                <Tag className="mt-2" content="ROOM LEADER" color="blue" type="outline" />
+              )}
               <p className="mt-2 text-14 text-neutral-placeholder">
                 Joined {formatDate(user?.createdAt)}
               </p>
@@ -250,7 +275,7 @@ export default function UserSlugPage() {
           <Box>
             <div className="flex items-center justify-between">
               <p className="text-20 font-semibold text-neutral-text-primary">
-                Current Lease Information
+                Current Room Information
               </p>
               <Tag content={leaseStatusText} color={leaseStatusColor} type="outline" />
             </div>
@@ -269,15 +294,15 @@ export default function UserSlugPage() {
                 </p>
               </div>
               <div>
-                <p className="text-12 uppercase text-neutral-placeholder">Start Date</p>
+                <p className="text-12 uppercase text-neutral-placeholder">Latest Bill Date</p>
                 <p className="text-16 font-medium text-neutral-text-primary mt-1">
-                  {formatDate(latestContract?.startDate)}
+                  {formatDate(latestBill?.createdAt)}
                 </p>
               </div>
               <div>
-                <p className="text-12 uppercase text-neutral-placeholder">End Date</p>
+                <p className="text-12 uppercase text-neutral-placeholder">Latest Electric Number</p>
                 <p className="text-16 font-medium text-neutral-text-primary mt-1">
-                  {formatDate(latestContract?.endDate)}
+                  {latestBill?.electricNumberNew ?? '-'}
                 </p>
               </div>
             </div>
@@ -292,24 +317,26 @@ export default function UserSlugPage() {
                 </Link>
               </div>
               <div className="mt-4 space-y-3">
-                {contracts.length === 0 && (
+                {bills.length === 0 && (
                   <p className="text-14 text-neutral-placeholder">No billing history</p>
                 )}
-                {contracts.slice(0, 4).map(contract => (
+                {bills.slice(0, 4).map(bill => (
                   <div
-                    key={contract.id}
+                    key={bill.id}
                     className="flex items-center justify-between border border-neutral rounded-lg px-3 py-2"
                   >
                     <div>
                       <p className="text-14 font-medium text-neutral-text-primary">
-                        {formatDate(contract.startDate)}
+                        {formatDate(bill.createdAt)}
                       </p>
                       <p className="text-12 text-neutral-placeholder">
-                        Contract #{contract.id.slice(0, 8)}
+                        Bill #{bill.id.slice(0, 8)}
                       </p>
                     </div>
                     <p className="text-14 font-semibold text-neutral-text-primary">
-                      {formatPrice(userService?.roomFee)}
+                      {formatPrice(
+                        Number(userService?.roomFee || 0) + Number(bill.otherServiceFee || 0)
+                      )}
                     </p>
                   </div>
                 ))}

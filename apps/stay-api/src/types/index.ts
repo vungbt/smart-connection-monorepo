@@ -4,4 +4,4 @@ export * from './files';
 export * from './auth';
 export * from './rooms';
 export * from './members';
-export * from './contracts';
+export * from './bills';

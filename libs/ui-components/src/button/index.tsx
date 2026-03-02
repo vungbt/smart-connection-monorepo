@@ -37,7 +37,7 @@ const shapeClasses = {
 const colorClasses = {
   primary: {
     solid: 'bg-primary text-white hover:bg-primary-base',
-    outline: 'border border-primary text-primary bg-transparent hover:bg-primary-background',
+    outline: 'border border-primary text-primary bg-white hover:bg-primary-background',
     subtle: 'bg-primary-background text-primary-base hover:bg-primary-hover',
     link: 'text-primary bg-transparent hover:underline',
     text: 'text-primary bg-transparent hover:text-primary-clicked',
@@ -46,7 +46,7 @@ const colorClasses = {
   },
   secondary: {
     solid: 'bg-secondary text-white hover:bg-secondary-base',
-    outline: 'border border-secondary text-secondary bg-transparent hover:bg-secondary-background',
+    outline: 'border border-secondary text-secondary bg-white hover:bg-secondary-background',
     subtle: 'bg-secondary-background text-secondary-base hover:bg-secondary-hover',
     link: 'text-secondary bg-transparent hover:underline',
     text: 'text-secondary bg-transparent hover:text-secondary-clicked',
@@ -55,7 +55,7 @@ const colorClasses = {
   },
   success: {
     solid: 'bg-success text-white hover:bg-success-base',
-    outline: 'border border-success text-success bg-transparent hover:bg-success-bg',
+    outline: 'border border-success text-success bg-white hover:bg-success-bg',
     subtle: 'bg-success-bg text-success hover:bg-success-base',
     link: 'text-success bg-transparent hover:underline',
     text: 'text-success bg-transparent hover:text-success-base',
@@ -63,7 +63,7 @@ const colorClasses = {
   },
   error: {
     solid: 'bg-error text-white hover:bg-error-base',
-    outline: 'border border-color-error text-error bg-transparent hover:bg-error-bg',
+    outline: 'border border-color-error text-error bg-white hover:bg-error-bg',
     subtle: 'bg-error-bg text-error hover:bg-error-base',
     link: 'text-error bg-transparent hover:underline',
     text: 'text-error bg-transparent hover:text-error-base',
@@ -71,7 +71,7 @@ const colorClasses = {
   },
   pending: {
     solid: 'bg-pending text-white hover:bg-pending-base',
-    outline: 'border border-pending text-pending bg-transparent hover:bg-pending-bg',
+    outline: 'border border-pending text-pending bg-white hover:bg-pending-bg',
     subtle: 'bg-pending-bg text-pending hover:bg-pending-base',
     link: 'text-pending bg-transparent hover:underline',
     text: 'text-pending bg-transparent hover:text-pending-base',
@@ -79,7 +79,7 @@ const colorClasses = {
   },
   neutral: {
     solid: 'bg-neutral text-white hover:bg-neutral-text-primary',
-    outline: 'border border-neutral text-neutral bg-transparent hover:bg-neutral-bg',
+    outline: 'border border-neutral text-neutral bg-white hover:bg-neutral-bg',
     subtle: 'bg-neutral-bg text-neutral hover:bg-neutral-text-primary',
     link: 'text-neutral bg-transparent hover:underline',
     text: 'text-neutral bg-transparent hover:text-neutral-text-primary',
