@@ -23,8 +23,17 @@ const validationSchema = yup.object({
 });
 
 export default function RoomSlugPage() {
-  const { isAdd, isLoadingServices, isSubmitting, services, initialValues, onSubmit, onCancel } =
-    RoomSlugUtils();
+  const {
+    isAdd,
+    isLoadingServices,
+    isLoadingUsers,
+    isSubmitting,
+    services,
+    users,
+    initialValues,
+    onSubmit,
+    onCancel,
+  } = RoomSlugUtils();
 
   const serviceOptions = useMemo<SelectOption[]>(
     () =>
@@ -33,6 +42,15 @@ export default function RoomSlugPage() {
         label: `${service.type} - ${formatPrice(service.roomFee)}`,
       })),
     [services]
+  );
+
+  const userOptions = useMemo<SelectOption[]>(
+    () =>
+      users.map(user => ({
+        value: user.id,
+        label: user.phone ? `${user.name} - ${user.phone}` : user.name,
+      })),
+    [users]
   );
 
   usePageTitle({
@@ -80,6 +98,26 @@ export default function RoomSlugPage() {
                 options={serviceOptions}
                 placeholder="Select service"
                 loading={isSubmitting || isLoadingServices}
+              />
+            </FormikItem>
+
+            <FormikItem
+              name="userIds"
+              label="Users"
+              mapValue={value => {
+                const userIds = (value as string[] | undefined) || [];
+                return userOptions.filter(option => userIds.includes(String(option.value)));
+              }}
+              mapOnChange={option => {
+                const selectedOptions = (option as SelectOption[] | null) || [];
+                return selectedOptions.map(selectedOption => String(selectedOption.value));
+              }}
+            >
+              <Select
+                isMulti
+                options={userOptions}
+                placeholder="Select users"
+                loading={isSubmitting || isLoadingUsers}
               />
             </FormikItem>
           </div>

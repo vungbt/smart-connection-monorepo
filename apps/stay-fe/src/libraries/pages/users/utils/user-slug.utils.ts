@@ -36,7 +36,6 @@ type UserSlugUtilsResult = {
   contracts: UserContractItem[];
   leaseStatusText: string;
   leaseStatusColor: 'green' | 'blue' | 'orange' | 'red';
-  onBackToListHref: string;
 };
 
 const getLeaseStatus = (status?: EContractStatus): UserSlugUtilsResult['leaseStatusColor'] => {
@@ -214,6 +213,5 @@ export default function UserSlugUtils(): UserSlugUtilsResult {
     contracts,
     leaseStatusText: latestContract?.status || 'PENDING',
     leaseStatusColor: getLeaseStatus(latestContract?.status),
-    onBackToListHref: ROUTES.USERS,
   };
 }

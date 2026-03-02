@@ -48,7 +48,6 @@ export default function UserSlugPage() {
     contracts,
     leaseStatusText,
     leaseStatusColor,
-    onBackToListHref,
   } = UserSlugUtils();
 
   const roomOptions = useMemo<SelectOption[]>(
