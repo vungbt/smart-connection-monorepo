@@ -7,6 +7,7 @@ export interface IRoomAttributes {
   deletedAt?: Date;
   name: string;
   serviceId: string;
+  isUseElectricBike: boolean;
 }
 
 export type RoomItem = RoomsModel;
@@ -19,4 +20,5 @@ export type RoomListParams = {
   serviceIds?: string[];
   q?: string;
   includeMembers?: boolean | string;
+  includeService?: boolean | string;
 };

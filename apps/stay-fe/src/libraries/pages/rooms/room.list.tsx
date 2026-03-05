@@ -4,7 +4,7 @@ import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { RoomItem } from '@/types/rooms';
 import { getCellIndex } from '@/utils/common';
-import { formatPrice } from '@/utils/formater';
+import { formatPrice } from '@/utils/formatter';
 import {
   Button,
   ModalConfirm,
@@ -23,7 +23,6 @@ export default function RoomListPage() {
     isLoading,
     isLoadingDelete,
     itemIdDelete,
-    getServiceById,
     onEdit,
     onDelete,
     setItemIdDelete,
@@ -43,9 +42,8 @@ export default function RoomListPage() {
     {
       header: 'Service Type',
       cell: ({ row }) => {
-        const service = getServiceById(row.original.serviceId);
+        const service = row.original.service;
         if (!service) return '-';
-
         return (
           <Tag
             content={service.type}
@@ -57,10 +55,17 @@ export default function RoomListPage() {
     },
     {
       header: 'Room Fee',
-      cell: ({ row }) => {
-        const service = getServiceById(row.original.serviceId);
-        return formatPrice(service?.roomFee);
-      },
+      cell: ({ row }) => formatPrice(row.original.service?.roomFee),
+    },
+    {
+      header: 'Electric Bike',
+      cell: ({ row }) => (
+        <Tag
+          content={row.original.isUseElectricBike ? 'YES' : 'NO'}
+          color={row.original.isUseElectricBike ? 'green' : 'red'}
+          type="outline"
+        />
+      ),
     },
     {
       header: 'Actions',

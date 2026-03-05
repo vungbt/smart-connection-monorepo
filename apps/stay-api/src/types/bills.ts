@@ -8,7 +8,9 @@ export interface IBillAttributes {
   roomId: string;
   billingMonth: number;
   billingYear: number;
+  electricNumberOld: number;
   electricNumberNew: number;
+  waterNumberOld: number;
   waterNumberNew: number;
   otherServiceFee?: number;
   note?: string;

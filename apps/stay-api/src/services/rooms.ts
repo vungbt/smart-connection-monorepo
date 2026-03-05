@@ -1,5 +1,6 @@
 import RoomsModel from '@/models/rooms';
 import MembersModel from '@/models/members';
+import ServicesModel from '@/models/services';
 import {
   IPaginationReq,
   IRoomAttributes,
@@ -15,27 +16,32 @@ const toStringArray = (value?: string[] | string) => {
   return Array.isArray(value) ? value : [value];
 };
 
-const list = async (params: RoomListParams, pagination: IPaginationReq) => {
-  const { serviceIds, q, includeMembers } = params;
-  const whereCondition: WhereOptions<IRoomAttributes> = {};
-  const shouldIncludeMembers =
-    includeMembers === true ||
-    `${includeMembers || ''}`.toLowerCase() === 'true' ||
-    `${includeMembers || ''}` === '1';
+const toBool = (value?: boolean | string) =>
+  value === true || `${value || ''}`.toLowerCase() === 'true' || `${value || ''}` === '1';
 
-  const include: Includeable[] = shouldIncludeMembers
-    ? [
-        {
-          model: MembersModel,
-          as: 'members',
-          required: false,
-          attributes: ['id', 'name', 'phone', 'address', 'isActive', 'isRoomLeader', 'roomId'],
-          where: {
-            deletedAt: null,
-          },
-        },
-      ]
-    : [];
+const list = async (params: RoomListParams, pagination: IPaginationReq) => {
+  const { serviceIds, q, includeMembers, includeService } = params;
+  const whereCondition: WhereOptions<IRoomAttributes> = {};
+
+  const include: Includeable[] = [];
+
+  if (toBool(includeMembers)) {
+    include.push({
+      model: MembersModel,
+      as: 'members',
+      required: false,
+      attributes: ['id', 'name', 'phone', 'address', 'isActive', 'isRoomLeader', 'roomId'],
+      where: { deletedAt: null },
+    });
+  }
+
+  if (toBool(includeService)) {
+    include.push({
+      model: ServicesModel,
+      as: 'service',
+      required: false,
+    });
+  }
 
   const normalizedServiceIds = toStringArray(serviceIds);
   if (normalizedServiceIds.length > 0) {

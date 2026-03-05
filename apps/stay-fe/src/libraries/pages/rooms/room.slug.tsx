@@ -2,7 +2,7 @@
 import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { RoomFormValues } from '@/types/rooms';
-import { formatPrice } from '@/utils/formater';
+import { formatPrice } from '@/utils/formatter';
 import {
   Box,
   Breadcrumb,
@@ -20,6 +20,7 @@ import RoomSlugUtils from './utils/room-slug.utils';
 const validationSchema = yup.object({
   name: yup.string().required('Room name is required'),
   serviceId: yup.string().required('Please select a service'),
+  isUseElectricBike: yup.boolean().required('Please choose electric bike usage'),
 });
 
 export default function RoomSlugPage() {
@@ -51,6 +52,14 @@ export default function RoomSlugPage() {
         label: user.phone ? `${user.name} - ${user.phone}` : user.name,
       })),
     [users]
+  );
+
+  const electricBikeOptions = useMemo<SelectOption[]>(
+    () => [
+      { value: 'true', label: 'Yes' },
+      { value: 'false', label: 'No' },
+    ],
+    []
   );
 
   usePageTitle({
@@ -98,6 +107,25 @@ export default function RoomSlugPage() {
                 options={serviceOptions}
                 placeholder="Select service"
                 loading={isSubmitting || isLoadingServices}
+              />
+            </FormikItem>
+
+            <FormikItem
+              name="isUseElectricBike"
+              required
+              label="Use Electric Bike"
+              mapValue={value =>
+                electricBikeOptions.find(item => item.value === String(Boolean(value))) || null
+              }
+              mapOnChange={option => {
+                const selectedOption = option as SelectOption | null;
+                return selectedOption?.value === 'true';
+              }}
+            >
+              <Select
+                options={electricBikeOptions}
+                placeholder="Select option"
+                loading={isSubmitting}
               />
             </FormikItem>
 

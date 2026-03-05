@@ -1,113 +1,115 @@
 'use client';
+import { SERVICE_TYPE_TAG_COLORS } from '@/constants/common';
 import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { BillItem, BillListRes } from '@/types/bills';
-import { API_ROUTES } from '@/utils/apis/router';
-import { formatDate, formatPrice } from '@/utils/formater';
-import { useApiQuery } from '@smart-connection-monorepo/api-client';
+import { BillItem } from '@/types/bills';
+import { getCellIndex } from '@/utils/common';
+import { formatDate, formatPrice } from '@/utils/formatter';
 import {
   Button,
+  ModalConfirm,
   Table,
   TableColumn,
-  TableSortingType,
+  Tag,
 } from '@smart-connection-monorepo/ui-components';
-import { FilterForm, useFilterForm } from '@smart-connection-monorepo/ui-modules';
+import { ActionButtons, FilterForm } from '@smart-connection-monorepo/ui-modules';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
-import { calculateBillAmount } from './bill.mock';
-
-type BillSortBy =
-  | 'createdAt'
-  | 'billingYear'
-  | 'billingMonth'
-  | 'electricNumberNew'
-  | 'waterNumberNew'
-  | 'roomName';
-
-const sortFieldMap: Record<string, BillSortBy> = {
-  issueDate: 'createdAt',
-  amount: 'waterNumberNew',
-  roomName: 'roomName',
-};
+import { calculateBillAmount } from '@/utils/bills';
+import BillListUtils from './utils/bill-list.utils';
 
 export default function BillListPage() {
-  const { q } = useFilterForm();
-  const [sorting, setSorting] = useState<TableSortingType>([{ id: 'issueDate', desc: true }]);
-
-  const activeSort = sorting[0];
-  const sortBy = activeSort ? sortFieldMap[activeSort.id] || 'createdAt' : 'createdAt';
-  const sortOrder = activeSort?.desc ? 'DESC' : 'ASC';
+  const {
+    bills,
+    metadata,
+    isLoading,
+    isLoadingDelete,
+    itemIdDelete,
+    sorting,
+    onView,
+    onDelete,
+    setItemIdDelete,
+    setSorting,
+    onSubmitDelete,
+  } = BillListUtils();
 
   usePageTitle({ title: 'Bill Management', icon: 'vuesax-money-receive' });
 
-  const { data: billData, isLoading: isLoadingBills } = useApiQuery<BillListRes>({
-    endpoint: API_ROUTES.BILLS,
-    queryKey: ['bills', q, sortBy, sortOrder],
-    params: {
-      page: 1,
-      pageSize: 100,
-      q: q || undefined,
-      sortBy,
-      sortOrder,
+  const columns: TableColumn<BillItem> = [
+    {
+      header: 'N°',
+      cell: ({ row }) => (
+        <Link
+          href={ROUTES.BILLS_SLUG.replace(':slug', row.original.id)}
+          className="font-semibold text-primary"
+        >
+          {getCellIndex(metadata, row.index)}
+        </Link>
+      ),
     },
-  });
-
-  const bills = billData?.items || [];
-
-  const columns: TableColumn<BillItem> = useMemo(
-    () => [
-      {
-        header: 'Invoice ID',
-        cell: ({ row }) => (
-          <Link
-            className="font-semibold text-primary"
-            href={ROUTES.BILLS_SLUG.replace(':slug', row.original.id)}
-          >
-            #{row.original.id}
-          </Link>
-        ),
+    {
+      header: 'Tenant',
+      cell: ({ row }) => row.original.room?.members?.[0]?.name || '-',
+    },
+    {
+      header: 'Room',
+      id: 'roomName',
+      enableSorting: true,
+      accessorFn: row => row.room?.name || '',
+      cell: ({ row }) => row.original.room?.name ?? '--',
+    },
+    {
+      header: 'Issue Date',
+      id: 'issueDate',
+      enableSorting: true,
+      accessorFn: row => String(row.createdAt || ''),
+      cell: ({ row }) => formatDate(row.original.createdAt),
+    },
+    {
+      header: 'Service Type',
+      cell: ({ row }) => {
+        const type = row.original.room?.service?.type;
+        if (!type) return '-';
+        return <Tag content={type} color={SERVICE_TYPE_TAG_COLORS[type]} type="outline" />;
       },
-      {
-        header: 'Tenant',
-        cell: ({ row }) => row.original.room?.members?.[0]?.name || '-',
-      },
-      {
-        header: 'Room',
-        id: 'roomName',
-        enableSorting: true,
-        cell: ({ row }) => {
-          const value = row.original.room?.name ?? '--';
-          return value;
-        },
-      },
-      {
-        header: 'Issue Date',
-        id: 'issueDate',
-        enableSorting: true,
-        cell: ({ row }) => formatDate(row.original.createdAt),
-      },
-      {
-        header: 'Service Type',
-        cell: ({ row }) => row.original.room?.service?.type || '-',
-      },
-      {
-        header: 'Amount',
-        id: 'amount',
-        enableSorting: true,
-        cell: ({ row }) => (
-          <span className="font-semibold">
-            {formatPrice(
-              calculateBillAmount(row.original.room?.service, row.original.otherServiceFee)
-            )}
-          </span>
-        ),
-      },
-    ],
-    []
-  );
+    },
+    {
+      header: 'Amount',
+      id: 'amount',
+      enableSorting: true,
+      accessorFn: row => row.waterNumberNew,
+      cell: ({ row }) => (
+        <span className="font-semibold">
+          {formatPrice(
+            calculateBillAmount(
+              row.original.room?.service,
+              {
+                electricNumberOld: row.original.electricNumberOld,
+                electricNumberNew: row.original.electricNumberNew,
+                waterNumberOld: row.original.waterNumberOld,
+                waterNumberNew: row.original.waterNumberNew,
+              },
+              row.original.otherServiceFee,
+              Boolean(row.original.room?.isUseElectricBike),
+              row.original.room?.members?.length || 0
+            )
+          )}
+        </span>
+      ),
+    },
+    {
+      header: 'Actions',
+      cell: ({ row }) => (
+        <ActionButtons
+          onView={() => onView(row.original)}
+          onDelete={() => onDelete(row.original.id)}
+        />
+      ),
+    },
+  ];
 
   return (
     <div>
+      {/* headers */}
       <div className="flex items-center gap-3 justify-end mt-6">
         <FilterForm placeholder="Search invoice, tenant or room" drawer={{ title: 'Filters' }}>
           2342342
@@ -115,18 +117,29 @@ export default function BillListPage() {
         <Link href={ROUTES.BILLS_ADD}>
           <Button icon="plus">Create Bill</Button>
         </Link>
-        <Button icon="arrow-up-tray" variant="outline">
-          Export list
-        </Button>
+        <Link href={ROUTES.BILLS_BULK_ADD}>
+          <Button variant="outline" icon="vuesax-document-upload">
+            Create Bills (Bulk)
+          </Button>
+        </Link>
       </div>
 
+      {/* content */}
       <Table
         columns={columns}
         data={bills}
         rowKey="id"
-        loading={isLoadingBills}
+        loading={isLoading}
         sortable={{ sorting, onSorting: setSorting }}
         customClasses={{ root: 'mt-6' }}
+      />
+
+      <ModalConfirm
+        isLoading={isLoadingDelete}
+        isOpen={!!itemIdDelete}
+        onCancel={() => setItemIdDelete(null)}
+        onClose={() => setItemIdDelete(null)}
+        onSubmit={onSubmitDelete}
       />
     </div>
   );

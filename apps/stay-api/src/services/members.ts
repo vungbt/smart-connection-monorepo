@@ -33,6 +33,7 @@ type MemberListRoom = {
   id: string;
   name: string;
   serviceId: string;
+  isUseElectricBike: boolean;
   service?: MemberListRoomService | null;
 };
 
@@ -112,7 +113,7 @@ const list = async (params: MemberListParams, pagination: IPaginationReq) => {
       {
         model: RoomsModel,
         as: 'room',
-        attributes: ['id', 'name', 'serviceId'],
+        attributes: ['id', 'name', 'serviceId', 'isUseElectricBike'],
         required: false,
         where: { deletedAt: null },
         include: [
@@ -202,7 +203,7 @@ const getById = async (id: string) => {
       {
         model: RoomsModel,
         as: 'room',
-        attributes: ['id', 'name', 'serviceId'],
+        attributes: ['id', 'name', 'serviceId', 'isUseElectricBike'],
         required: false,
         where: { deletedAt: null },
         include: [

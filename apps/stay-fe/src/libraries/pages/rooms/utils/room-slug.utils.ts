@@ -27,6 +27,7 @@ type RoomMutationPayload = Omit<RoomFormValues, 'userIds'>;
 const defaultInitialValues: RoomFormValues = {
   name: '',
   serviceId: '',
+  isUseElectricBike: false,
   userIds: [],
 };
 
@@ -85,6 +86,7 @@ export default function RoomSlugUtils(): RoomSlugUtilsResult {
     : {
         name: roomDetail?.name || '',
         serviceId: roomDetail?.serviceId || '',
+        isUseElectricBike: Boolean(roomDetail?.isUseElectricBike),
         userIds: initialUserIds,
       };
 

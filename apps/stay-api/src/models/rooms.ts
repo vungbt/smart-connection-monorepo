@@ -11,6 +11,7 @@ class RoomsModel extends Model<IRoomAttributes> implements IRoomAttributes {
   public deletedAt?: Date;
   public name!: string;
   public serviceId!: string;
+  public isUseElectricBike!: boolean;
 }
 
 RoomsModel.init(
@@ -31,6 +32,11 @@ RoomsModel.init(
         model: 'services',
         key: 'id',
       },
+    },
+    isUseElectricBike: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
   },
   {

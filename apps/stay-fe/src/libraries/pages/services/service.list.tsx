@@ -4,7 +4,7 @@ import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { ServiceItem } from '@/types/services';
 import { getCellIndex } from '@/utils/common';
-import { formatPrice } from '@/utils/formater';
+import { formatPrice } from '@/utils/formatter';
 import {
   Button,
   ModalConfirm,
