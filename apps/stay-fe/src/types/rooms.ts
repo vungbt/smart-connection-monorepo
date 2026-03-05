@@ -1,4 +1,5 @@
 import { ListRes } from '@/types/common';
+import { ServiceItem } from '@/types/services';
 
 export type RoomItem = {
   id: string;
@@ -7,6 +8,8 @@ export type RoomItem = {
   deletedAt?: Date;
   name: string;
   serviceId: string;
+  isUseElectricBike: boolean;
+  service?: ServiceItem;
   members?: {
     id: string;
     name: string;
@@ -29,5 +32,6 @@ export type RoomDetailRes = {
 export type RoomFormValues = {
   name: string;
   serviceId: string;
+  isUseElectricBike: boolean;
   userIds: string[];
 };

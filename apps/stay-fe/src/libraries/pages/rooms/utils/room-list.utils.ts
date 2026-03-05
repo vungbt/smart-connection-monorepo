@@ -2,14 +2,13 @@ import { ROUTES } from '@/constants/route';
 import { usePagination } from '@/hooks/usePagination';
 import { Metadata } from '@/types/common';
 import { RoomItem, RoomListRes } from '@/types/rooms';
-import { ServiceItem, ServiceListRes } from '@/types/services';
 import { roomKeys } from '@/utils/apis/api-keys';
 import { API_ROUTES } from '@/utils/apis/router';
 import { useApiMutation, useApiQuery, useQueryClient } from '@smart-connection-monorepo/api-client';
 import { toastError, toastSuccess } from '@smart-connection-monorepo/ui-components';
 import { useFilterForm } from '@smart-connection-monorepo/ui-modules';
 import { useRouter } from 'next/navigation';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type RoomListUtilsResult = {
   rooms: RoomItem[];
@@ -17,7 +16,6 @@ type RoomListUtilsResult = {
   isLoading: boolean;
   isLoadingDelete: boolean;
   itemIdDelete: string | null;
-  getServiceById: (serviceId: string) => ServiceItem | undefined;
   onEdit: (room: RoomItem) => void;
   onDelete: (roomId: string) => void;
   onSubmitDelete: () => void;
@@ -43,6 +41,7 @@ export default function RoomListUtils(): RoomListUtilsResult {
       page: pagination.page,
       pageSize: pagination.pageSize,
       q: searchKeyword || undefined,
+      includeService: 'true',
     },
   });
 
@@ -52,19 +51,6 @@ export default function RoomListUtils(): RoomListUtilsResult {
       totalPages: roomData?.metadata?.totalPages || 0,
     });
   }, [roomData?.metadata]);
-
-  const { data: serviceData, isLoading: isLoadingServices } = useApiQuery<ServiceListRes>({
-    endpoint: API_ROUTES.SERVICES,
-    queryKey: ['services', 'all'],
-    params: {
-      page: 1,
-      pageSize: 1000,
-    },
-  });
-
-  const serviceMap = useMemo(() => {
-    return new Map((serviceData?.items || []).map(service => [service.id, service]));
-  }, [serviceData?.items]);
 
   const { mutate: deleteRoom, isPending: isLoadingDelete } = useApiMutation<
     { message: string },
@@ -106,10 +92,9 @@ export default function RoomListUtils(): RoomListUtilsResult {
   return {
     rooms: roomData?.items || [],
     metadata: roomData?.metadata,
-    isLoading: isLoadingRooms || isLoadingServices,
+    isLoading: isLoadingRooms,
     isLoadingDelete,
     itemIdDelete,
-    getServiceById: (serviceId: string) => serviceMap.get(serviceId),
     onEdit,
     onDelete,
     setItemIdDelete,

@@ -7,10 +7,12 @@ const create = (req: Request, res: Response, next: NextFunction) =>
     rules: {
       name: 'required|string',
       serviceId: 'required|string',
+      isUseElectricBike: 'required|boolean',
     },
     attributes: {
       name: 'Room name',
       serviceId: 'Service ID',
+      isUseElectricBike: 'Use Electric Bike',
     },
     message: 'Validation failed for room creation',
   });
@@ -21,10 +23,12 @@ const update = (req: Request, res: Response, next: NextFunction) =>
     rules: {
       name: 'string',
       serviceId: 'string',
+      isUseElectricBike: 'boolean',
     },
     attributes: {
       name: 'Room Type',
       serviceId: 'Service ID',
+      isUseElectricBike: 'Use Electric Bike',
     },
     message: 'Validation failed for room update',
   });

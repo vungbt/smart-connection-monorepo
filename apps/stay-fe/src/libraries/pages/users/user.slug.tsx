@@ -2,7 +2,7 @@
 import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
 import { UserFormValues } from '@/types/users';
-import { formatDate, formatPrice } from '@/utils/formater';
+import { formatDate, formatPrice } from '@/utils/formatter';
 import {
   Box,
   Breadcrumb,

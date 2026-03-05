@@ -12,7 +12,9 @@ class BillsModel extends Model<IBillAttributes> implements IBillAttributes {
   public roomId!: string;
   public billingMonth!: number;
   public billingYear!: number;
+  public electricNumberOld!: number;
   public electricNumberNew!: number;
+  public waterNumberOld!: number;
   public waterNumberNew!: number;
   public otherServiceFee?: number;
   public note?: string;
@@ -41,7 +43,17 @@ BillsModel.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    electricNumberOld: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: 0,
+    },
     electricNumberNew: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      defaultValue: 0,
+    },
+    waterNumberOld: {
       type: DataTypes.FLOAT,
       allowNull: false,
       defaultValue: 0,

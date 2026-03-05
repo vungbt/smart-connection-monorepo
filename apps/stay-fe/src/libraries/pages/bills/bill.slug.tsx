@@ -1,14 +1,9 @@
 'use client';
+import { SERVICE_TYPE_TAG_COLORS } from '@/constants/common';
 import { ROUTES } from '@/constants/route';
 import { usePageTitle } from '@/hooks/usePageTitle';
-import { useSlugParams } from '@/hooks/useSlugParams';
-import { BillCreateValues, BillDetailRes } from '@/types/bills';
 import { ServiceItem } from '@/types/services';
-import { UserListRes } from '@/types/users';
-import { billKeys } from '@/utils/apis/api-keys';
-import { API_ROUTES } from '@/utils/apis/router';
-import { formatDate, formatPrice } from '@/utils/formater';
-import { useApiMutation, useApiQuery, useQueryClient } from '@smart-connection-monorepo/api-client';
+import { formatDate, formatPrice } from '@/utils/formatter';
 import {
   Box,
   Breadcrumb,
@@ -19,39 +14,16 @@ import {
   Select,
   SelectOption,
   Tag,
-  toastError,
-  toastSuccess,
   yup,
 } from '@smart-connection-monorepo/ui-components';
-import { useFormikContext } from 'formik';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
-import { calculateBillAmount } from './bill.mock';
-
-type CreateBillFormValues = {
-  tenantId: string;
-  billingMonth: string;
-  billingYear: string;
-  electricNumberOld: number;
-  electricNumberNew: number;
-  waterNumberOld: number;
-  waterNumberNew: number;
-  otherServiceFee: number;
-  note: string;
-};
-
-const defaultInitialValues: CreateBillFormValues = {
-  tenantId: '',
-  billingMonth: new Date().toLocaleString('en-US', { month: 'long' }),
-  billingYear: String(new Date().getFullYear()),
-  electricNumberOld: 0,
-  electricNumberNew: 0,
-  waterNumberOld: 0,
-  waterNumberNew: 0,
-  otherServiceFee: 0,
-  note: '',
-};
+import BillSlugUtils, {
+  CreateBillFormValues,
+  defaultInitialValues,
+  getBillDetail,
+  monthOptions,
+  useBillForm,
+  yearOptions,
+} from './utils/bill-slug.utils';
 
 const validationSchema = yup.object({
   tenantId: yup.string().required('Please select tenant'),
@@ -73,32 +45,15 @@ const validationSchema = yup.object({
   note: yup.string().max(1000, 'Note is too long').optional(),
 });
 
-const monthOptions: SelectOption[] = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-].map(month => ({ value: month, label: month }));
-
-const yearOptions: SelectOption[] = [0, 1, 2, 3, 4].map(offset => {
-  const year = String(new Date().getFullYear() - offset);
-  return { value: year, label: year };
-});
-
 function CreateBillLayout({
   roomOptions,
   tenantOptions,
   tenantRoomMap,
   roomServiceMap,
-  isCreating,
+  roomMemberCountMap,
+  roomElectricBikeMap,
+  isSubmitting,
+  isEdit,
   isLoadingRooms,
   onCancel,
 }: {
@@ -106,34 +61,31 @@ function CreateBillLayout({
   tenantOptions: SelectOption[];
   tenantRoomMap: Map<string, string>;
   roomServiceMap: Map<string, ServiceItem | undefined>;
-  isCreating: boolean;
+  roomMemberCountMap: Map<string, number>;
+  roomElectricBikeMap: Map<string, boolean>;
+  isSubmitting: boolean;
+  isEdit: boolean;
   isLoadingRooms: boolean;
   onCancel: () => void;
 }) {
-  const { values, setFieldValue, submitForm } = useFormikContext<CreateBillFormValues>();
-
-  const selectedRoomId = values.tenantId ? tenantRoomMap.get(values.tenantId) || '' : '';
-  const selectedRoomLabel =
-    roomOptions.find(option => option.value === selectedRoomId)?.label || '-';
-  const service = selectedRoomId ? roomServiceMap.get(selectedRoomId) : undefined;
-
-  const electricUnitPrice = Number(service?.electricFee || 0);
-  const waterUnitPrice = Number(service?.waterFee || 0);
-  const totalElectricity =
-    Math.max(Number(values.electricNumberNew || 0) - Number(values.electricNumberOld || 0), 0) *
-    electricUnitPrice;
-  const totalWater =
-    Math.max(Number(values.waterNumberNew || 0) - Number(values.waterNumberOld || 0), 0) *
-    waterUnitPrice;
-
-  const fixedMonthlyFees =
-    Number(service?.roomFee || 0) +
-    Number(service?.commonServiceFee || 0) +
-    Number(service?.internetFee || 0) +
-    Number(service?.electricBikeFee || 0);
-
-  const totalDue =
-    totalElectricity + totalWater + fixedMonthlyFees + Number(values.otherServiceFee || 0);
+  const {
+    values,
+    setFieldValue,
+    submitForm,
+    selectedRoomLabel,
+    service,
+    electricUnitPrice,
+    waterUnitPrice,
+    totalElectricity,
+    totalWater,
+    totalDue,
+  } = useBillForm({
+    tenantRoomMap,
+    roomOptions,
+    roomServiceMap,
+    roomMemberCountMap,
+    roomElectricBikeMap,
+  });
 
   return (
     <div className="space-y-6">
@@ -141,12 +93,10 @@ function CreateBillLayout({
         items={[
           { title: 'Home', href: ROUTES.HOME },
           { title: 'Bills', href: ROUTES.BILLS },
-          { title: 'Create Bill' },
+          { title: isEdit ? 'Edit Bill' : 'Create Bill' },
         ]}
         description="Generate and send a detailed invoice for the current billing cycle."
       />
-
-      <h3 className="text-30 font-semibold text-neutral-text-primary">Create Monthly Bill</h3>
 
       <Box>
         <h4 className="mb-4 text-20 font-semibold text-neutral-text-primary">
@@ -177,7 +127,7 @@ function CreateBillLayout({
             <Select
               options={tenantOptions}
               placeholder="Select a tenant"
-              loading={isCreating || isLoadingRooms}
+              loading={isSubmitting || isLoadingRooms}
             />
           </FormikItem>
 
@@ -191,7 +141,7 @@ function CreateBillLayout({
               (option as SelectOption | null)?.value || defaultInitialValues.billingMonth
             }
           >
-            <Select options={monthOptions} placeholder="Month" loading={isCreating} />
+            <Select options={monthOptions} placeholder="Month" loading={isSubmitting} />
           </FormikItem>
 
           <FormikItem
@@ -202,7 +152,7 @@ function CreateBillLayout({
               (option as SelectOption | null)?.value || defaultInitialValues.billingYear
             }
           >
-            <Select options={yearOptions} placeholder="Year" loading={isCreating} />
+            <Select options={yearOptions} placeholder="Year" loading={isSubmitting} />
           </FormikItem>
         </div>
       </Box>
@@ -214,10 +164,10 @@ function CreateBillLayout({
           </h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormikItem name="electricNumberOld" label="Previous Index">
-              <Input type="number" min="0" step="0.01" loading={isCreating} />
+              <Input type="number" min="0" step="0.01" loading={isSubmitting} />
             </FormikItem>
             <FormikItem name="electricNumberNew" required label="Current Index">
-              <Input type="number" min="0" step="0.01" loading={isCreating} />
+              <Input type="number" min="0" step="0.01" loading={isSubmitting} />
             </FormikItem>
             <Input label="Unit Price" value={`${formatPrice(electricUnitPrice)} / kWh`} disabled />
             <Input label="Total Electricity" value={formatPrice(totalElectricity)} disabled />
@@ -228,10 +178,10 @@ function CreateBillLayout({
           <h4 className="mb-4 text-20 font-semibold text-neutral-text-primary">Water Usage</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormikItem name="waterNumberOld" label="Previous Index">
-              <Input type="number" min="0" step="0.01" loading={isCreating} />
+              <Input type="number" min="0" step="0.01" loading={isSubmitting} />
             </FormikItem>
             <FormikItem name="waterNumberNew" required label="Current Index">
-              <Input type="number" min="0" step="0.01" loading={isCreating} />
+              <Input type="number" min="0" step="0.01" loading={isSubmitting} />
             </FormikItem>
             <Input label="Unit Price" value={`${formatPrice(waterUnitPrice)} / m³`} disabled />
             <Input label="Total Water" value={formatPrice(totalWater)} disabled />
@@ -255,186 +205,65 @@ function CreateBillLayout({
             disabled
           />
           <FormikItem name="otherServiceFee" label="Other Fee">
-            <Input type="number" min="0" step="0.01" loading={isCreating} />
+            <Input type="number" min="0" step="0.01" loading={isSubmitting} />
           </FormikItem>
         </div>
       </Box>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 rounded-xl bg-primary text-white p-6">
-          <p className="text-12 uppercase tracking-wider">Total Amount Due</p>
-          <p className="mt-2 text-48 font-bold">{formatPrice(totalDue)}</p>
-          <p className="mt-4 text-12 uppercase tracking-wider">
-            Due by: {values.billingMonth} {values.billingYear}
-          </p>
-        </div>
+      <div className="rounded-xl bg-primary text-white px-6 py-4">
+        <p className="text-12 uppercase tracking-wider">Total Amount Due</p>
+        <p className="mt-1 text-36 font-bold">{formatPrice(totalDue)}</p>
+        <p className="mt-1 text-12 uppercase tracking-wider">
+          Due by: {values.billingMonth} {values.billingYear}
+        </p>
+      </div>
 
-        <div className="flex flex-col gap-3">
-          <Button
-            type="button"
-            icon="check"
-            loading={isCreating}
-            disabled={isCreating}
-            onClick={() => submitForm()}
-          >
-            Create & Send Notification
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            loading={isCreating}
-            disabled={isCreating}
-            onClick={() => submitForm()}
-          >
-            Save as Draft
-          </Button>
-          <Button type="button" variant="text" onClick={onCancel} disabled={isCreating}>
-            Cancel
-          </Button>
-        </div>
+      <div className="flex items-center justify-end w-full gap-4">
+        <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
+          Cancel
+        </Button>
+        <Button
+          type="button"
+          variant="solid"
+          loading={isSubmitting}
+          disabled={isSubmitting}
+          onClick={() => submitForm()}
+        >
+          {!isEdit ? 'Create new bill' : 'Save changes'}
+        </Button>
       </div>
     </div>
   );
 }
 
 export default function BillSlugPage() {
-  const { itemId: billId, isAdd } = useSlugParams();
-  const router = useRouter();
-  const queryClient = useQueryClient();
-
-  const { data: billDetailData, isLoading: isLoadingDetail } = useApiQuery<BillDetailRes>(
-    {
-      endpoint: `${API_ROUTES.BILLS}/${billId}`,
-      queryKey: billKeys.detail(billId || ''),
-      params: {
-        id: billId,
-      },
-    },
-    { enabled: !!billId && !isAdd }
-  );
-
-  const { data: userData, isLoading: isLoadingUsers } = useApiQuery<UserListRes>({
-    endpoint: API_ROUTES.USERS,
-    queryKey: ['users', 'all-for-bill-create', 'include-room-service'],
-    params: {
-      page: 1,
-      pageSize: 1000,
-      sortBy: 'roomName',
-      sortOrder: 'ASC',
-      includeRoomService: 'true',
-    },
-  });
-
-  const { mutate: createBill, isPending: isCreating } = useApiMutation<
-    BillDetailRes,
-    BillCreateValues
-  >('POST');
-
-  const bill = billDetailData?.item;
-
-  const roomOptions = useMemo<SelectOption[]>(() => {
-    const roomMap = new Map<string, string>();
-    (userData?.items || []).forEach(user => {
-      if (user.room?.id && user.room?.name && !roomMap.has(user.room.id)) {
-        roomMap.set(user.room.id, user.room.name);
-      }
-    });
-
-    return Array.from(roomMap.entries()).map(([value, label]) => ({ value, label }));
-  }, [userData?.items]);
-
-  const tenantOptions = useMemo<SelectOption[]>(
-    () =>
-      (userData?.items || [])
-        .filter(
-          user => Boolean(user.roomId) && Boolean(user.isActive) && Boolean(user.isRoomLeader)
-        )
-        .map(user => ({
-          value: user.id,
-          label: user.room?.name ? `${user.name} - ${user.room.name}` : user.name,
-        })),
-    [userData?.items]
-  );
-
-  const tenantRoomMap = useMemo(
-    () =>
-      new Map(
-        (userData?.items || [])
-          .filter(user => Boolean(user.id) && Boolean(user.roomId))
-          .map(user => [user.id, user.roomId] as [string, string])
-      ),
-    [userData?.items]
-  );
-
-  const roomServiceMap = useMemo(
-    () =>
-      new Map(
-        (userData?.items || [])
-          .filter(user => Boolean(user.roomId) && Boolean(user.room?.service))
-          .map(user => [user.roomId, user.room?.service] as [string, ServiceItem | undefined])
-      ),
-    [userData?.items]
-  );
-
-  const initialValues: CreateBillFormValues = isAdd
-    ? defaultInitialValues
-    : {
-        tenantId: '',
-        billingMonth: defaultInitialValues.billingMonth,
-        billingYear: defaultInitialValues.billingYear,
-        electricNumberOld: 0,
-        electricNumberNew: Number(bill?.electricNumberNew || 0),
-        waterNumberOld: 0,
-        waterNumberNew: Number(bill?.waterNumberNew || 0),
-        otherServiceFee: Number(bill?.otherServiceFee || 0),
-        note: bill?.note || '',
-      };
+  const {
+    isAdd,
+    isEditing,
+    isLoading,
+    isSubmitting,
+    isLoadingUsers,
+    bill,
+    billId,
+    tenantOptions,
+    roomOptions,
+    tenantRoomMap,
+    roomServiceMap,
+    roomMemberCountMap,
+    roomElectricBikeMap,
+    initialValues,
+    onSubmit,
+    onStartEdit,
+    onCancelEdit,
+    onCancelAdd,
+  } = BillSlugUtils();
 
   usePageTitle({
-    title: isAdd ? 'Create Bill' : 'Bill Detail',
+    title: isAdd ? 'Create Bill' : isEditing ? 'Edit Bill' : 'Bill Detail',
     icon: 'vuesax-money-receive',
   });
 
-  const onCancel = () => {
-    router.push(ROUTES.BILLS);
-  };
-
-  const onSubmit = (values: CreateBillFormValues) => {
-    const roomId = tenantRoomMap.get(values.tenantId);
-    if (!roomId) {
-      toastError('Selected tenant does not have a room');
-      return;
-    }
-
-    const payload: BillCreateValues = {
-      roomId,
-      billingMonth: monthOptions.findIndex(item => item.value === values.billingMonth) + 1,
-      billingYear: Number(values.billingYear),
-      electricNumberNew: Number(values.electricNumberNew || 0),
-      waterNumberNew: Number(values.waterNumberNew || 0),
-      otherServiceFee: values.otherServiceFee ? Number(values.otherServiceFee) : 0,
-      note: values.note?.trim() || undefined,
-    };
-
-    createBill(
-      {
-        endpoint: API_ROUTES.BILLS,
-        body: payload,
-      },
-      {
-        onSuccess: () => {
-          toastSuccess('Bill created successfully');
-          queryClient.invalidateQueries({ queryKey: billKeys.list() });
-          router.push(ROUTES.BILLS);
-        },
-        onError: error => {
-          toastError(error?.message);
-        },
-      }
-    );
-  };
-
-  if (isAdd) {
+  if (isAdd || isEditing) {
     return (
       <FormikForm<CreateBillFormValues>
         enableReinitialize
@@ -447,15 +276,18 @@ export default function BillSlugPage() {
           tenantOptions={tenantOptions}
           tenantRoomMap={tenantRoomMap}
           roomServiceMap={roomServiceMap}
-          isCreating={isCreating}
+          roomMemberCountMap={roomMemberCountMap}
+          roomElectricBikeMap={roomElectricBikeMap}
+          isSubmitting={isSubmitting}
+          isEdit={isEditing}
           isLoadingRooms={isLoadingUsers}
-          onCancel={onCancel}
+          onCancel={isAdd ? onCancelAdd : onCancelEdit}
         />
       </FormikForm>
     );
   }
 
-  if (isLoadingDetail) {
+  if (isLoading) {
     return <p className="text-14 text-neutral-placeholder">Loading bill detail...</p>;
   }
 
@@ -472,28 +304,12 @@ export default function BillSlugPage() {
         />
         <Box>
           <p className="text-neutral-text-secondary">Bill not found.</p>
-          <Link href={ROUTES.BILLS} className="mt-3 inline-block text-primary font-medium">
-            Back to bills
-          </Link>
         </Box>
       </div>
     );
   }
 
-  const room = bill.room;
-  const service = room?.service;
-  const user = room?.members?.[0];
-  const subtotal = calculateBillAmount(service, bill.otherServiceFee);
-
-  const breakdownRows = [
-    { key: 'roomFee', label: 'Monthly Rent', value: service?.roomFee || 0 },
-    { key: 'waterFee', label: 'Water Fee', value: service?.waterFee || 0 },
-    { key: 'electricFee', label: 'Electricity', value: service?.electricFee || 0 },
-    { key: 'electricBikeFee', label: 'Electric Bike Fee', value: service?.electricBikeFee || 0 },
-    { key: 'commonServiceFee', label: 'Common Service Fee', value: service?.commonServiceFee || 0 },
-    { key: 'internetFee', label: 'Internet Fee', value: service?.internetFee || 0 },
-    { key: 'otherServiceFee', label: 'Other Service Fee', value: bill.otherServiceFee || 0 },
-  ];
+  const { room, service, user, subtotal, breakdownRows } = getBillDetail(bill);
 
   return (
     <div className="space-y-6">
@@ -506,22 +322,10 @@ export default function BillSlugPage() {
         description={`Billing information for ${room?.name || '-'}.`}
       />
 
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h3 className="text-24 font-semibold text-neutral-text-primary">Invoice Details</h3>
-          <p className="text-14 text-neutral-placeholder mt-1">
-            Billing for {user?.address || room?.name || '-'}
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" icon="printer">
-            Print
-          </Button>
-          <Button variant="outline" icon="arrow-down-tray">
-            PDF
-          </Button>
-          <Button icon="check">Mark as paid</Button>
-        </div>
+      <div className="flex items-center w-full justify-end gap-2">
+        <Button variant="outline" size="small" icon="pencil" onClick={onStartEdit}>
+          Edit Bill
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -546,14 +350,34 @@ export default function BillSlugPage() {
               </div>
               <div>
                 <p className="text-12 uppercase text-neutral-placeholder">Service Type</p>
+                <div className="mt-1">
+                  {service?.type ? (
+                    <Tag
+                      content={service.type}
+                      color={SERVICE_TYPE_TAG_COLORS[service.type]}
+                      type="outline"
+                    />
+                  ) : (
+                    '-'
+                  )}
+                </div>
+              </div>
+              <div>
+                <p className="text-12 uppercase text-neutral-placeholder">Old Electric Number</p>
                 <p className="text-16 font-medium text-neutral-text-primary mt-1">
-                  {service?.type || '-'}
+                  {bill.electricNumberOld ?? 0}
                 </p>
               </div>
               <div>
                 <p className="text-12 uppercase text-neutral-placeholder">New Electric Number</p>
                 <p className="text-16 font-medium text-neutral-text-primary mt-1">
                   {bill.electricNumberNew ?? 0}
+                </p>
+              </div>
+              <div>
+                <p className="text-12 uppercase text-neutral-placeholder">Old Water Number</p>
+                <p className="text-16 font-medium text-neutral-text-primary mt-1">
+                  {bill.waterNumberOld ?? 0}
                 </p>
               </div>
               <div>
@@ -574,7 +398,7 @@ export default function BillSlugPage() {
                     <p className="text-14 font-medium text-neutral-text-primary">{item.label}</p>
                   </div>
                   <div>
-                    <p className="text-14 text-neutral-text-secondary">{service?.type || '-'}</p>
+                    <p className="text-14 text-neutral-text-secondary">{item.formula}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-14 font-semibold text-neutral-text-primary">

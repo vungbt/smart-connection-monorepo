@@ -3,6 +3,22 @@ import { RoomItem } from '@/types/rooms';
 import { ServiceItem } from '@/types/services';
 import { UserItem } from '@/types/users';
 
+export type BulkDraft = {
+  electricNumberOld: number;
+  electricNumberNew: number;
+  waterNumberOld: number;
+  waterNumberNew: number;
+  otherServiceFee: number;
+};
+
+export type BulkRoomRow = {
+  roomId: string;
+  roomName: string;
+  service?: ServiceItem;
+  isUseElectricBike: boolean;
+  memberCount: number;
+};
+
 export type BillRoom = RoomItem & {
   service?: ServiceItem;
   members?: UserItem[];
@@ -16,7 +32,9 @@ export type BillItem = {
   roomId: string;
   billingMonth: number;
   billingYear: number;
+  electricNumberOld: number;
   electricNumberNew: number;
+  waterNumberOld: number;
   waterNumberNew: number;
   otherServiceFee?: number;
   note?: string;
@@ -31,7 +49,9 @@ export type BillCreateValues = {
   roomId: string;
   billingMonth: number;
   billingYear: number;
+  electricNumberOld: number;
   electricNumberNew: number;
+  waterNumberOld: number;
   waterNumberNew: number;
   otherServiceFee?: number;
   note?: string;

@@ -17,6 +17,7 @@ export const ROUTES = {
   BILLS: '/bills',
   BILLS_SLUG: '/bills/:slug',
   BILLS_ADD: '/bills/add',
+  BILLS_BULK_ADD: '/bills/bulk-add',
 };
 
 export const PageName = 'Stay Easy';

@@ -17,6 +17,7 @@ export type UserItem = {
     id: string;
     name: string;
     serviceId: string;
+    isUseElectricBike: boolean;
     service?: ServiceItem;
   };
 };
