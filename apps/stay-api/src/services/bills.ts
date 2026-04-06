@@ -51,7 +51,7 @@ const toSortOrder = (value?: string): 'ASC' | 'DESC' =>
   value && value.toUpperCase() === 'ASC' ? 'ASC' : 'DESC';
 
 const list = async (params: BillListParams, pagination: IPaginationReq) => {
-  const { roomIds, q, sortBy, sortOrder } = params;
+  const { roomIds, q, sortBy, sortOrder, billingMonth, billingYear } = params;
   const whereCondition: WhereOptions<IBillAttributes> = {};
   const orderField = sortBy && sortableFields.has(sortBy) ? sortBy : 'createdAt';
   const orderDirection = toSortOrder(sortOrder);
@@ -63,6 +63,20 @@ const list = async (params: BillListParams, pagination: IPaginationReq) => {
   const normalizedRoomIds = toStringArray(roomIds);
   if (normalizedRoomIds.length > 0) {
     whereCondition.roomId = { [Op.in]: normalizedRoomIds };
+  }
+
+  const monthNum = Number(billingMonth);
+  const yearNum = Number(billingYear);
+  if (
+    Number.isFinite(monthNum) &&
+    monthNum >= 1 &&
+    monthNum <= 12 &&
+    Number.isFinite(yearNum) &&
+    yearNum >= 2000 &&
+    yearNum <= 2100
+  ) {
+    whereCondition.billingMonth = monthNum;
+    whereCondition.billingYear = yearNum;
   }
 
   if (q && q.length > 0) {

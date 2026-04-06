@@ -63,12 +63,16 @@ const list = (req: Request, res: Response, next: NextFunction) =>
     rules: {
       roomIds: 'array',
       'roomIds.*': 'string',
+      billingMonth: 'integer|min:1|max:12',
+      billingYear: 'integer|min:2000|max:2100',
       q: 'string',
       sortBy: 'in:createdAt,billingYear,billingMonth,electricNumberNew,waterNumberNew,roomName',
       sortOrder: 'in:ASC,DESC,asc,desc',
     },
     attributes: {
       roomIds: 'Room IDs',
+      billingMonth: 'Billing Month',
+      billingYear: 'Billing Year',
       q: 'Search Query',
       sortBy: 'Sort By',
       sortOrder: 'Sort Order',

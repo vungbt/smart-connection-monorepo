@@ -3,6 +3,7 @@ import { usePagination } from '@/hooks/usePagination';
 import { BillItem, BillListRes } from '@/types/bills';
 import { billKeys } from '@/utils/apis/api-keys';
 import { API_ROUTES } from '@/utils/apis/router';
+import { monthOptions } from '@/utils/bills';
 import { useApiMutation, useApiQuery, useQueryClient } from '@smart-connection-monorepo/api-client';
 import {
   TableSortingType,
@@ -28,6 +29,11 @@ const sortFieldMap: Record<string, BillSortBy> = {
   roomName: 'roomName',
 };
 
+export type BillListFilterFormValues = {
+  billingMonth: string;
+  billingYear: string;
+};
+
 type BillListUtilsResult = {
   bills: BillItem[];
   metadata?: Metadata;
@@ -35,6 +41,10 @@ type BillListUtilsResult = {
   isLoadingDelete: boolean;
   itemIdDelete: string | null;
   sorting: TableSortingType;
+  listBillingMonth: number;
+  listBillingYear: number;
+  listFilterInitialValues: BillListFilterFormValues;
+  applyBillingPeriodFilter: (month: number, year: number) => void;
   onView: (bill: BillItem) => void;
   onDelete: (billId: string) => void;
   onSubmitDelete: () => void;
@@ -44,6 +54,8 @@ type BillListUtilsResult = {
 
 export default function BillListUtils(): BillListUtilsResult {
   const [itemIdDelete, setItemIdDelete] = useState<string | null>(null);
+  const [listBillingMonth, setListBillingMonth] = useState(() => new Date().getMonth() + 1);
+  const [listBillingYear, setListBillingYear] = useState(() => new Date().getFullYear());
   const [sorting, setSorting] = useState<TableSortingType>([{ id: 'roomName', desc: false }]);
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -63,6 +75,8 @@ export default function BillListUtils(): BillListUtilsResult {
       q: searchKeyword,
       sortBy,
       sortOrder,
+      billingMonth: listBillingMonth,
+      billingYear: listBillingYear,
     }),
     params: {
       page: pagination.page,
@@ -70,6 +84,8 @@ export default function BillListUtils(): BillListUtilsResult {
       q: searchKeyword || undefined,
       sortBy,
       sortOrder,
+      billingMonth: listBillingMonth,
+      billingYear: listBillingYear,
     },
   });
 
@@ -84,6 +100,17 @@ export default function BillListUtils(): BillListUtilsResult {
 
   const onDelete = (billId: string) => {
     setItemIdDelete(billId);
+  };
+
+  const listFilterInitialValues: BillListFilterFormValues = {
+    billingMonth: String(monthOptions[listBillingMonth - 1]?.value ?? monthOptions[0].value),
+    billingYear: String(listBillingYear),
+  };
+
+  const applyBillingPeriodFilter = (month: number, year: number) => {
+    setListBillingMonth(month);
+    setListBillingYear(year);
+    setPagination({ ...pagination, page: 1 });
   };
 
   const onSubmitDelete = () => {
@@ -117,6 +144,10 @@ export default function BillListUtils(): BillListUtilsResult {
     isLoadingDelete,
     itemIdDelete,
     sorting,
+    listBillingMonth,
+    listBillingYear,
+    listFilterInitialValues,
+    applyBillingPeriodFilter,
     onView,
     onDelete,
     setItemIdDelete,

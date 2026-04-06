@@ -24,6 +24,9 @@ export type BillUpdateBody = Partial<Omit<IBillAttributes, 'id' | 'createdAt' | 
 
 export type BillListParams = {
   roomIds?: string[];
+  /** When set with billingYear, restricts results to that billing period */
+  billingMonth?: number;
+  billingYear?: number;
   q?: string;
   sortBy?:
     | 'createdAt'

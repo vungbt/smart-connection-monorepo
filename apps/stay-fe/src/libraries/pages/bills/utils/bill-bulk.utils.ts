@@ -32,6 +32,22 @@ export const toNumber = (value: number | string | undefined) => {
   return Number.isFinite(parsed) ? parsed : 0;
 };
 
+function baselineDraftForRoom(
+  roomId: string,
+  previousBillByRoomId: Map<string, { electricNumberNew: number; waterNumberNew: number }>
+): BulkDraft {
+  const previousBill = previousBillByRoomId.get(roomId);
+  const oldElectric = toNumber(previousBill?.electricNumberNew);
+  const oldWater = toNumber(previousBill?.waterNumberNew);
+  return {
+    electricNumberOld: oldElectric,
+    electricNumberNew: oldElectric,
+    waterNumberOld: oldWater,
+    waterNumberNew: oldWater,
+    otherServiceFee: 0,
+  };
+}
+
 export const getFixedFeeBreakdown = (service?: ServiceItem, isUseElectricBike = false) => {
   const roomFee = toNumber(service?.roomFee || 0);
   const commonServiceFee = toNumber(service?.commonServiceFee || 0);
@@ -64,11 +80,11 @@ type BillBulkUtilsResult = {
 export default function BillBulkUtils(): BillBulkUtilsResult {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [billingMonth, setBillingMonth] = useState(
-    new Date().toLocaleString('en-US', { month: 'long' })
+  const [billingMonth, setBillingMonth] = useState(() =>
+    String(monthOptions[new Date().getMonth()]?.value ?? monthOptions[0].value)
   );
-  const [billingYear, setBillingYear] = useState(String(new Date().getFullYear()));
-  const [drafts, setDrafts] = useState<Record<string, BulkDraft>>({});
+  const [billingYear, setBillingYear] = useState(() => String(new Date().getFullYear()));
+  const [drafts, setDrafts] = useState<Record<string, Partial<BulkDraft>>>({});
   const [isSubmittingBulk, setIsSubmittingBulk] = useState(false);
 
   const { data: roomData, isLoading: isLoadingRooms } = useApiQuery<RoomListRes>({
@@ -126,6 +142,8 @@ export default function BillBulkUtils(): BillBulkUtilsResult {
       page: 1,
       pageSize: 2000,
       roomIds,
+      billingMonth: previousBillingPeriod.month,
+      billingYear: previousBillingPeriod.year,
       sortBy: 'createdAt',
       sortOrder: 'DESC',
     },
@@ -159,18 +177,8 @@ export default function BillBulkUtils(): BillBulkUtilsResult {
   const preparedDrafts = useMemo(() => {
     const next: Record<string, BulkDraft> = {};
     roomRows.forEach(row => {
-      const previousBill = previousBillByRoomId.get(row.roomId);
-      const oldElectric = toNumber(previousBill?.electricNumberNew);
-      const oldWater = toNumber(previousBill?.waterNumberNew);
-      const currentDraft = drafts[row.roomId];
-
-      next[row.roomId] = {
-        electricNumberOld: currentDraft ? currentDraft.electricNumberOld : oldElectric,
-        electricNumberNew: currentDraft ? currentDraft.electricNumberNew : oldElectric,
-        waterNumberOld: currentDraft ? currentDraft.waterNumberOld : oldWater,
-        waterNumberNew: currentDraft ? currentDraft.waterNumberNew : oldWater,
-        otherServiceFee: currentDraft ? currentDraft.otherServiceFee : 0,
-      };
+      const baseline = baselineDraftForRoom(row.roomId, previousBillByRoomId);
+      next[row.roomId] = { ...baseline, ...drafts[row.roomId] };
     });
     return next;
   }, [roomRows, previousBillByRoomId, drafts]);
@@ -179,7 +187,7 @@ export default function BillBulkUtils(): BillBulkUtilsResult {
     setDrafts(previous => ({
       ...previous,
       [roomId]: {
-        ...(previous[roomId] || { ...defaultDraft }),
+        ...previous[roomId],
         [key]: toNumber(value),
       },
     }));

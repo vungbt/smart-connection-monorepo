@@ -59,6 +59,7 @@ export function FilterForm({
           <p className="font-medium text-16">{drawer?.title}</p>
           <button
             type="button"
+            onClick={onHandleCloseFilter}
             className="outline-none group p-1 rounded-full hover:bg-primary-background"
           >
             <RenderIcon name="x-mark" className="text-neutral-border group-hover:text-primary" />

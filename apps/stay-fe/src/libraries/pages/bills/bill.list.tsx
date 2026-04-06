@@ -7,15 +7,75 @@ import { getCellIndex } from '@/utils/common';
 import { formatDate, formatPrice } from '@/utils/formatter';
 import {
   Button,
+  FormikForm,
+  FormikItem,
   ModalConfirm,
+  Select,
+  SelectOption,
   Table,
   TableColumn,
   Tag,
+  yup,
 } from '@smart-connection-monorepo/ui-components';
 import { ActionButtons, FilterForm } from '@smart-connection-monorepo/ui-modules';
 import Link from 'next/link';
-import { calculateBillAmount } from '@/utils/bills';
-import BillListUtils from './utils/bill-list.utils';
+import { calculateBillAmount, monthOptions, yearOptions } from '@/utils/bills';
+import BillListUtils, { BillListFilterFormValues } from './utils/bill-list.utils';
+
+const billListFilterSchema = yup.object({
+  billingMonth: yup.string().required('Select billing month'),
+  billingYear: yup.string().required('Select billing year'),
+});
+
+function BillListPeriodFilterForm({
+  initialValues,
+  onApply,
+}: {
+  initialValues: BillListFilterFormValues;
+  onApply: (month: number, year: number) => void;
+}) {
+  return (
+    <FormikForm<BillListFilterFormValues>
+      enableReinitialize
+      initialValues={initialValues}
+      validationSchema={billListFilterSchema}
+      onSubmit={values => {
+        const idx = monthOptions.findIndex(o => String(o.value) === String(values.billingMonth));
+        const month = idx >= 0 ? idx + 1 : new Date().getMonth() + 1;
+        const year = Number(values.billingYear);
+        onApply(month, Number.isFinite(year) ? year : new Date().getFullYear());
+      }}
+    >
+      <FormikItem
+        name="billingMonth"
+        label="Billing month"
+        mapValue={value =>
+          monthOptions.find(option => String(option.value) === String(value)) || null
+        }
+        mapOnChange={option =>
+          String((option as SelectOption | null)?.value ?? monthOptions[0].value)
+        }
+      >
+        <Select options={monthOptions} placeholder="Month" />
+      </FormikItem>
+      <FormikItem
+        name="billingYear"
+        label="Billing year"
+        mapValue={value =>
+          yearOptions.find(option => String(option.value) === String(value)) || null
+        }
+        mapOnChange={option =>
+          String((option as SelectOption | null)?.value ?? String(new Date().getFullYear()))
+        }
+      >
+        <Select options={yearOptions} placeholder="Year" />
+      </FormikItem>
+      <Button type="submit" className="w-full">
+        Apply filters
+      </Button>
+    </FormikForm>
+  );
+}
 
 export default function BillListPage() {
   const {
@@ -30,6 +90,8 @@ export default function BillListPage() {
     setItemIdDelete,
     setSorting,
     onSubmitDelete,
+    listFilterInitialValues,
+    applyBillingPeriodFilter,
   } = BillListUtils();
 
   usePageTitle({ title: 'Bill Management', icon: 'vuesax-money-receive' });
@@ -112,7 +174,12 @@ export default function BillListPage() {
       {/* headers */}
       <div className="flex items-center gap-3 justify-end mt-6">
         <FilterForm placeholder="Search invoice, tenant or room" drawer={{ title: 'Filters' }}>
-          2342342
+          <div className="pt-2">
+            <BillListPeriodFilterForm
+              initialValues={listFilterInitialValues}
+              onApply={applyBillingPeriodFilter}
+            />
+          </div>
         </FilterForm>
         <Link href={ROUTES.BILLS_ADD}>
           <Button icon="plus">Create Bill</Button>
