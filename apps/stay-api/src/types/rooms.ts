@@ -8,6 +8,7 @@ export interface IRoomAttributes {
   name: string;
   serviceId: string;
   isUseElectricBike: boolean;
+  memberCount?: number | null;
 }
 
 export type RoomItem = RoomsModel;

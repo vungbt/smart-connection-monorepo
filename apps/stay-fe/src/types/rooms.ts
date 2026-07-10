@@ -9,6 +9,7 @@ export type RoomItem = {
   name: string;
   serviceId: string;
   isUseElectricBike: boolean;
+  memberCount?: number | null;
   service?: ServiceItem;
   members?: {
     id: string;
@@ -33,5 +34,6 @@ export type RoomFormValues = {
   name: string;
   serviceId: string;
   isUseElectricBike: boolean;
+  memberCount: number | '';
   userIds: string[];
 };

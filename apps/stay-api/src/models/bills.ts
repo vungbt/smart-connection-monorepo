@@ -17,6 +17,9 @@ class BillsModel extends Model<IBillAttributes> implements IBillAttributes {
   public waterNumberOld!: number;
   public waterNumberNew!: number;
   public otherServiceFee?: number;
+  public customElectricFee?: number | null;
+  public customWaterFee?: number | null;
+  public isMoveOutBill?: boolean;
   public note?: string;
 }
 
@@ -67,6 +70,19 @@ BillsModel.init(
       type: DataTypes.FLOAT,
       allowNull: true,
       defaultValue: 0,
+    },
+    customElectricFee: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    customWaterFee: {
+      type: DataTypes.FLOAT,
+      allowNull: true,
+    },
+    isMoveOutBill: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     note: {
       type: DataTypes.TEXT,

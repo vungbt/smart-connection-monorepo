@@ -42,6 +42,7 @@ export default function RoomListUtils(): RoomListUtilsResult {
       pageSize: pagination.pageSize,
       q: searchKeyword || undefined,
       includeService: 'true',
+      includeMembers: 'true',
     },
   });
 

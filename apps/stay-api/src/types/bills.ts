@@ -13,6 +13,9 @@ export interface IBillAttributes {
   waterNumberOld: number;
   waterNumberNew: number;
   otherServiceFee?: number;
+  customElectricFee?: number | null;
+  customWaterFee?: number | null;
+  isMoveOutBill?: boolean;
   note?: string;
 }
 

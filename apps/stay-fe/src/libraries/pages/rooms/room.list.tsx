@@ -5,6 +5,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { RoomItem } from '@/types/rooms';
 import { getCellIndex } from '@/utils/common';
 import { formatPrice } from '@/utils/formatter';
+import { getRoomMemberCount } from '@/utils/rooms';
 import {
   Button,
   ModalConfirm,
@@ -56,6 +57,27 @@ export default function RoomListPage() {
     {
       header: 'Room Fee',
       cell: ({ row }) => formatPrice(row.original.service?.roomFee),
+    },
+    {
+      header: 'Members',
+      cell: ({ row }) => {
+        const actualCount = (row.original.members || []).length;
+        const configuredCount =
+          row.original.memberCount != null ? Number(row.original.memberCount) : null;
+        const billingCount = getRoomMemberCount(row.original);
+
+        return (
+          <span>
+            {billingCount}
+            {configuredCount != null && configuredCount !== actualCount && (
+              <span className="text-12 text-neutral-text-secondary">
+                {' '}
+                (max of {actualCount} users / {configuredCount} custom)
+              </span>
+            )}
+          </span>
+        );
+      },
     },
     {
       header: 'Electric Bike',

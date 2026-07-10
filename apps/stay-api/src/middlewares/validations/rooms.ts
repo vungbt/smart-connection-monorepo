@@ -8,11 +8,13 @@ const create = (req: Request, res: Response, next: NextFunction) =>
       name: 'required|string',
       serviceId: 'required|string',
       isUseElectricBike: 'required|boolean',
+      memberCount: 'integer|min:0',
     },
     attributes: {
       name: 'Room name',
       serviceId: 'Service ID',
       isUseElectricBike: 'Use Electric Bike',
+      memberCount: 'Member Count',
     },
     message: 'Validation failed for room creation',
   });
@@ -24,11 +26,13 @@ const update = (req: Request, res: Response, next: NextFunction) =>
       name: 'string',
       serviceId: 'string',
       isUseElectricBike: 'boolean',
+      memberCount: 'integer|min:0',
     },
     attributes: {
       name: 'Room Type',
       serviceId: 'Service ID',
       isUseElectricBike: 'Use Electric Bike',
+      memberCount: 'Member Count',
     },
     message: 'Validation failed for room update',
   });
