@@ -20,6 +20,7 @@ import {
 import { ActionButtons, FilterForm } from '@smart-connection-monorepo/ui-modules';
 import Link from 'next/link';
 import { calculateBillAmount, monthOptions, yearOptions } from '@/utils/bills';
+import { getRoomMemberCount } from '@/utils/rooms';
 import BillListUtils, { BillListFilterFormValues } from './utils/bill-list.utils';
 
 const billListFilterSchema = yup.object({
@@ -152,7 +153,12 @@ export default function BillListPage() {
               },
               row.original.otherServiceFee,
               Boolean(row.original.room?.isUseElectricBike),
-              row.original.room?.members?.length || 0
+              getRoomMemberCount(row.original.room),
+              {
+                customElectricFee: row.original.customElectricFee,
+                customWaterFee: row.original.customWaterFee,
+              },
+              Boolean(row.original.isMoveOutBill)
             )
           )}
         </span>

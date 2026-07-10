@@ -7,6 +7,7 @@ import {
   Box,
   Breadcrumb,
   Button,
+  Checkbox,
   Input,
   Select,
   SelectOption,
@@ -15,9 +16,11 @@ import BillBulkUtils, {
   BulkDraft,
   getFixedFeeBreakdown,
   monthOptions,
+  toNullableFee,
   toNumber,
   yearOptions,
 } from './utils/bill-bulk.utils';
+import { calculateBillAmount } from '@/utils/bills';
 
 export default function BillBulkPage() {
   const {
@@ -86,13 +89,16 @@ export default function BillBulkPage() {
 
       <Box>
         <div className="overflow-x-auto">
-          <div className="min-w-[1400px]">
-            <div className="grid grid-cols-10 gap-3 pb-3 border-b border-neutral">
+          <div className="min-w-[1850px]">
+            <div className="grid grid-cols-[repeat(13,minmax(0,1fr))] gap-3 pb-3 border-b border-neutral">
               <p className="text-12 font-semibold text-neutral-text-secondary">Room</p>
+              <p className="text-12 font-semibold text-neutral-text-secondary">Move Out</p>
               <p className="text-12 font-semibold text-neutral-text-secondary">Electric Old</p>
               <p className="text-12 font-semibold text-neutral-text-secondary">Electric New</p>
+              <p className="text-12 font-semibold text-neutral-text-secondary">Electric Price</p>
               <p className="text-12 font-semibold text-neutral-text-secondary">Water Old</p>
               <p className="text-12 font-semibold text-neutral-text-secondary">Water New</p>
+              <p className="text-12 font-semibold text-neutral-text-secondary">Water Price</p>
               <p className="text-12 font-semibold text-neutral-text-secondary">Room Fee</p>
               <p className="text-12 font-semibold text-neutral-text-secondary">Common Fee</p>
               <p className="text-12 font-semibold text-neutral-text-secondary">Internet</p>
@@ -107,28 +113,43 @@ export default function BillBulkPage() {
                 waterNumberOld: 0,
                 waterNumberNew: 0,
                 otherServiceFee: 0,
+                customElectricFee: '',
+                customWaterFee: '',
+                isMoveOutBill: false,
               };
               const service = row.service;
-              const electricUsage = Math.max(draft.electricNumberNew - draft.electricNumberOld, 0);
-              const waterUsage = Math.max(draft.waterNumberNew - draft.waterNumberOld, 0);
-              const electricTotal = electricUsage * toNumber(service?.electricFee || 0);
-              const waterTotal = waterUsage * toNumber(service?.waterFee || 0);
+              const customElectricFee = toNullableFee(draft.customElectricFee);
+              const customWaterFee = toNullableFee(draft.customWaterFee);
+              const isMoveOutBill = Boolean(draft.isMoveOutBill);
+              const total = calculateBillAmount(
+                service,
+                {
+                  electricNumberOld: draft.electricNumberOld,
+                  electricNumberNew: draft.electricNumberNew,
+                  waterNumberOld: draft.waterNumberOld,
+                  waterNumberNew: draft.waterNumberNew,
+                },
+                toNumber(draft.otherServiceFee),
+                row.isUseElectricBike,
+                row.memberCount,
+                { customElectricFee, customWaterFee },
+                isMoveOutBill
+              );
               const fixedFees = getFixedFeeBreakdown(service, row.isUseElectricBike);
-              const total =
-                electricTotal +
-                waterTotal +
-                fixedFees.roomFee +
-                fixedFees.commonServiceFee * row.memberCount +
-                fixedFees.internetFee +
-                fixedFees.electricBikeFee +
-                toNumber(draft.otherServiceFee);
 
               return (
                 <div
                   key={row.roomId}
-                  className="grid grid-cols-10 gap-3 py-3 border-b border-neutral/60 items-center"
+                  className="grid grid-cols-[repeat(13,minmax(0,1fr))] gap-3 py-3 border-b border-neutral/60 items-center"
                 >
                   <p className="text-14 font-medium text-neutral-text-primary">{row.roomName}</p>
+                  <Checkbox
+                    checked={isMoveOutBill}
+                    onChange={event =>
+                      updateDraft(row.roomId, 'isMoveOutBill', event.target.checked)
+                    }
+                    disabled={isLoading}
+                  />
                   <Input
                     type="number"
                     min="0"
@@ -153,6 +174,17 @@ export default function BillBulkPage() {
                     type="number"
                     min="0"
                     step="0.01"
+                    placeholder={String(service?.electricFee ?? '')}
+                    value={draft.customElectricFee}
+                    onChange={event =>
+                      updateDraft(row.roomId, 'customElectricFee', event.target.value)
+                    }
+                    loading={isLoading}
+                  />
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
                     value={draft.waterNumberOld}
                     onChange={event =>
                       updateDraft(row.roomId, 'waterNumberOld', event.target.value)
@@ -169,17 +201,30 @@ export default function BillBulkPage() {
                     }
                     loading={isLoading}
                   />
+                  <Input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    placeholder={String(service?.waterFee ?? '')}
+                    value={draft.customWaterFee}
+                    onChange={event =>
+                      updateDraft(row.roomId, 'customWaterFee', event.target.value)
+                    }
+                    loading={isLoading}
+                  />
                   <p className="text-14 font-semibold text-neutral-text-primary">
-                    {formatPrice(fixedFees.roomFee)}
+                    {isMoveOutBill ? '-' : formatPrice(fixedFees.roomFee)}
                   </p>
                   <p className="text-14 font-semibold text-neutral-text-primary">
-                    {formatPrice(row.memberCount * fixedFees.commonServiceFee)}
+                    {isMoveOutBill
+                      ? '-'
+                      : formatPrice(row.memberCount * fixedFees.commonServiceFee)}
                   </p>
                   <p className="text-14 font-semibold text-neutral-text-primary">
-                    {formatPrice(fixedFees.internetFee)}
+                    {isMoveOutBill ? '-' : formatPrice(fixedFees.internetFee)}
                   </p>
                   <p className="text-14 font-semibold text-neutral-text-primary">
-                    {formatPrice(fixedFees.electricBikeFee)}
+                    {isMoveOutBill ? '-' : formatPrice(fixedFees.electricBikeFee)}
                   </p>
                   <p className="text-14 font-semibold text-primary">{formatPrice(total)}</p>
                 </div>

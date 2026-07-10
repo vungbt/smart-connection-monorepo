@@ -7,7 +7,13 @@ import { billKeys } from '@/utils/apis/api-keys';
 import { API_ROUTES } from '@/utils/apis/router';
 import { useApiMutation, useApiQuery, useQueryClient } from '@smart-connection-monorepo/api-client';
 import { SelectOption, toastError, toastSuccess } from '@smart-connection-monorepo/ui-components';
-import { calculateBillAmount, monthOptions } from '@/utils/bills';
+import {
+  calculateBillAmount,
+  getEffectiveElectricFee,
+  getEffectiveWaterFee,
+  monthOptions,
+} from '@/utils/bills';
+import { getRoomMemberCount } from '@/utils/rooms';
 export { monthOptions, yearOptions } from '@/utils/bills';
 import { FormikContextType, useFormikContext } from 'formik';
 import { useRouter } from 'next/navigation';
@@ -22,6 +28,11 @@ export type CreateBillFormValues = {
   waterNumberOld: number;
   waterNumberNew: number;
   otherServiceFee: number;
+  useCustomElectricFee: boolean;
+  customElectricFee: number | '';
+  useCustomWaterFee: boolean;
+  customWaterFee: number | '';
+  isMoveOutBill: boolean;
   note: string;
 };
 
@@ -34,6 +45,11 @@ export const defaultInitialValues: CreateBillFormValues = {
   waterNumberOld: 0,
   waterNumberNew: 0,
   otherServiceFee: 0,
+  useCustomElectricFee: false,
+  customElectricFee: '',
+  useCustomWaterFee: false,
+  customWaterFee: '',
+  isMoveOutBill: false,
   note: '',
 };
 
@@ -143,8 +159,8 @@ export default function BillSlugUtils(): BillSlugUtilsResult {
   const roomMemberCountMap = useMemo(() => {
     const map = new Map<string, number>();
     (userData?.items || []).forEach(user => {
-      if (!user.roomId || !user.isActive) return;
-      map.set(user.roomId, Number(map.get(user.roomId) || 0) + 1);
+      if (!user.roomId || map.has(user.roomId)) return;
+      map.set(user.roomId, getRoomMemberCount(user.room));
     });
     return map;
   }, [userData?.items]);
@@ -182,6 +198,12 @@ export default function BillSlugUtils(): BillSlugUtilsResult {
         waterNumberOld: Number(bill?.waterNumberOld || 0),
         waterNumberNew: Number(bill?.waterNumberNew || 0),
         otherServiceFee: Number(bill?.otherServiceFee || 0),
+        useCustomElectricFee: bill?.customElectricFee != null,
+        customElectricFee:
+          bill?.customElectricFee != null ? Number(bill.customElectricFee) : ('' as const),
+        useCustomWaterFee: bill?.customWaterFee != null,
+        customWaterFee: bill?.customWaterFee != null ? Number(bill.customWaterFee) : ('' as const),
+        isMoveOutBill: Boolean(bill?.isMoveOutBill),
         note: bill?.note || '',
       };
 
@@ -205,6 +227,15 @@ export default function BillSlugUtils(): BillSlugUtilsResult {
       waterNumberOld: Number(values.waterNumberOld || 0),
       waterNumberNew: Number(values.waterNumberNew || 0),
       otherServiceFee: values.otherServiceFee ? Number(values.otherServiceFee) : 0,
+      customElectricFee:
+        values.useCustomElectricFee && values.customElectricFee !== ''
+          ? Number(values.customElectricFee)
+          : null,
+      customWaterFee:
+        values.useCustomWaterFee && values.customWaterFee !== ''
+          ? Number(values.customWaterFee)
+          : null,
+      isMoveOutBill: Boolean(values.isMoveOutBill),
       note: values.note?.trim() || undefined,
     };
 
@@ -289,7 +320,7 @@ export function getBillDetail(bill: BillItem) {
   const room = bill.room;
   const service = room?.service;
   const user = room?.members?.[0];
-  const memberCount = room?.members?.length || 0;
+  const memberCount = getRoomMemberCount(room);
 
   const electricUsage = Math.max(
     Number(bill.electricNumberNew || 0) - Number(bill.electricNumberOld || 0),
@@ -299,11 +330,14 @@ export function getBillDetail(bill: BillItem) {
     Number(bill.waterNumberNew || 0) - Number(bill.waterNumberOld || 0),
     0
   );
-  const electricTotal = electricUsage * Number(service?.electricFee || 0);
-  const waterTotal = waterUsage * Number(service?.waterFee || 0);
+  const electricUnitPrice = getEffectiveElectricFee(service, bill.customElectricFee);
+  const waterUnitPrice = getEffectiveWaterFee(service, bill.customWaterFee);
+  const electricTotal = electricUsage * electricUnitPrice;
+  const waterTotal = waterUsage * waterUnitPrice;
   const electricBikeTotal = bill.room?.isUseElectricBike
     ? Number(service?.electricBikeFee || 0)
     : 0;
+  const isMoveOutBill = Boolean(bill.isMoveOutBill);
   const subtotal = calculateBillAmount(
     service,
     {
@@ -314,25 +348,30 @@ export function getBillDetail(bill: BillItem) {
     },
     bill.otherServiceFee,
     Boolean(bill.room?.isUseElectricBike),
-    memberCount
+    memberCount,
+    {
+      customElectricFee: bill.customElectricFee,
+      customWaterFee: bill.customWaterFee,
+    },
+    isMoveOutBill
   );
 
-  const breakdownRows = [
+  const allBreakdownRows = [
     { key: 'roomFee', label: 'Monthly Rent', formula: 'Room fee', value: service?.roomFee || 0 },
     {
       key: 'waterFee',
       label: 'Water Fee',
-      formula: `(${bill.waterNumberNew || 0} - ${bill.waterNumberOld || 0}) × ${Number(
-        service?.waterFee || 0
-      ).toLocaleString()}`,
+      formula: `(${bill.waterNumberNew || 0} - ${
+        bill.waterNumberOld || 0
+      }) × ${waterUnitPrice.toLocaleString()}`,
       value: waterTotal,
     },
     {
       key: 'electricFee',
       label: 'Electricity',
-      formula: `(${bill.electricNumberNew || 0} - ${bill.electricNumberOld || 0}) × ${Number(
-        service?.electricFee || 0
-      ).toLocaleString()}`,
+      formula: `(${bill.electricNumberNew || 0} - ${
+        bill.electricNumberOld || 0
+      }) × ${electricUnitPrice.toLocaleString()}`,
       value: electricTotal,
     },
     {
@@ -361,7 +400,11 @@ export function getBillDetail(bill: BillItem) {
     },
   ];
 
-  return { room, service, user, memberCount, subtotal, breakdownRows };
+  const breakdownRows = isMoveOutBill
+    ? allBreakdownRows.filter(item => item.key === 'waterFee' || item.key === 'electricFee')
+    : allBreakdownRows;
+
+  return { room, service, user, memberCount, subtotal, breakdownRows, isMoveOutBill };
 }
 
 export function useBillForm({
@@ -381,8 +424,15 @@ export function useBillForm({
     ? Boolean(roomElectricBikeMap.get(selectedRoomId))
     : false;
 
-  const electricUnitPrice = Number(service?.electricFee || 0);
-  const waterUnitPrice = Number(service?.waterFee || 0);
+  const customElectricFee =
+    values.useCustomElectricFee && values.customElectricFee !== ''
+      ? Number(values.customElectricFee)
+      : null;
+  const customWaterFee =
+    values.useCustomWaterFee && values.customWaterFee !== '' ? Number(values.customWaterFee) : null;
+
+  const electricUnitPrice = getEffectiveElectricFee(service, customElectricFee);
+  const waterUnitPrice = getEffectiveWaterFee(service, customWaterFee);
   const totalElectricity =
     Math.max(Number(values.electricNumberNew || 0) - Number(values.electricNumberOld || 0), 0) *
     electricUnitPrice;
@@ -400,7 +450,9 @@ export function useBillForm({
     },
     Number(values.otherServiceFee || 0),
     isUseElectricBike,
-    memberCount
+    memberCount,
+    { customElectricFee, customWaterFee },
+    Boolean(values.isMoveOutBill)
   );
 
   return {

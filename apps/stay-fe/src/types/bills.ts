@@ -9,6 +9,9 @@ export type BulkDraft = {
   waterNumberOld: number;
   waterNumberNew: number;
   otherServiceFee: number;
+  customElectricFee: number | '';
+  customWaterFee: number | '';
+  isMoveOutBill: boolean;
 };
 
 export type BulkRoomRow = {
@@ -37,6 +40,9 @@ export type BillItem = {
   waterNumberOld: number;
   waterNumberNew: number;
   otherServiceFee?: number;
+  customElectricFee?: number | null;
+  customWaterFee?: number | null;
+  isMoveOutBill?: boolean;
   note?: string;
   room?: BillRoom;
 };
@@ -54,5 +60,8 @@ export type BillCreateValues = {
   waterNumberOld: number;
   waterNumberNew: number;
   otherServiceFee?: number;
+  customElectricFee?: number | null;
+  customWaterFee?: number | null;
+  isMoveOutBill?: boolean;
   note?: string;
 };

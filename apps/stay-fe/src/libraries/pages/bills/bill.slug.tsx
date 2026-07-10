@@ -8,6 +8,7 @@ import {
   Box,
   Breadcrumb,
   Button,
+  Checkbox,
   FormikForm,
   FormikItem,
   Input,
@@ -42,6 +43,27 @@ const validationSchema = yup.object({
     .typeError('Other service fee must be a number')
     .min(0, 'Value must be greater than or equal to 0')
     .optional(),
+  useCustomElectricFee: yup.boolean().optional(),
+  customElectricFee: yup.number().when('useCustomElectricFee', {
+    is: true,
+    then: schema =>
+      schema
+        .typeError('Custom electric price must be a number')
+        .min(0, 'Value must be greater than or equal to 0')
+        .required('Please input custom electric price'),
+    otherwise: schema => schema.optional(),
+  }),
+  useCustomWaterFee: yup.boolean().optional(),
+  customWaterFee: yup.number().when('useCustomWaterFee', {
+    is: true,
+    then: schema =>
+      schema
+        .typeError('Custom water price must be a number')
+        .min(0, 'Value must be greater than or equal to 0')
+        .required('Please input custom water price'),
+    otherwise: schema => schema.optional(),
+  }),
+  isMoveOutBill: yup.boolean().optional(),
   note: yup.string().max(1000, 'Note is too long').optional(),
 });
 
@@ -74,8 +96,6 @@ function CreateBillLayout({
     submitForm,
     selectedRoomLabel,
     service,
-    electricUnitPrice,
-    waterUnitPrice,
     totalElectricity,
     totalWater,
     totalDue,
@@ -115,6 +135,10 @@ function CreateBillLayout({
               setFieldValue('electricNumberNew', 0);
               setFieldValue('waterNumberNew', 0);
               setFieldValue('otherServiceFee', 0);
+              setFieldValue('useCustomElectricFee', false);
+              setFieldValue('customElectricFee', '');
+              setFieldValue('useCustomWaterFee', false);
+              setFieldValue('customWaterFee', '');
               setFieldValue('note', '');
               setFieldValue(
                 'billingMonth',
@@ -155,6 +179,24 @@ function CreateBillLayout({
             <Select options={yearOptions} placeholder="Year" loading={isSubmitting} />
           </FormikItem>
         </div>
+
+        <div className="mt-4 pt-4 border-t border-neutral">
+          <FormikItem
+            name="isMoveOutBill"
+            mapValue={value => Boolean(value)}
+            mapOnChange={event => Boolean(event?.target?.checked)}
+          >
+            <Checkbox
+              checked={Boolean(values.isMoveOutBill)}
+              label="Bill chuyển đi (chỉ tính điện & nước)"
+            />
+          </FormikItem>
+          {values.isMoveOutBill && (
+            <p className="mt-2 text-14 text-neutral-text-secondary">
+              Không tính tiền phòng, phí dịch vụ, internet, xe điện và phí khác.
+            </p>
+          )}
+        </div>
       </Box>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -169,7 +211,37 @@ function CreateBillLayout({
             <FormikItem name="electricNumberNew" required label="Current Index">
               <Input type="number" min="0" step="0.01" loading={isSubmitting} />
             </FormikItem>
-            <Input label="Unit Price" value={`${formatPrice(electricUnitPrice)} / kWh`} disabled />
+            <div className="md:col-span-2 space-y-2">
+              <FormikItem
+                name="useCustomElectricFee"
+                mapValue={value => Boolean(value)}
+                mapOnChange={event => {
+                  const checked = Boolean(event?.target?.checked);
+                  if (!checked) {
+                    setFieldValue('customElectricFee', '');
+                  } else if (values.customElectricFee === '') {
+                    setFieldValue('customElectricFee', Number(service?.electricFee || 0));
+                  }
+                  return checked;
+                }}
+              >
+                <Checkbox
+                  checked={Boolean(values.useCustomElectricFee)}
+                  label="Custom electric price"
+                />
+              </FormikItem>
+              {values.useCustomElectricFee ? (
+                <FormikItem name="customElectricFee" required label="Unit Price (đ/kWh)">
+                  <Input type="number" min="0" step="0.01" loading={isSubmitting} />
+                </FormikItem>
+              ) : (
+                <Input
+                  label="Unit Price"
+                  value={`${formatPrice(Number(service?.electricFee || 0))} / kWh (default)`}
+                  disabled
+                />
+              )}
+            </div>
             <Input label="Total Electricity" value={formatPrice(totalElectricity)} disabled />
           </div>
         </Box>
@@ -183,32 +255,67 @@ function CreateBillLayout({
             <FormikItem name="waterNumberNew" required label="Current Index">
               <Input type="number" min="0" step="0.01" loading={isSubmitting} />
             </FormikItem>
-            <Input label="Unit Price" value={`${formatPrice(waterUnitPrice)} / m³`} disabled />
+            <div className="md:col-span-2 space-y-2">
+              <FormikItem
+                name="useCustomWaterFee"
+                mapValue={value => Boolean(value)}
+                mapOnChange={event => {
+                  const checked = Boolean(event?.target?.checked);
+                  if (!checked) {
+                    setFieldValue('customWaterFee', '');
+                  } else if (values.customWaterFee === '') {
+                    setFieldValue('customWaterFee', Number(service?.waterFee || 0));
+                  }
+                  return checked;
+                }}
+              >
+                <Checkbox checked={Boolean(values.useCustomWaterFee)} label="Custom water price" />
+              </FormikItem>
+              {values.useCustomWaterFee ? (
+                <FormikItem name="customWaterFee" required label="Unit Price (đ/m³)">
+                  <Input type="number" min="0" step="0.01" loading={isSubmitting} />
+                </FormikItem>
+              ) : (
+                <Input
+                  label="Unit Price"
+                  value={`${formatPrice(Number(service?.waterFee || 0))} / m³ (default)`}
+                  disabled
+                />
+              )}
+            </div>
             <Input label="Total Water" value={formatPrice(totalWater)} disabled />
           </div>
         </Box>
       </div>
 
-      <Box>
-        <h4 className="mb-4 text-20 font-semibold text-neutral-text-primary">Fixed Monthly Fees</h4>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          <Input label="Room Rent" value={formatPrice(Number(service?.roomFee || 0))} disabled />
-          <Input
-            label="Common Fee"
-            value={formatPrice(Number(service?.commonServiceFee || 0))}
-            disabled
-          />
-          <Input label="Internet" value={formatPrice(Number(service?.internetFee || 0))} disabled />
-          <Input
-            label="Electric Bike"
-            value={formatPrice(Number(service?.electricBikeFee || 0))}
-            disabled
-          />
-          <FormikItem name="otherServiceFee" label="Other Fee">
-            <Input type="number" min="0" step="0.01" loading={isSubmitting} />
-          </FormikItem>
-        </div>
-      </Box>
+      {!values.isMoveOutBill && (
+        <Box>
+          <h4 className="mb-4 text-20 font-semibold text-neutral-text-primary">
+            Fixed Monthly Fees
+          </h4>
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <Input label="Room Rent" value={formatPrice(Number(service?.roomFee || 0))} disabled />
+            <Input
+              label="Common Fee"
+              value={formatPrice(Number(service?.commonServiceFee || 0))}
+              disabled
+            />
+            <Input
+              label="Internet"
+              value={formatPrice(Number(service?.internetFee || 0))}
+              disabled
+            />
+            <Input
+              label="Electric Bike"
+              value={formatPrice(Number(service?.electricBikeFee || 0))}
+              disabled
+            />
+            <FormikItem name="otherServiceFee" label="Other Fee">
+              <Input type="number" min="0" step="0.01" loading={isSubmitting} />
+            </FormikItem>
+          </div>
+        </Box>
+      )}
 
       <div className="rounded-xl bg-primary text-white px-6 py-4">
         <p className="text-12 uppercase tracking-wider">Total Amount Due</p>
@@ -309,7 +416,7 @@ export default function BillSlugPage() {
     );
   }
 
-  const { room, service, user, subtotal, breakdownRows } = getBillDetail(bill);
+  const { room, service, user, subtotal, breakdownRows, isMoveOutBill } = getBillDetail(bill);
 
   return (
     <div className="space-y-6">
@@ -338,8 +445,12 @@ export default function BillSlugPage() {
               </div>
               <div>
                 <p className="text-12 uppercase text-neutral-placeholder">Status</p>
-                <div className="mt-1">
-                  <Tag content="ROOM BILL" color="green" type="outline" />
+                <div className="mt-1 flex flex-wrap gap-2">
+                  <Tag
+                    content={isMoveOutBill ? 'MOVE-OUT BILL' : 'ROOM BILL'}
+                    color={isMoveOutBill ? 'pending' : 'green'}
+                    type="outline"
+                  />
                 </div>
               </div>
               <div>

@@ -11,6 +11,7 @@ import { ServiceItem } from '@/types/services';
 import { billKeys } from '@/utils/apis/api-keys';
 import { API_ROUTES } from '@/utils/apis/router';
 import { monthOptions } from '@/utils/bills';
+import { getRoomMemberCount } from '@/utils/rooms';
 import { useApiMutation, useApiQuery, useQueryClient } from '@smart-connection-monorepo/api-client';
 import { toastError, toastSuccess } from '@smart-connection-monorepo/ui-components';
 import { useRouter } from 'next/navigation';
@@ -25,12 +26,24 @@ export const defaultDraft: BulkDraft = {
   waterNumberOld: 0,
   waterNumberNew: 0,
   otherServiceFee: 0,
+  customElectricFee: '',
+  customWaterFee: '',
+  isMoveOutBill: false,
 };
 
 export const toNumber = (value: number | string | undefined) => {
   const parsed = Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 };
+
+export const toOptionalFee = (value: number | string | undefined): number | '' => {
+  if (value === '' || value === undefined || value === null) return '';
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : '';
+};
+
+export const toNullableFee = (value: number | ''): number | null =>
+  value === '' ? null : Number(value);
 
 function baselineDraftForRoom(
   roomId: string,
@@ -45,6 +58,9 @@ function baselineDraftForRoom(
     waterNumberOld: oldWater,
     waterNumberNew: oldWater,
     otherServiceFee: 0,
+    customElectricFee: '',
+    customWaterFee: '',
+    isMoveOutBill: false,
   };
 }
 
@@ -72,7 +88,7 @@ type BillBulkUtilsResult = {
   isSubmitting: boolean;
   setBillingMonth: (value: string) => void;
   setBillingYear: (value: string) => void;
-  updateDraft: (roomId: string, key: keyof BulkDraft, value: number | string) => void;
+  updateDraft: (roomId: string, key: keyof BulkDraft, value: number | string | boolean) => void;
   onSubmitBulk: () => Promise<void>;
   onCancel: () => void;
 };
@@ -105,7 +121,7 @@ export default function BillBulkUtils(): BillBulkUtilsResult {
         roomName: room.name || '-',
         service: room.service,
         isUseElectricBike: Boolean(room.isUseElectricBike),
-        memberCount: (room.members || []).filter(member => member.isActive).length,
+        memberCount: getRoomMemberCount(room),
       }))
       .sort((a, b) =>
         a.roomName.localeCompare(b.roomName, undefined, { numeric: true, sensitivity: 'base' })
@@ -183,12 +199,19 @@ export default function BillBulkUtils(): BillBulkUtilsResult {
     return next;
   }, [roomRows, previousBillByRoomId, drafts]);
 
-  const updateDraft = (roomId: string, key: keyof BulkDraft, value: number | string) => {
+  const updateDraft = (roomId: string, key: keyof BulkDraft, value: number | string | boolean) => {
+    const isCustomFee = key === 'customElectricFee' || key === 'customWaterFee';
+    const isBooleanField = key === 'isMoveOutBill';
+    const numericValue = typeof value === 'boolean' ? Number(value) : value;
     setDrafts(previous => ({
       ...previous,
       [roomId]: {
         ...previous[roomId],
-        [key]: toNumber(value),
+        [key]: isBooleanField
+          ? Boolean(value)
+          : isCustomFee
+          ? toOptionalFee(numericValue)
+          : toNumber(numericValue),
       },
     }));
   };
@@ -225,6 +248,9 @@ export default function BillBulkUtils(): BillBulkUtilsResult {
           waterNumberOld: toNumber(draft.waterNumberOld),
           waterNumberNew: toNumber(draft.waterNumberNew),
           otherServiceFee: toNumber(draft.otherServiceFee),
+          customElectricFee: toNullableFee(draft.customElectricFee),
+          customWaterFee: toNullableFee(draft.customWaterFee),
+          isMoveOutBill: Boolean(draft.isMoveOutBill),
         };
 
         return createBill({ endpoint: API_ROUTES.BILLS, body: payload });

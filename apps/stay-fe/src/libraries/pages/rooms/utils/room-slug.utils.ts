@@ -22,12 +22,15 @@ type RoomSlugUtilsResult = {
   onCancel: () => void;
 };
 
-type RoomMutationPayload = Omit<RoomFormValues, 'userIds'>;
+type RoomMutationPayload = Omit<RoomFormValues, 'userIds' | 'memberCount'> & {
+  memberCount?: number | null;
+};
 
 const defaultInitialValues: RoomFormValues = {
   name: '',
   serviceId: '',
   isUseElectricBike: false,
+  memberCount: '',
   userIds: [],
 };
 
@@ -87,6 +90,8 @@ export default function RoomSlugUtils(): RoomSlugUtilsResult {
         name: roomDetail?.name || '',
         serviceId: roomDetail?.serviceId || '',
         isUseElectricBike: Boolean(roomDetail?.isUseElectricBike),
+        memberCount:
+          roomDetail?.memberCount != null ? Number(roomDetail.memberCount) : ('' as const),
         userIds: initialUserIds,
       };
 
@@ -119,7 +124,11 @@ export default function RoomSlugUtils(): RoomSlugUtilsResult {
   };
 
   const onSubmit = async (formValues: RoomFormValues) => {
-    const { userIds, ...roomPayload } = formValues;
+    const { userIds, memberCount, ...rest } = formValues;
+    const roomPayload: RoomMutationPayload = {
+      ...rest,
+      memberCount: memberCount === '' ? null : Number(memberCount),
+    };
 
     if (isAdd) {
       createRoom(

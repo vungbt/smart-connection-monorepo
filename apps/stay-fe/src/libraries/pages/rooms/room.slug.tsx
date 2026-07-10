@@ -21,6 +21,13 @@ const validationSchema = yup.object({
   name: yup.string().required('Room name is required'),
   serviceId: yup.string().required('Please select a service'),
   isUseElectricBike: yup.boolean().required('Please choose electric bike usage'),
+  memberCount: yup
+    .number()
+    .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+    .typeError('Member count must be a number')
+    .integer('Member count must be an integer')
+    .min(0, 'Member count must be greater than or equal to 0')
+    .optional(),
 });
 
 export default function RoomSlugPage() {
@@ -125,6 +132,16 @@ export default function RoomSlugPage() {
               <Select
                 options={electricBikeOptions}
                 placeholder="Select option"
+                loading={isSubmitting}
+              />
+            </FormikItem>
+
+            <FormikItem name="memberCount" label="Member Count (for billing)">
+              <Input
+                type="number"
+                min="0"
+                step="1"
+                placeholder="Uses max(custom, actual users)"
                 loading={isSubmitting}
               />
             </FormikItem>

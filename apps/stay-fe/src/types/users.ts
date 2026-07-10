@@ -18,6 +18,8 @@ export type UserItem = {
     name: string;
     serviceId: string;
     isUseElectricBike: boolean;
+    memberCount?: number | null;
+    members?: { isActive?: boolean }[];
     service?: ServiceItem;
   };
 };
