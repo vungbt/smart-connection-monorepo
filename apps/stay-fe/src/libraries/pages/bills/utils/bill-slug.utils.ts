@@ -1,6 +1,6 @@
 import { ROUTES } from '@/constants/route';
 import { useSlugParams } from '@/hooks/useSlugParams';
-import { BillCreateValues, BillDetailRes, BillItem } from '@/types/bills';
+import { BillCreateValues, BillDetailRes, BillItem, BillListRes } from '@/types/bills';
 import { ServiceItem } from '@/types/services';
 import { UserListRes } from '@/types/users';
 import { billKeys } from '@/utils/apis/api-keys';
@@ -59,8 +59,10 @@ type BillSlugUtilsResult = {
   isLoading: boolean;
   isSubmitting: boolean;
   isLoadingUsers: boolean;
+  isLoadingRoomBills: boolean;
   bill?: BillItem;
   billId?: string;
+  billOptions: SelectOption[];
   tenantOptions: SelectOption[];
   roomOptions: SelectOption[];
   tenantRoomMap: Map<string, string>;
@@ -72,6 +74,7 @@ type BillSlugUtilsResult = {
   onStartEdit: () => void;
   onCancelEdit: () => void;
   onCancelAdd: () => void;
+  onSelectBill: (billId: string | number) => void;
 };
 
 export default function BillSlugUtils(): BillSlugUtilsResult {
@@ -112,6 +115,47 @@ export default function BillSlugUtils(): BillSlugUtilsResult {
   >('PUT');
 
   const bill = billDetailData?.item;
+
+  const { data: billListData, isLoading: isLoadingBillList } = useApiQuery<BillListRes>(
+    {
+      endpoint: API_ROUTES.BILLS,
+      queryKey: billKeys.list({
+        pageSize: 1000,
+        sortBy: 'roomName',
+        billingMonth: bill?.billingMonth,
+        billingYear: bill?.billingYear,
+      }),
+      params: {
+        page: 1,
+        pageSize: 1000,
+        sortBy: 'roomName',
+        sortOrder: 'ASC',
+        billingMonth: bill?.billingMonth,
+        billingYear: bill?.billingYear,
+      },
+    },
+    { enabled: Boolean(bill) && !isAdd }
+  );
+
+  const billOptions = useMemo<SelectOption[]>(
+    () =>
+      Array.from(
+        new Map(
+          [...(billListData?.items || [])]
+            .sort((a, b) =>
+              (a.room?.name || '').localeCompare(b.room?.name || '', undefined, {
+                numeric: true,
+                sensitivity: 'base',
+              })
+            )
+            .map(item => [item.roomId, item] as const)
+        ).values()
+      ).map(item => ({
+        value: item.id,
+        label: item.room?.name || '-',
+      })),
+    [billListData?.items]
+  );
 
   const roomOptions = useMemo<SelectOption[]>(() => {
     const roomMap = new Map<string, string>();
@@ -210,6 +254,11 @@ export default function BillSlugUtils(): BillSlugUtilsResult {
   const onStartEdit = () => setIsEditing(true);
   const onCancelEdit = () => setIsEditing(false);
   const onCancelAdd = () => router.push(ROUTES.BILLS);
+  const onSelectBill = (selectedBillId: string | number) => {
+    const nextBillId = String(selectedBillId);
+    if (!nextBillId || nextBillId === billId) return;
+    router.push(ROUTES.BILLS_SLUG.replace(':slug', nextBillId));
+  };
 
   const onSubmit = (values: CreateBillFormValues) => {
     const roomId = tenantRoomMap.get(values.tenantId);
@@ -279,8 +328,10 @@ export default function BillSlugUtils(): BillSlugUtilsResult {
     isLoading: isLoadingDetail,
     isSubmitting: isCreating || isUpdating,
     isLoadingUsers,
+    isLoadingRoomBills: isLoadingBillList,
     bill,
     billId: billId || undefined,
+    billOptions,
     tenantOptions,
     roomOptions,
     tenantRoomMap,
@@ -292,6 +343,7 @@ export default function BillSlugUtils(): BillSlugUtilsResult {
     onStartEdit,
     onCancelEdit,
     onCancelAdd,
+    onSelectBill,
   };
 }
 

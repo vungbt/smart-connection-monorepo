@@ -350,8 +350,10 @@ export default function BillSlugPage() {
     isLoading,
     isSubmitting,
     isLoadingUsers,
+    isLoadingRoomBills,
     bill,
     billId,
+    billOptions,
     tenantOptions,
     roomOptions,
     tenantRoomMap,
@@ -363,6 +365,7 @@ export default function BillSlugPage() {
     onStartEdit,
     onCancelEdit,
     onCancelAdd,
+    onSelectBill,
   } = BillSlugUtils();
 
   usePageTitle({
@@ -429,7 +432,23 @@ export default function BillSlugPage() {
         description={`Billing information for ${room?.name || '-'}.`}
       />
 
-      <div className="flex items-center w-full justify-end gap-2">
+      <div className="flex flex-col md:flex-row md:items-center w-full justify-between gap-4">
+        <div className="w-48 max-w-full">
+          <Select
+            className="bg-white"
+            size="small"
+            options={billOptions}
+            value={billOptions.find(option => option.value === billId) || null}
+            placeholder="Select a room"
+            loading={isLoadingRoomBills}
+            disabled={isLoadingRoomBills || billOptions.length === 0}
+            isSearchable
+            onChange={option => {
+              const selectedBillId = (option as SelectOption | null)?.value;
+              if (selectedBillId != null) onSelectBill(selectedBillId);
+            }}
+          />
+        </div>
         <Button variant="outline" size="small" icon="pencil" onClick={onStartEdit}>
           Edit Bill
         </Button>
